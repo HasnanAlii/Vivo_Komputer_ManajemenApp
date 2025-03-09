@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('id_pembelian')->nullable()->constrained('pembelian')->onDelete('cascade');
             $table->foreignId('id_service')->nullable()->constrained('service')->onDelete('cascade');
             $table->date('tanggal');
-            $table->string('nama_barang_jasa'); // Perbaikan nama kolom
+            $table->string('nama_barang_jasa'); 
             $table->integer('jumlah')->nullable();
             $table->decimal('modal', 15, 2);
             $table->decimal('laba', 15, 2);
