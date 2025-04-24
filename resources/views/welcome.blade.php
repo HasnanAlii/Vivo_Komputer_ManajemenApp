@@ -23,7 +23,7 @@
     </head>
     <body class="font-semibold text-md  bg-[#FDFDFC] flex flex-col justify-between min-h-screen " >
         <main class="flex flex-col items-center justify-center flex-1 text-center">
-            <div class="mb-4">
+            <div class="mb-1">
                 <img src="/assets/images/vivologo.png" alt="Vivo Komputer Logo">
 
             </div>
