@@ -32,6 +32,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/{sales}/edit', [SaleController::class, 'edit'])->name('edit');
         Route::put('/{sales}', [SaleController::class, 'update'])->name('update');
         Route::delete('/{sales}', [SaleController::class, 'destroy'])->name('destroy');
+        Route::post('sales/checkout', [SaleController::class, 'checkout'])->name('checkout');
+        Route::patch('/sales/{id}/increase', [SaleController::class, 'increase'])->name('increase');
+        Route::patch('/sales/{id}/decrease', [SaleController::class, 'decrease'])->name('decrease');
+
+
     });
 
      Route::prefix('finances')->name('finances.')->group(function () {

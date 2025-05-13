@@ -12,14 +12,14 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CustomerSeeder::class,
             ProductSeeder::class,
-            ServiceSeeder::class,
-            PurchasingSeeder::class,
-            SaleSeeder::class,
-            FinanceSeeder::class,
-            // MoneyInSeeder::class,
-            MoneyOutSeeder::class,
-            NotificationSeeder::class,
-            ReportSeeder::class,
+            // ServiceSeeder::class,
+            // PurchasingSeeder::class,
+            // SaleSeeder::class,
+            // FinanceSeeder::class,
+            // // MoneyInSeeder::class,
+            // MoneyOutSeeder::class,
+            // NotificationSeeder::class,
+            // ReportSeeder::class,
         ]);
     }
 }

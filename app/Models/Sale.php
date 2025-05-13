@@ -13,15 +13,32 @@ class Sale extends Model
 
     protected $primaryKey = 'idSale';
 
-    protected $fillable = ['nomorFaktur', 'jumlah', 'totalHarga', 'keuntungan', 'tanggal', 'idUser', 'idProduct'];
+   
+    protected $fillable = [
+        'nomorFaktur',
+        'jumlah',
+        'totalHarga',
+        'keuntungan',
+        'tanggal',
+        'idUser',
+        'idProduct',
+    ];
+
 
     public function user()
     {
         return $this->belongsTo(User::class, 'idUser');
     }
 
+    // Sale.php
     public function product()
     {
-        return $this->belongsTo(Product::class, 'idProduct');
+        return $this->belongsTo(Product::class, 'idProduct', 'idProduct');
     }
+    public function finance() {
+    return $this->belongsTo(Finance::class, 'idFinance', 'idFinance');
+    }
+
+
+
 }
