@@ -6,22 +6,20 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
         $this->call([
             UserSeeder::class,
-            KeuanganSeeder::class,
-            KategoriSeeder::class,
-            InventorySeeder::class,
-            ProdukSeeder::class,
-            PelangganSeeder::class,
-            TransaksiSeeder::class,
-            PembelianSeeder::class,
+            CustomerSeeder::class,
+            ProductSeeder::class,
             ServiceSeeder::class,
-            LaporanSeeder::class,
+            PurchasingSeeder::class,
+            SaleSeeder::class,
+            FinanceSeeder::class,
+            // MoneyInSeeder::class,
+            MoneyOutSeeder::class,
+            NotificationSeeder::class,
+            ReportSeeder::class,
         ]);
     }
 }

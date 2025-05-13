@@ -4,40 +4,34 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Pelanggan;
-use App\Models\Produk;
 
 class Service extends Model
 {
     use HasFactory;
 
-    protected $table = 'service';
+    protected $table = 'services';
 
-    protected $fillable = [
-        'nama_kerusakan',
-        'pelanggan_id',
-        'id_barang',
-    ];
+    protected $primaryKey = 'idService';
 
-    public function pelanggan()
+    protected $fillable = ['nomorFaktur', 'kerusakan', 'jenisPerangkat', 'status', 'totalBiaya', 'keuntungan', 'tglMasuk', 'tglSelesai', 'idCustomer', 'idUser', 'idProduct'];
+
+    public function customer()
     {
-        return $this->belongsTo(Pelanggan::class, 'pelanggan_id');
+        return $this->belongsTo(Customer::class, 'idCustomer');
     }
 
-    public function produk()
+    public function user()
     {
-        return $this->belongsTo(Produk::class, 'id_barang');
+        return $this->belongsTo(User::class, 'idUser');
     }
 
-    public static function boot()
+    public function product()
     {
-        parent::boot();
+        return $this->belongsTo(Product::class, 'idProduct');
+    }
 
-        static::creating(function ($service) {
-            // Memastikan pelanggan terdaftar di tabel pelanggan sebelum menyimpan service
-            if (!Pelanggan::find($service->pelanggan_id)) {
-                throw new \Exception("Pelanggan tidak ditemukan!");
-            }
-        });
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'idService');
     }
 }

@@ -4,36 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Produk;
-use App\Models\Inventory;
 
 class Sale extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaksi';
-    protected $fillable = ['pelanggan_id', 'tanggal', 'jumlah', 'total_harga', 'tipe', 'id_produk'];
+    protected $table = 'sales';
 
-    // public static function boot()
-    // {
-    //     parent::boot();
+    protected $primaryKey = 'idSale';
 
-    //     static::created(function ($transaksi) {
-    //         // Kurangi stok produk
-    //         $produk = Produk::find($transaksi->id_produk);
-    //         if ($produk && $produk->jumlah >= $transaksi->jumlah) {
-    //             $produk->jumlah -= $transaksi->jumlah;
-    //             $produk->save();
-    //         } else {
-    //             throw new \Exception("Stok produk tidak mencukupi");
-    //         }
+    protected $fillable = ['nomorFaktur', 'jumlah', 'totalHarga', 'keuntungan', 'tanggal', 'idUser', 'idProduct'];
 
-    //         // Kurangi stok inventory jika ada
-    //         $inventory = Inventory::where('id', $produk->id_iventory)->first();
-    //         if ($inventory && $inventory->jumlah >= $transaksi->jumlah) {
-    //             $inventory->jumlah -= $transaksi->jumlah;
-    //             $inventory->save();
-    //         }
-    //     });
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'idUser');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'idProduct');
+    }
 }

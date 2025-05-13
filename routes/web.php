@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SalesController;
 use App\Http\Controllers\PurchasingController;
 use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,13 +25,23 @@ Route::middleware('auth')->group(function () {
     
     // Sales routes
     Route::prefix('sales')->name('sales.')->group(function () {
-        Route::get('/', [SalesController::class, 'index'])->name('index');
-        Route::get('/create', [SalesController::class, 'create'])->name('create');
-        Route::post('/', [SalesController::class, 'store'])->name('store');
-        Route::get('/{sales}', [SalesController::class, 'show'])->name('show');
-        Route::get('/{sales}/edit', [SalesController::class, 'edit'])->name('edit');
-        Route::put('/{sales}', [SalesController::class, 'update'])->name('update');
-        Route::delete('/{sales}', [SalesController::class, 'destroy'])->name('destroy');
+        Route::get('/', [SaleController::class, 'index'])->name('index');
+        Route::get('/create', [SaleController::class, 'create'])->name('create');
+        Route::post('/', [SaleController::class, 'store'])->name('store');
+        Route::get('/{sales}', [SaleController::class, 'show'])->name('show');
+        Route::get('/{sales}/edit', [SaleController::class, 'edit'])->name('edit');
+        Route::put('/{sales}', [SaleController::class, 'update'])->name('update');
+        Route::delete('/{sales}', [SaleController::class, 'destroy'])->name('destroy');
+    });
+
+     Route::prefix('finances')->name('finances.')->group(function () {
+        Route::get('/', [FinanceController::class, 'index'])->name('index');
+        Route::get('/create', [FinanceController::class, 'create'])->name('create');
+        Route::post('/', [FinanceController::class, 'store'])->name('store');
+        Route::get('/{sales}', [FinanceController::class, 'show'])->name('show');
+        Route::get('/{sales}/edit', [FinanceController::class, 'edit'])->name('edit');
+        Route::put('/{sales}', [FinanceController::class, 'update'])->name('update');
+        Route::delete('/{sales}', [FinanceController::class, 'destroy'])->name('destroy');
     });
     
     // Purchasing routes
@@ -57,23 +68,23 @@ Route::middleware('auth')->group(function () {
     
     // Reports routes
     Route::prefix('reports')->name('reports.')->group(function () {
-        Route::get('/', [ReportsController::class, 'index'])->name('index');
-        Route::get('/sales', [ReportsController::class, 'sales'])->name('sales');
-        Route::get('/purchasing', [ReportsController::class, 'purchasing'])->name('purchasing');
-        Route::get('/service', [ReportsController::class, 'service'])->name('service');
-        Route::get('/inventory', [ReportsController::class, 'inventory'])->name('inventory');
-        Route::get('/finance', [ReportsController::class, 'finance'])->name('finance');
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/sales', [ReportController::class, 'sales'])->name('sales');
+        Route::get('/purchasing', [ReportController::class, 'purchasing'])->name('purchasing');
+        Route::get('/service', [ReportController::class, 'service'])->name('service');
+        Route::get('/inventory', [ReportController::class, 'inventory'])->name('inventory');
+        Route::get('/finance', [ReportController::class, 'finance'])->name('finance');
     });
     
     // Inventory routes
     Route::prefix('inventory')->name('inventory.')->group(function () {
-        Route::get('/', [InventoryController::class, 'index'])->name('index');
-        Route::get('/create', [InventoryController::class, 'create'])->name('create');
-        Route::post('/', [InventoryController::class, 'store'])->name('store');
-        Route::get('/{inventory}', [InventoryController::class, 'show'])->name('show');
-        Route::get('/{inventory}/edit', [InventoryController::class, 'edit'])->name('edit');
-        Route::put('/{inventory}', [InventoryController::class, 'update'])->name('update');
-        Route::delete('/{inventory}', [InventoryController::class, 'destroy'])->name('destroy');
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::get('/create', [ProductController::class, 'create'])->name('create');
+        Route::post('/', [ProductController::class, 'store'])->name('store');
+        Route::get('/{inventory}', [ProductController::class, 'show'])->name('show');
+        Route::get('/{inventory}/edit', [ProductController::class, 'edit'])->name('edit');
+        Route::put('/{inventory}', [ProductController::class, 'update'])->name('update');
+        Route::delete('/{inventory}', [ProductController::class, 'destroy'])->name('destroy');
     });
 });
 
