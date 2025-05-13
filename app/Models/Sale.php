@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Produk;
 use App\Models\Inventory;
 
-class Transaksi extends Model
+class Sale extends Model
 {
     use HasFactory;
 

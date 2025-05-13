@@ -22,8 +22,9 @@
                             Lorem ipsum dolor sit amet adipisicing elit.amet quisquam explicabo commodi ipsum.
                           </p>
                           <div class="flex justify-end">
-                            <button class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                              <span class="text-xl">→</span>
+                            <button onclick="window.location.href='{{ route('inventory.index') }}'" 
+                            class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+                                <span class="text-xl">→</span>
                             </button>
                           </div>
                         </div>
@@ -34,9 +35,11 @@
                             Lorem ipsum dolor sit amet adipisicing elit.amet quisquam explicabo commodi ipsum.
                           </p>
                           <div class="flex justify-end">
-                            <button class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                              <span class="text-xl">→</span>
+                            <button onclick="window.location.href='{{ route('purchasing.index') }}'" 
+                            class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+                                <span class="text-xl">→</span>
                             </button>
+                            
                           </div>
                         </div>
                         <!-- Laporan Penjualan -->
@@ -46,9 +49,11 @@
                             Lorem ipsum dolor sit amet adipisicing elit.amet quisquam explicabo commodi ipsum.
                           </p>
                           <div class="flex justify-end">
-                            <button class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                              <span class="text-xl">→</span>
+                            <button onclick="window.location.href='{{ route('reports.index') }}'" 
+                            class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+                                <span class="text-xl">→</span>
                             </button>
+                            
                           </div>
                         </div>
                         <!-- Produk/Jasa Terlaris -->
@@ -58,9 +63,11 @@
                             Lorem ipsum dolor sit amet adipisicing elit.amet quisquam explicabo commodi ipsum.
                           </p>
                           <div class="flex justify-end">
-                            <button class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                              <span class="text-xl">→</span>
+                            <button onclick="window.location.href='{{ route('service.index') }}'" 
+                            class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+                                <span class="text-xl">→</span>
                             </button>
+                            
                           </div>
                         </div>
                       </div>
@@ -74,9 +81,12 @@
                           </p>
                         </div>
                         <div class="mt-6 self-end">
-                          <button class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                            <span class="text-xl">→</span>
+                      
+                          <button onclick="window.location.href='{{ route('sales.index') }}'" 
+                                  class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+                              <span class="text-xl">→</span>
                           </button>
+
                         </div>
                       </div>
                     </div>
