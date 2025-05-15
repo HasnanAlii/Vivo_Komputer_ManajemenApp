@@ -6,6 +6,15 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        <svg style="display: none;">
+    <symbol id="icon-archive-box" viewBox="0 0 24 24"><path d="..." /></symbol>
+    <symbol id="icon-shopping-cart" viewBox="0 0 24 24"><path d="..." /></symbol>
+    <symbol id="icon-document-text" viewBox="0 0 24 24"><path d="..." /></symbol>
+    <symbol id="icon-currency-dollar" viewBox="0 0 24 24"><path d="..." /></symbol>
+    <symbol id="icon-wrench-screwdriver" viewBox="0 0 24 24"><path d="..." /></symbol>
+    <symbol id="icon-credit-card" viewBox="0 0 24 24"><path d="..." /></symbol>
+</svg>
+
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -29,7 +38,8 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main> @yield('content')
+                
                 {{ $slot }}
             </main>
         </div>

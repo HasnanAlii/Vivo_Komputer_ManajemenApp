@@ -1,119 +1,52 @@
 <x-app-layout>
-    {{-- <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot> --}}
-
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="h-52  bg-blue-100 shadow-sm sm:rounded-lg">
+                <!-- Header Banner -->
+               <div class="relative h-44 rounded-t-lg flex items-center justify-center overflow-hidden bg-gradient-to-r from-blue-200 to-blue-100">
+                    <!-- Background image kecil di tengah -->
+                    <div class="absolute inset-0 flex items-center  pointer-events-none">
+                        <img src="{{ asset('assets/images/vivologo.png') }}" alt="Logo" class="h-28 ml-20 w-auto opacity-60" />
+                    </div>
 
+                    <!-- Konten teks di atas -->
+                    <h1 class="relative text-4xl font-bold text-blue-800">Selamat Datang di Dashboard</h1>
+                     <div class="absolute inset-0 flex items-center justify-end pointer-events-none">
+                        <img src="{{ asset('assets/images/vivologo.png') }}" alt="Logo" class="h-28 mr-20 w-auto opacity-60" />
+                    </div>
                 </div>
-                <div class="p-6 text-gray-900 max-h-90 " >
-                    <div class="grid grid-cols-4 gap-4 ">
-                      <!-- Left 2 columns (4 cards) -->
-                      <div class="col-span-2 grid grid-cols-2 gap-4 ">
-                        <!-- Inventory -->
-                        <div class="bg-blue-200 p-4 rounded-xl ">
-                          <h2 class="font-semibold text-2xl mb-2">Inventory</h2>
-                          <p class="text-sm text-gray-700 mb-4">
-                            Lorem ipsum dolor sit amet adipisicing elit.amet quisquam explicabo commodi ipsum.
-                          </p>
-                          <div class="flex justify-end">
-                            <button onclick="window.location.href='{{ route('inventory.index') }}'" 
-                            class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                                <span class="text-xl">→</span>
-                            </button>
-                          </div>
-                        </div>
-                        <!-- Pembelian Produk -->
-                        <div class="bg-blue-200 p-4 rounded-xl w-fit">
-                          <h2 class="font-semibold text-2xl mb-2">Pembelian Produk</h2>
-                          <p class="text-sm text-gray-700 mb-4">
-                            Lorem ipsum dolor sit amet adipisicing elit.amet quisquam explicabo commodi ipsum.
-                          </p>
-                          <div class="flex justify-end">
-                            <button onclick="window.location.href='{{ route('purchasing.index') }}'" 
-                            class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                                <span class="text-xl">→</span>
-                            </button>
-                            
-                          </div>
-                        </div>
-                        <!-- Laporan Penjualan -->
-                        <div class="bg-blue-200 p-4 rounded-xl">
-                          <h2 class="font-semibold text-2xl mb-2">Laporan Penjualan</h2>
-                          <p class="text-sm text-gray-700 mb-4">
-                            Lorem ipsum dolor sit amet adipisicing elit.amet quisquam explicabo commodi ipsum.
-                          </p>
-                          <div class="flex justify-end">
-                            <button onclick="window.location.href='{{ route('reports.index') }}'" 
-                            class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                                <span class="text-xl">→</span>
-                            </button>
-                            
-                          </div>
-                        </div>
-                        <!-- Produk/Jasa Terlaris -->
-                        <div class="bg-blue-200 p-4 rounded-xl">
-                          <h2 class="font-semibold text-2xl mb-2">Keuangan</h2>
-                          <p class="text-sm text-gray-700 mb-4">
-                            Lorem ipsum dolor sit amet adipisicing elit.amet quisquam explicabo commodi ipsum.
-                          </p>
-                          <div class="flex justify-end">
-                      
-                          <button onclick="window.location.href='{{ route('finances.index') }}'" 
-                                  class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                              <span class="text-xl">→</span>
-                          </button>
 
-                        </div>
-                      </div>
-                        
-                      </div>
-                  
-                      <!-- Sidebar Kasir -->
-                     <div class="bg-blue-200 p-4 rounded-xl flex flex-col justify-center">
-                        <div>
-                          <h2 class="font-semibold text-4xl mb-2">Servis</h2>
-                          <p class="text-sm text-gray-700">
-                            Lorem ipsum dolor sit amet adipisicing elit. amet quisquam explicabo commodi ipsum.
-                          </p>
-                        </div>
-                        <div class="mt-6 self-end">
-                            <button onclick="window.location.href='{{ route('service.index') }}'" 
-                            class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                                <span class="text-xl">→</span>
-                            </button>
-                            
-                          </div>
-                        </div>
-                      
 
-                      <div class="bg-blue-200 p-4 rounded-xl flex flex-col justify-center">
-                        <div>
-                          <h2 class="font-semibold text-4xl mb-2">Kasir</h2>
-                          <p class="text-sm text-gray-700">
-                            Lorem ipsum dolor sit amet adipisicing elit. amet quisquam explicabo commodi ipsum.
-                          </p>
-                        </div>
-                        <div class="mt-6 self-end">
-                      
-                          <button onclick="window.location.href='{{ route('sales.index') }}'" 
-                                  class="w-20 h-10 border-2 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-                              <span class="text-xl">→</span>
-                          </button>
+                <!-- Konten Grid -->
+                <div class="p-6 text-gray-900">
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-                        </div>
-                      </div>
-                      
+                        <!-- Kolom Kiri (4 Kartu) -->
+                        <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Kartu 1: Inventory -->
+                            <x-dashboard.card title="Stok Barang" route="{{ route('product.index') }}" icon="archive-box" />
 
+                            <!-- Kartu 2: Pembelian Produk -->
+                            <x-dashboard.card title="Pembelian Produk" route="{{ route('purchasing.create') }}" icon="shopping-cart" />
+
+                            <!-- Kartu 3: Laporan Penjualan -->
+                            <x-dashboard.card title="Laporan Penjualan" route="{{ route('reports.index') }}" icon="document-text" />
+
+                            <!-- Kartu 4: Keuangan -->
+                            <x-dashboard.card title="Keuangan" route="{{ route('finances.index') }}" icon="currency-dollar" />
+                        </div>
+
+                        <!-- Kolom Kanan -->
+                        <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Servis -->
+                            <x-dashboard.card title="Servis" route="{{ route('service.index') }}" icon="wrench-screwdriver" />
+
+                            <!-- Kasir -->
+                            <x-dashboard.card title="Kasir" route="{{ route('sales.index') }}" icon="credit-card" />
+                        </div>
 
                     </div>
-                  </div>
-                  
+                </div>
             </div>
         </div>
     </div>

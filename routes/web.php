@@ -35,6 +35,13 @@ Route::middleware('auth')->group(function () {
         Route::post('sales/checkout', [SaleController::class, 'checkout'])->name('checkout');
         Route::patch('/sales/{id}/increase', [SaleController::class, 'increase'])->name('increase');
         Route::patch('/sales/{id}/decrease', [SaleController::class, 'decrease'])->name('decrease');
+        Route::get('/sales/print/{id}', [SaleController::class, 'printReceipt'])->name('print');
+        Route::put('/sales/{id}/update-bayar', [SaleController::class, 'updateBayar'])->name('updateBayar');
+
+        
+
+        
+
 
 
     });
@@ -82,14 +89,21 @@ Route::middleware('auth')->group(function () {
     });
     
     // Inventory routes
-    Route::prefix('inventory')->name('inventory.')->group(function () {
+    Route::prefix('product')->name('product.')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index');
         Route::get('/create', [ProductController::class, 'create'])->name('create');
         Route::post('/', [ProductController::class, 'store'])->name('store');
-        Route::get('/{inventory}', [ProductController::class, 'show'])->name('show');
-        Route::get('/{inventory}/edit', [ProductController::class, 'edit'])->name('edit');
-        Route::put('/{inventory}', [ProductController::class, 'update'])->name('update');
-        Route::delete('/{inventory}', [ProductController::class, 'destroy'])->name('destroy');
+        Route::get('/{product}', [ProductController::class, 'show'])->name('show');
+        Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
+        Route::get('/{product}/edit', [ProductController::class, 'editt'])->name('editt');
+        Route::put('/{product}', [ProductController::class, 'update'])->name('update');
+        Route::put('/{product}', [ProductController::class, 'updatee'])->name('updatee');
+        Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
+        Route::post('/product/import', [ProductController::class, 'import'])->name('import');
+ 
+
+
+
     });
 });
 

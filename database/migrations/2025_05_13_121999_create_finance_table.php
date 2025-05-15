@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('finance', function (Blueprint $table) {
             $table->id('idFinance');
-            $table->integer('danaMasuk');
+            $table->integer('danaMasuk/keluar');
             $table->integer('modal');
             $table->integer('totalDana');
             $table->date('tanggal');
