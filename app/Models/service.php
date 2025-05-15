@@ -24,6 +24,11 @@ class Service extends Model
     {
         return $this->belongsTo(User::class, 'idUser');
     }
+    
+    public function finance() {
+    return $this->belongsTo(Finance::class, 'idFinance', 'idFinance');
+    }
+
 
     public function product()
     {

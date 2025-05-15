@@ -43,6 +43,8 @@ class ProductController extends Controller
     {
         return view('products.edit', compact('product'));
     }
+
+    
     public function editt(Product $product)
     {
         return view('products.edit2', compact('product'));

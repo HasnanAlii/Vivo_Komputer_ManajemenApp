@@ -26,11 +26,12 @@ return new class extends Migration
             $table->unsignedBigInteger('idCustomer');
             $table->foreign('idCustomer')->references('idCustomer')->on('customers')->onDelete('cascade');
 
-            $table->unsignedBigInteger('idUser');
-            $table->foreign('idUser')->references('idUser')->on('users')->onDelete('cascade');
-
             $table->unsignedBigInteger('idProduct');
             $table->foreign('idProduct')->references('idProduct')->on('products')->onDelete('cascade');
+
+            $table->unsignedBigInteger('idFinance')->nullable();
+             $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('set null');
+
 
             $table->timestamps();
 

@@ -38,11 +38,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/sales/print/{id}', [SaleController::class, 'printReceipt'])->name('print');
         Route::put('/sales/{id}/update-bayar', [SaleController::class, 'updateBayar'])->name('updateBayar');
 
-        
-
-        
-
-
 
     });
 
@@ -50,10 +45,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [FinanceController::class, 'index'])->name('index');
         Route::get('/create', [FinanceController::class, 'create'])->name('create');
         Route::post('/', [FinanceController::class, 'store'])->name('store');
-        Route::get('/{sales}', [FinanceController::class, 'show'])->name('show');
-        Route::get('/{sales}/edit', [FinanceController::class, 'edit'])->name('edit');
-        Route::put('/{sales}', [FinanceController::class, 'update'])->name('update');
-        Route::delete('/{sales}', [FinanceController::class, 'destroy'])->name('destroy');
+        Route::post('/+', [FinanceController::class, 'storee'])->name('storee');
+
     });
     
     // Purchasing routes
@@ -95,9 +88,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ProductController::class, 'store'])->name('store');
         Route::get('/{product}', [ProductController::class, 'show'])->name('show');
         Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
-        Route::get('/{product}/edit', [ProductController::class, 'editt'])->name('editt');
+        Route::get('/{product}/editharga', [ProductController::class, 'editt'])->name('editt');
         Route::put('/{product}', [ProductController::class, 'update'])->name('update');
-        Route::put('/{product}', [ProductController::class, 'updatee'])->name('updatee');
+        Route::put('/{product}/harga', [ProductController::class, 'updatee'])->name('updatee');
         Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
         Route::post('/product/import', [ProductController::class, 'import'])->name('import');
  

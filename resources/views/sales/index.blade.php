@@ -1,7 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="font-bold text-2xl text-gray-800">Halaman Kasir</h2>
+            <h2 class="font-bold text-2xl text-gray-800 flex items-center gap-2">
+                🛒 <span>Halaman Kasir</span>
+            </h2>
             <form action="{{ route('sales.index') }}" method="GET" class="flex items-center space-x-2">
                 <input type="text" name="search" placeholder="Cari Produk..." value="{{ request('search') }}"
                     class="pl-3 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300">

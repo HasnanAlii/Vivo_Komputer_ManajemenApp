@@ -17,8 +17,8 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->date('tanggal');
 
-            $table->unsignedBigInteger('idFinance');
-            $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('cascade');
+ 
+         
 
             $table->timestamps();
         });

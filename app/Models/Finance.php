@@ -10,5 +10,29 @@ class Finance extends Model
     protected $primaryKey = 'idFinance';
     public $timestamps = false;
 
-    protected $fillable = ['danaMasuk', 'modal', 'keuntungan', 'totalDana', 'tanggal'];
+   protected $fillable = [
+    'dana',
+    'modal',
+    'totalDana',
+    'tanggal',
+    'keuntungan',
+    'keterangan', 
+];
+
+
+public function purchasings()
+{
+    return $this->hasOne(Purchasing::class, 'idFinance', 'idFinance');
+}
+
+public function sales()
+{
+    return $this->hasOne(Sale::class, 'idFinance', 'idFinance');
+}
+
+
+
+
+
+
 }

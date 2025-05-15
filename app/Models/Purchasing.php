@@ -9,16 +9,10 @@ class Purchasing extends Model
     protected $primaryKey = 'idPurchasing';
 
     protected $fillable = [
-        'nomorFaktur',
-        'jumlah',
-        'hargaBeli',
-        'hargaJual',
-        'keuntungan',
-        'tanggal',
-        'idUser',
-        'idCustomer',
-        'idProduct',
-    ];
+    'nomorFaktur', 'jumlah', 'hargaBeli', 'hargaJual', 'keuntungan', 'tanggal',
+    'idCustomer', 'idProduct', 'idFinance',
+];
+
 
     public function user()
     {
@@ -34,8 +28,9 @@ class Purchasing extends Model
     {
         return $this->belongsTo(Product::class, 'idProduct', 'idProduct');
     }
-     public function finance() {
-    return $this->belongsTo(Finance::class, 'idFinance', 'idFinance');
+    public function finance()
+    {
+        return $this->belongsTo(Finance::class, 'idFinance', 'idFinance');
     }
 
 }

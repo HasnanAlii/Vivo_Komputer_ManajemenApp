@@ -25,18 +25,14 @@ class Sale extends Model
     ];
 
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'idUser');
-    }
-
-    // Sale.php
+  
     public function product()
     {
         return $this->belongsTo(Product::class, 'idProduct', 'idProduct');
     }
-    public function finance() {
-    return $this->belongsTo(Finance::class, 'idFinance', 'idFinance');
+    public function finance()
+    {
+        return $this->belongsTo(Finance::class, 'idFinance', 'idFinance');
     }
 
 

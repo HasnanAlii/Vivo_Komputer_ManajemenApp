@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('finance', function (Blueprint $table) {
             $table->id('idFinance');
-            $table->integer('danaMasuk/keluar');
+            $table->integer('dana');
             $table->integer('modal');
-            $table->integer('totalDana');
+            $table->integer('totalDana')->nullable();
             $table->date('tanggal');
-            $table->integer('keuntungan');
+            $table->integer('keuntungan')->nullable();
+            $table->string('keterangan', 50);
+
 
             // $table->unsignedBigInteger('idUser')->nullable();
             // $table->foreign('idUser')->references('idUser')->on('users')->onDelete('set null');
