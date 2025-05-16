@@ -32,8 +32,8 @@
                     <!-- Customer Info -->
                     <div>
                         <h3 class="text-xl font-semibold text-blue-700 mb-4 border-b pb-2 flex items-center">
-                            <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 1117.805 5.12 9 9 0 015.12 17.804z" />
+                               <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm0 2c-3.333 0-10 1.667-10 5v1h20v-1c0-3.333-6.667-5-10-5z"/>
                             </svg>
                             Data Customer
                         </h3>
@@ -46,12 +46,17 @@
 
                     <!-- Product Info -->
                     <div>
-                        <h3 class="text-xl font-semibold text-green-700 mb-4 border-b pb-2  py-3 flex items-center">
-                            <svg class="h-5 w-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
-                            </svg>
-                            Data Produk
+                      
+                        <h3 class="text-xl font-semibold text-green-700 mb-4 border-b pb-2 py-3 flex items-center">
+                       <!-- Ikon produk (box/package) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511l-8.25 4.74-8.25-4.74M12 3l9 5.25v7.5l-9 5.25-9-5.25v-7.5L12 3z" />
+                        </svg>
+
+                        Data Produk
                         </h3>
+
+                    
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <input type="text" name="namaBarang" placeholder="Nama Barang" class="input" required>
 

@@ -7,13 +7,14 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
         <svg style="display: none;">
-    <symbol id="icon-archive-box" viewBox="0 0 24 24"><path d="..." /></symbol>
-    <symbol id="icon-shopping-cart" viewBox="0 0 24 24"><path d="..." /></symbol>
-    <symbol id="icon-document-text" viewBox="0 0 24 24"><path d="..." /></symbol>
-    <symbol id="icon-currency-dollar" viewBox="0 0 24 24"><path d="..." /></symbol>
-    <symbol id="icon-wrench-screwdriver" viewBox="0 0 24 24"><path d="..." /></symbol>
-    <symbol id="icon-credit-card" viewBox="0 0 24 24"><path d="..." /></symbol>
-</svg>
+        <symbol id="icon-archive-box" viewBox="0 0 24 24"><path d="..." /></symbol>
+        <symbol id="icon-shopping-cart" viewBox="0 0 24 24"><path d="..." /></symbol>
+        <symbol id="icon-document-text" viewBox="0 0 24 24"><path d="..." /></symbol>
+        <symbol id="icon-currency-dollar" viewBox="0 0 24 24"><path d="..." /></symbol>
+        <symbol id="icon-wrench-screwdriver" viewBox="0 0 24 24"><path d="..." /></symbol>
+        <symbol id="icon-credit-card" viewBox="0 0 24 24"><path d="..." /></symbol>          
+        </svg>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
         <!-- Fonts -->
@@ -42,6 +43,19 @@
                 
                 {{ $slot }}
             </main>
-        </div>
+        </div><!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#select-sparepart').select2({
+            placeholder: "-- Pilih Sparepart --",
+            allowClear: true
+        });
+    });
+</script>
+
     </body>
 </html>

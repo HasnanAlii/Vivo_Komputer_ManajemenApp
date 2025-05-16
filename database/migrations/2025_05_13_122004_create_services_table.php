@@ -14,23 +14,23 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id('idService');
             $table->integer('nomorFaktur');
-            $table->string('kerusakan', 50);
+            $table->string('kerusakan', 50)->nullable();
             $table->string('jenisPerangkat', 50);
             $table->boolean('status')->default(false);
-            $table->integer('totalBiaya');
-            $table->integer('keuntungan');
+            $table->integer('totalBiaya')->nullable();
+            $table->integer('keuntungan')->nullable();
             $table->date('tglMasuk');
-            $table->date('tglSelesai');
+            $table->date('tglSelesai')->nullable();
 
             
             $table->unsignedBigInteger('idCustomer');
             $table->foreign('idCustomer')->references('idCustomer')->on('customers')->onDelete('cascade');
 
-            $table->unsignedBigInteger('idProduct');
+            $table->unsignedBigInteger('idProduct')->nullable();
             $table->foreign('idProduct')->references('idProduct')->on('products')->onDelete('cascade');
 
             $table->unsignedBigInteger('idFinance')->nullable();
-             $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('set null');
+             $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('cascade');
 
 
             $table->timestamps();

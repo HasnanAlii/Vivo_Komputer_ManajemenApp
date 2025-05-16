@@ -29,6 +29,11 @@ public function sales()
 {
     return $this->hasOne(Sale::class, 'idFinance', 'idFinance');
 }
+ public function services()
+    {
+        return $this->hasOne(Service::class, 'idFinance', 'idFinance');
+    }
+
 
 
 

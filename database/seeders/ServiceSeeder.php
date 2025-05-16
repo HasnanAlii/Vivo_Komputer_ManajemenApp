@@ -2,32 +2,43 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
 use App\Models\Service;
 use App\Models\Customer;
-use App\Models\User;
 use App\Models\Product;
-use Illuminate\Database\Seeder;
 
 class ServiceSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        $customer = Customer::first();
-        $user = User::first();
+        // Ambil satu produk yang sesuai untuk perbaikan (misalnya kategori = 'Sparepart')
         $product = Product::first();
 
+        // Jika tidak ditemukan, pakai produk pertama
+        if (!$product) {
+            $product = Product::first();
+        }
+
+        // Buat customer dummy
+        $customer = Customer::create([
+            'nama' => 'Rina Putri',
+            'noTelp' => '08234567890',
+            'alamat' => 'Jl. Merdeka No.99',
+        ]);
+
+        // Buat data service
         Service::create([
-            'nomorFaktur' => 1001,
-            'kerusakan' => 'Broken Screen',
+            'nomorFaktur' => 2025001,
+            'kerusakan' => 'Keyboard rusak',
             'jenisPerangkat' => 'Laptop',
             'status' => false,
-            'totalBiaya' => 150,
-            'keuntungan' => 50,
-            'tglMasuk' => '2025-05-01',
-            'tglSelesai' => '2025-05-10',
+            'totalBiaya' => 300000,
+            'keuntungan' => 100000,
+            'tglMasuk' => now()->subDays(5),
+            'tglSelesai' => now()->addDays(3),
             'idCustomer' => $customer->idCustomer,
-            'idUser' => $user->idUser,
             'idProduct' => $product->idProduct,
+            'idFinance' => null,
         ]);
     }
 }

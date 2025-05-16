@@ -30,10 +30,10 @@ class Service extends Model
     }
 
 
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'idProduct');
-    }
+ public function products()
+{
+    return $this->belongsTo(Product::class, 'idProduct', 'idProduct');
+}
 
     public function notifications()
     {

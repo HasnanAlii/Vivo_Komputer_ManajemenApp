@@ -89,8 +89,8 @@
                                 {{ $finance->purchasings->nomorFaktur }}
                             @elseif($finance->sales)
                                 {{ $finance->sales->nomorFaktur }}
-                            @else
-                                <span class="text-gray-400 italic">-</span>
+                            @elseif($finance->services)
+                                {{ $finance->services->nomorFaktur }}
                             @endif
                         </td>
 

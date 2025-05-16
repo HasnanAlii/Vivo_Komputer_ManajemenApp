@@ -11,7 +11,8 @@ class ProductSeeder extends Seeder
     {
         DB::table('products')->insert([
             [
-                'namaBarang'  => 'Televisi 42 Inch',
+                'namaBarang'  => '
+                 42 Inch',
                 'jumlah'      => 10,
                 'hargaBeli'   => 3000000,
                 'hargaJual'   => 3500000,
