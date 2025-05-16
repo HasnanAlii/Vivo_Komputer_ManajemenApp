@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ProductImport;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -11,25 +12,25 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::orderBy('namaBarang')->paginate(5);
+        $products = Product::with('category')->orderBy('namaBarang')->paginate(5);
         return view('products.index', compact('products'));
     }
 
 
     public function create()
     {
-        return view('products.create');
+         $categories = Category::orderBy('namaKategori')->get();
+        return view('products.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'namaBarang' => 'required|max:50',
-            'kategori' => 'required|max:20',
-            'kodeBarang' => 'required|integer|unique:products,kodeBarang',
+           'namaBarang' => 'required|max:50',
             'jumlah' => 'required|integer',
             'hargaBeli' => 'required|integer',
             'hargaJual' => 'required|integer',
+            'idCategory' => 'required|exists:categories,idCategory',
         ]);
 
         Product::create($request->all());

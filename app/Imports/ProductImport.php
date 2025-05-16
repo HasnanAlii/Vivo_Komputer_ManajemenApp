@@ -12,11 +12,10 @@ class ProductImport implements ToModel, WithHeadingRow
     {
         return new Product([
             'namaBarang'  => $row['namabarang'],
-            'kategori'    => $row['kategori'],
-            'kodeBarang'  => $row['kodebarang'],
             'jumlah'      => $row['jumlah'],
             'hargaBeli'   => $row['hargabeli'],
             'hargaJual'   => $row['hargajual'],
+            'idCategory'  => $row['idcategory'], 
         ]);
     }
 }

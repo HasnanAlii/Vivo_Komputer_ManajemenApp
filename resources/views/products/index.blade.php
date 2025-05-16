@@ -56,8 +56,13 @@
                                <tr class="{{ $i % 2 === 0 ? 'bg-white' : 'bg-gray-50' }} border-t hover:bg-gray-100">
                                    <td class="px-4 py-2 text-center">{{ $products->firstItem() + $i }}</td>
                                    <td class="px-4 py-2 font-medium">{{ $product->namaBarang }}</td>
-                                   <td class="px-4 py-2 ">{{ $product->kategori }}</td>
-                                   <td class="px-4 py-2 text-center">{{ $product->kodeBarang }}</td>
+                                   <td class="px-4 py-2">
+                                        {{ $product->category->kodeKategori ?? 'Kategori Tidak Ditemukan' }}
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        {{ $product->category->namaKategori ?? 'Kategori Tidak Ditemukan' }}
+                                    </td>
+
                                    <td class="px-4 py-2 text-center">{{ $product->jumlah }}</td>
                                    <td class="px-4 py-2 ">Rp {{ number_format($product->hargaJual) }}</td>
                                    <td class="px-4 py-2 text-center space-x-2">

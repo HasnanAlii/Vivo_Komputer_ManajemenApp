@@ -32,5 +32,9 @@ class Purchasing extends Model
     {
         return $this->belongsTo(Finance::class, 'idFinance', 'idFinance');
     }
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'idCategory', 'idCategory');
+    }
 
 }

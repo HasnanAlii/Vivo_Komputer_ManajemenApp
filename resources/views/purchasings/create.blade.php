@@ -52,17 +52,25 @@
                             </svg>
                             Data Produk
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="namaBarang" placeholder="Nama Barang" class="input" required>
-                            <input type="text" name="kategori" placeholder="Kategori" class="input">
-                            <input type="text" name="kodeBarang" placeholder="Kode Barang" class="input">
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                            <input type="number" name="jumlah" placeholder="Jumlah" class="input" required min="1">
-                            <input type="number" name="hargaBeli" placeholder="Harga Beli /pcs" class="input" required min="0">
-                            <input type="number" name="hargaJual" placeholder="Harga Jual /pcs" class="input" required min="0">
-                        </div>
-                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="text" name="namaBarang" placeholder="Nama Barang" class="input" required>
+
+                    <select name="idCategory" class="input" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->idCategory }}">{{ $category->namaKategori }}</option>
+                        @endforeach
+                    </select>
+
+                    {{-- Kode Barang dihapus karena tidak dipakai --}}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <input type="number" name="jumlah" placeholder="Jumlah" class="input" required min="1">
+                    <input type="number" name="hargaBeli" placeholder="Harga Beli /pcs" class="input" required min="0">
+                    <input type="number" name="hargaJual" placeholder="Harga Jual /pcs" class="input" required min="0">
+                </div>
+
 
                     <!-- Submit -->
                     <div class="pt-6 flex justify-end">

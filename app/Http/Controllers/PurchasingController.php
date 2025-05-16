@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Purchasing;
 use App\Models\User;
 use App\Models\Customer;
@@ -10,7 +11,6 @@ use Illuminate\Http\Request;
 use App\Models\Finance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class PurchasingController extends Controller
 {
@@ -20,92 +20,90 @@ class PurchasingController extends Controller
         return view('purchasings.index', compact('purchasings'));
     }
 
-
     public function create()
     {
-        return view('purchasings.create');
+        $categories = Category::all();
+        return view('purchasings.create', compact('categories'));
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        // Hapus validasi nomorFaktur karena diisi otomatis
-        'nama' => 'required|string|max:255',
-        'noTelp' => 'nullable|string|max:20',
-        'alamat' => 'nullable|string|max:255',
-        'namaBarang' => 'required|string|max:255',
-        'kategori' => 'nullable|string|max:100',
-        'kodeBarang' => 'nullable|string|max:100',
-        'jumlah' => 'required|integer|min:1',
-        'hargaBeli' => 'required|numeric|min:0',
-        'hargaJual' => 'required|numeric|min:0',
-        'keterangan' => 'nullable|string|max:100',
-    ]);
-
-    DB::beginTransaction();
-
-try {
-    // Simpan customer dulu
-    $customer = Customer::create([
-        'nama' => $request->nama,
-        'noTelp' => $request->noTelp,
-        'alamat' => $request->alamat,
-    ]);
-    
-
-    // Cari atau buat product
-    $product = Product::where('namaBarang', $request->namaBarang)
-        ->orWhere('kodeBarang', $request->kodeBarang)
-        ->first();
-
-    if (!$product) {
-        $product = Product::create([
-            'namaBarang' => $request->namaBarang,
-            'kategori' => $request->kategori,
-            'kodeBarang' => $request->kodeBarang,
-            'jumlah' => $request->jumlah,
-            'hargaBeli' => $request->hargaBeli,
-            'hargaJual' => $request->hargaBeli * 1.2,
+    {
+        $request->validate([
+            // Hapus nomorFaktur validasi karena auto generate
+            'nama' => 'required|string|max:255',
+            'noTelp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:255',
+            'namaBarang' => 'required|string|max:255',
+            'idCategory' => 'required|exists:categories,idCategory',  // pakai idCategory
+            'jumlah' => 'required|integer|min:1',
+            'hargaBeli' => 'required|numeric|min:0',
+            'hargaJual' => 'required|numeric|min:0',
+            'keterangan' => 'nullable|string|max:100',
         ]);
-    } else {
-        $product->jumlah += $request->jumlah;
-        $product->hargaBeli = $request->hargaBeli;
-        $product->save();
+
+        DB::beginTransaction();
+
+        try {
+            // Simpan customer dulu
+            $customer = Customer::create([
+                'nama' => $request->nama,
+                'noTelp' => $request->noTelp,
+                'alamat' => $request->alamat,
+            ]);
+
+            // Cari product berdasarkan namaBarang dan idCategory (tidak pakai kodeBarang)
+            $product = Product::where('namaBarang', $request->namaBarang)
+                ->where('idCategory', $request->idCategory)
+                ->first();
+
+            if (!$product) {
+                $product = Product::create([
+                    'namaBarang' => $request->namaBarang,
+                    'idCategory' => $request->idCategory,
+                    'jumlah' => $request->jumlah,
+                    'hargaBeli' => $request->hargaBeli,
+                    'hargaJual' => $request->hargaJual,
+                ]);
+            } else {
+                $product->jumlah += $request->jumlah;
+                $product->hargaBeli = $request->hargaBeli;
+                $product->hargaJual = $request->hargaJual;
+                $product->save();
+            }
+
+            $total = $request->jumlah * $request->hargaBeli;
+            $keuntungan = ($request->hargaJual - $request->hargaBeli) * $request->jumlah;
+
+            // Simpan finance
+            $finance = Finance::create([
+                'dana' => -$total,
+                'modal' => $total,
+                'totalDana' => $keuntungan,
+                'tanggal' => now(),
+                'keuntungan' => $keuntungan,
+                'keterangan' => 'Pembelian produk',
+            ]);
+
+            // Simpan purchasing
+            Purchasing::create([
+                'nomorFaktur' => rand(10000000, 99999999),
+                'jumlah' => $request->jumlah,
+                'hargaBeli' => $request->hargaBeli,
+                'hargaJual' => $request->hargaJual,
+                'keuntungan' => $keuntungan,
+                'tanggal' => now(),
+                'idCustomer' => $customer->idCustomer,
+                'idProduct' => $product->idProduct,
+                'idFinance' => $finance->idFinance,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('purchasing.index')->with('success', 'Transaksi berhasil disimpan.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Gagal menyimpan transaksi: ' . $e->getMessage()]);
+        }
     }
-
-    $total = $request->jumlah * $request->hargaBeli;
-    $keuntungan = ($request->hargaJual - $request->hargaBeli) * $request->jumlah;
-
-    // 1. Simpan dulu Finance, dapatkan idFinance
-    $finance = Finance::create([
-        'dana' => -$total,
-        'modal' => $total,
-        'totalDana' => $keuntungan,
-        'tanggal' => now(),
-        'keuntungan' => $keuntungan,
-        'keterangan' => 'Pembelian produk',
-    ]);
-
-    // 2. Simpan Purchasing dengan idFinance yang sudah dibuat
-    Purchasing::create([
-        'nomorFaktur' => rand(10000000, 99999999),
-        'jumlah' => $request->jumlah,
-        'hargaBeli' => $request->hargaBeli,
-        'hargaJual' => $request->hargaJual,
-        'keuntungan'=> $keuntungan,
-        'tanggal' => now(),
-        'idCustomer' => $customer->idCustomer,
-        'idProduct' => $product->idProduct,
-        'idFinance' => $finance->idFinance, // <- pastikan ini terisi!
-    ]);
-
-    DB::commit();
-
-    return redirect()->route('purchasing.index')->with('success', 'Transaksi berhasil disimpan.');
-
-} catch (\Exception $e) {
-    DB::rollBack();
-    return redirect()->back()->withErrors(['error' => 'Gagal menyimpan transaksi: ' . $e->getMessage()]);
-}
-}
 }

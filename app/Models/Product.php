@@ -13,7 +13,18 @@ class Product extends Model
 
     protected $primaryKey = 'idProduct';
 
-    protected $fillable = ['namaBarang', 'kategori', 'kodeBarang', 'jumlah', 'hargaBeli', 'hargaJual'];
+    protected $fillable = [
+        'namaBarang',
+        'jumlah',
+        'hargaBeli',
+        'hargaJual',
+        'idCategory'
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'idCategory', 'idCategory');
+    }
 
     public function sales()
     {
