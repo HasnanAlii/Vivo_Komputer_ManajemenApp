@@ -14,6 +14,10 @@ class MoneyOut extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = ['keterangan', 'jumlah', 'tanggal', 'idFinance'];
+    
+    protected $casts = [
+        'tanggal' => 'date',  // otomatis jadi objek Carbon
+    ];
 
     public function finance()
     {

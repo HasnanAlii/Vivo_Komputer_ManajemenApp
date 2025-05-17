@@ -1,6 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
+            
             <h2 class="font-bold text-2xl text-gray-800">Daftar Pembelian</h2>
         </div>
     </x-slot>

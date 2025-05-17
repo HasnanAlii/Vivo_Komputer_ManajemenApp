@@ -34,8 +34,10 @@ class PurchasingController extends Controller
     }
 
     $purchasings = $query->paginate(8);
- 
-        return view('reports.purchasing', compact('purchasings'));
+    $totalModal = $query->sum('hargaBeli');
+    $totalKeuntungan = $query->sum('hargaJual')-$query->sum('hargaBeli');
+    $totalPendapatan= $totalModal + $totalKeuntungan;
+        return view('reports.purchasing', compact('purchasings' ,'totalModal', 'totalKeuntungan', 'totalPendapatan' ));
     }
 
     public function create()

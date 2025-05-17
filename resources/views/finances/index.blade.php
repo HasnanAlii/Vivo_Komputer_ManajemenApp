@@ -1,6 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-2xl text-gray-800 leading-tight flex items-center space-x-2">
+            <button type="button" onclick="window.location='{{ route('dashboard') }}'"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                    🔙
+                </button>
             <span>📊</span>
             <span>Halaman Keuangan</span>
         </h2>
@@ -18,7 +22,7 @@
                 class="bg-green-400 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-semibold shadow flex items-center gap-2">
                 <span>➕</span> Tambah Modal
             </button>
-
+            
             <!-- Modal Dana Masuk -->
             <div x-show="showDanaMasuk" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
                 <div @click.away="showDanaMasuk = false" class="bg-white rounded-xl shadow-lg w-[400px] p-6">
@@ -29,35 +33,58 @@
                         <x-text-input label="Keterangan" name="keterangan" />
                         <x-number-input label="Jumlah (Rp)" name="jumlah" />
                         <x-date-input label="Tanggal" name="tanggal" :value="date('Y-m-d')" />
+           
                         <x-modal-buttons @close="showDanaMasuk = false" color="green"/>
                     </form>
                 </div>
             </div>
         </div>
+        <div class="flex justify-end items-center space-x-4">
+                <form method="GET" action="{{ route('finances.index') }}" class="flex space-x-4 items-center">
+                    {{-- <label for="filter" class="font-medium">Filter:</label> --}}
+                    <select name="filter" id="filter" onchange="this.form.submit()" class="border rounded px-3 py-2">
+                    <option value="harian" {{ $filter == 'harian' ? 'selected' : '' }}>Harian</option>
+                    <option value="mingguan" {{ $filter == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
+                    <option value="bulanan" {{ $filter == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
+                    <option value="tahunan" {{ $filter == 'tahunan' ? 'selected' : '' }}>Tahunan</option>
+                    </select>
 
-        {{-- Tombol Dana Keluar --}}
-        <div x-data="{ showModal: false }">
-            <button 
+                    <input type="date" name="date" value="{{ $date }}" onchange="this.form.submit()" class="border rounded px-3 py-2">
+
+                    <noscript>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Filter</button>
+                    </noscript>
+                </form>
+            <a href="{{ route('finances.indexx') }}"
+                class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition">
+                <span class="ml-2">Lihat Pengeluaran</span>
+            </a>
+
+            {{-- Tombol Dana Keluar --}}
+            <div x-data="{ showModal: false }">
+                <button 
                 @click="showModal = true"
                 class="bg-red-400 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-semibold shadow flex items-center gap-2">
                 <span>➖</span> Tambah Pengeluaran
-            </button>
+                </button>
 
-            <!-- Modal Dana Keluar -->
-            <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
+                <!-- Modal Dana Keluar -->
+                <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
                 <div @click.away="showModal = false" class="bg-white rounded-xl shadow-lg w-[400px] p-6">
                     <h2 class="text-xl font-bold mb-4 text-red-700">📤 Tambah Dana Keluar</h2>
                     <form action="{{ route('finances.store') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="tipe" value="keluar">
-                        <x-text-input label="Keterangan" name="keterangan" />
-                        <x-number-input label="Jumlah (Rp)" name="jumlah" />
-                        <x-date-input label="Tanggal" name="tanggal" :value="date('Y-m-d')" />
-                        <x-modal-buttons @close="showModal = false" color="red"/>
+                    @csrf
+                    <input type="hidden" name="tipe" value="keluar">
+                    <x-text-input label="Keterangan" name="keterangan" />
+                    <x-number-input label="Jumlah (Rp)" name="jumlah" />
+                    <x-date-input label="Tanggal" name="tanggal" :value="date('Y-m-d')" />
+                    <x-modal-buttons @close="showModal = false" color="red"/>
                     </form>
                 </div>
+                </div>
             </div>
-        </div>
+            </div>
+
     </div>
 
     {{-- Tabel Data Keuangan --}}
@@ -120,7 +147,7 @@
             <span>Rp {{ number_format($totalKeuntungan, 0, ',', '.') }}</span>
         </div>
         <div class="flex items-center space-x-2 text-green-700">
-            <span class="text-2xl">🤑</span>
+            <span class="text-2xl">💰</span>
             <span>Total Dana:</span>
             <span>Rp {{ number_format($totalDana, 0, ',', '.') }}</span>
         </div>

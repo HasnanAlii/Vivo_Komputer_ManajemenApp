@@ -5,8 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
-        <svg style="display: none;">
+        <title>Vivo Komputer</title>
+        {{-- <svg style="display: none;"> --}}
+        <link rel="icon" href="{{ asset('assets/images/vivologo.png') }}" type="image/png">
+
         <symbol id="icon-archive-box" viewBox="0 0 24 24"><path d="..." /></symbol>
         <symbol id="icon-shopping-cart" viewBox="0 0 24 24"><path d="..." /></symbol>
         <symbol id="icon-document-text" viewBox="0 0 24 24"><path d="..." /></symbol>

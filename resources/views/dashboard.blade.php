@@ -30,7 +30,7 @@
                             <x-dashboard.card title="Pembelian Produk" route="{{ route('purchasing.create') }}" icon="shopping-cart" />
 
                             <!-- Kartu 3: Laporan Penjualan -->
-                            <x-dashboard.card title="Laporan Penjualan" route="{{ route('reports.index') }}" icon="document-text" />
+                            <x-dashboard.card title="Laporan" route="{{ route('reports.index') }}" icon="document-text" />
 
                             <!-- Kartu 4: Keuangan -->
                             <x-dashboard.card title="Keuangan" route="{{ route('finances.index') }}" icon="currency-dollar" />

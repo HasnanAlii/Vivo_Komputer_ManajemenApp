@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\MoneyOutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchasingController;
 use App\Http\Controllers\ServiceController;
@@ -46,6 +47,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [FinanceController::class, 'create'])->name('create');
         Route::post('/', [FinanceController::class, 'store'])->name('store');
         Route::post('/+', [FinanceController::class, 'storee'])->name('storee');
+        Route::get('/moneyOut', [MoneyOutController::class, 'index'])->name('indexx');
+
+        
 
     });
     

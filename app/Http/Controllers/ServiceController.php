@@ -34,9 +34,14 @@ class ServiceController extends Controller
     }
 
     $services = $query->paginate(8);
+    $totalModal = $query->sum('totalHarga') - $query->sum('biayaJasa');
+    $totalKeuntungan = $query->sum('biayaJasa');
+    $totalPendapatan= $query->sum('totalHarga');
 
-        return view('reports.service', compact('services'));
+        return view('reports.service', compact('services' ,'totalModal', 'totalKeuntungan', 'totalPendapatan' ));
     }
+     
+       
 
     public function create()
     {

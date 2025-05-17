@@ -50,6 +50,10 @@
                         {{-- Tombol Submit --}}
                     </form>
                     <div class="text-center pt-5">
+                          <button type="button" onclick="window.location='{{ route('service.index') }}'"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                    🔙
+                </button>
                         <button type="submit" class="bg-blue-600 justify-center hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded inline-flex ">
                             
                             Cetak Struk

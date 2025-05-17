@@ -2,6 +2,10 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-bold text-2xl text-gray-800 flex items-center gap-2">
+                 <button type="button" onclick="window.location='{{ route('dashboard') }}'"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                    🔙
+                </button>
                 🛒 <span>Halaman Kasir</span>
             </h2>
             <form action="{{ route('sales.index') }}" method="GET" class="flex items-center space-x-2">

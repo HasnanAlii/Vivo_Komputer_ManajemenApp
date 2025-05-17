@@ -1,6 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <button type="button" onclick="window.location='{{ route('reports.index') }}'"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                    🔙
+                </button>
             {{ __('Laporan Penjualan') }}
         </h2>
     </x-slot>
@@ -39,6 +43,7 @@
                                 <th class="px-4 py-2 border text-left">Kategori Produk</th>
                                 <th class="px-4 py-2 border">Jumlah</th>
                                 <th class="px-4 py-2 border text-left">Keuntungan</th>
+
                                 <th class="px-4 py-2 border text-left">Total Harga</th>
                                 <th class="px-4 py-2 border text-center">Tanggal</th>
                             </tr>
@@ -51,6 +56,7 @@
                                     <td class="px-4 py-2 border">{{ $item->product->namaBarang ?? '-' }}</td>
                                     <td class="px-4 py-2 border">{{ $item->product->category->namaKategori ?? '-' }}</td>
                                     <td class="px-4 py-2 border text-center">{{ $item->jumlah }}</td>
+                                   
                                     <td class="px-4 py-2 border text-blue-600 font-semibold"> Rp {{ number_format($item->keuntungan, 0, ',', '.') }}</td>
                                     <td class="px-4 py-2 border text-green-600 font-semibold">
                                         Rp {{ number_format($item->totalHarga, 0, ',', '.') }}
@@ -71,6 +77,23 @@
                      <div class="mt-4 ">
                      {{ $sales ->links('vendor.pagination.custom') }}
                      </div>
+                      <div class="mt-6 p-5 bg-blue-50 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-6 text-lg font-semibold shadow-inner ">
+                    <div class="mx-auto flex items-center space-x-2 text-red-700">
+                        <span class="text-2xl">💰</span>
+                        <span>Total Modal:</span>
+                        <span>Rp {{ number_format($totalModal, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-blue-700">
+                        <span class="text-2xl">📈</span>
+                        <span>Total Keuntungan:</span>
+                        <span>Rp {{ number_format($totalKeuntungan, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-green-700">
+                        <span class="text-2xl">💰</span>
+                        <span>Total Pendapatan:</span>
+                        <span>Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</span>
+                    </div>
+                </div>
                   
                 </div>
                 

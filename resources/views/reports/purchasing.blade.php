@@ -1,6 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
+             <button type="button" onclick="window.location='{{ route('reports.index') }}'"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                    🔙
+                </button>
             <h2 class="font-bold text-2xl text-gray-800">Daftar Pembelian</h2>
         </div>
     </x-slot>
@@ -69,10 +73,28 @@
                             @endforelse
                         </tbody>
                     </table>
+                    {{-- Ringkasan Total --}}
                 </div>
                 <div class="mt-4 ">
-                 {{ $purchasings->links('vendor.pagination.custom') }}
-              </div>
+                    {{ $purchasings->links('vendor.pagination.custom') }}
+                </div>
+                <div class="mt-6 p-5 bg-blue-50 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-6 text-lg font-semibold shadow-inner ">
+                    <div class="mx-auto flex items-center space-x-2 text-red-700">
+                        <span class="text-2xl">💰</span>
+                        <span>Total Modal:</span>
+                        <span>Rp {{ number_format($totalModal, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-blue-700">
+                        <span class="text-2xl">📈</span>
+                        <span>Total Keuntungan:</span>
+                        <span>Rp {{ number_format($totalKeuntungan, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-green-700">
+                        <span class="text-2xl">💰</span>
+                        <span>Total Pendapatan:</span>
+                        <span>Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</span>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

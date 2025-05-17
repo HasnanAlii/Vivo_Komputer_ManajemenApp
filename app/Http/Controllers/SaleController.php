@@ -45,16 +45,16 @@ class SaleController extends Controller
             return redirect()->route('sales.index');
         }
     }
-
+    
     // Jika tidak ada search, cukup tampilkan semua transaksi belum lunas
     $sales = Sale::whereNull('idFinance')->with('product')->get();
     return view('sales.index', compact('sales'));
 }
 public function indexx(Request $request)
-    {
-     $query = Sale::with(['product']);
+{
+    $query = Sale::with(['product']);
 
-    // Filter berdasarkan parameter yang dikirim
+    // Filter berdasarkan parameter
     switch ($request->filter) {
         case 'today':
             $query->whereDate('tanggal', Carbon::today());
@@ -70,10 +70,22 @@ public function indexx(Request $request)
             $query->whereYear('tanggal', Carbon::now()->year);
             break;
     }
-    $sales = $query->paginate(8);
-        return view('reports.sale', compact('sales'));
-    }
 
+    // Clone query sebelum paginate agar sum() ikut terfilter
+    $filteredQuery = clone $query;
+
+    // Eksekusi paginate
+    $sales = $query->paginate(8);
+
+    // Gunakan query hasil clone untuk perhitungan total
+    $totalModal = $filteredQuery->sum('totalHarga') - $filteredQuery->sum('keuntungan');
+    $totalKeuntungan = $filteredQuery->sum('keuntungan');
+    $totalPendapatan = $totalModal + $totalKeuntungan;
+
+    return view('reports.sale', compact('sales', 'totalModal', 'totalKeuntungan', 'totalPendapatan'));
+}
+
+     
 
 
     public function create()
@@ -219,6 +231,6 @@ public function indexx(Request $request)
         $bayar = session('bayar') ?? $sales->first()->finance->dana ?? $total;
         $kembalian = $bayar - $total;
 
-        return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian'));
+        return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian','modal'));
     }
 }

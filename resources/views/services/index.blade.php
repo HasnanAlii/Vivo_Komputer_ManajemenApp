@@ -1,6 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+              <button type="button" onclick="window.location='{{ route('dashboard') }}'"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                    🔙
+                </button>
             {{ __('Data Perbaikan Barang') }}
         </h2>
     </x-slot>

@@ -14,15 +14,53 @@ use Illuminate\Support\Str;
 
 class FinanceController extends Controller
 {
-public function index()
+public function index(Request $request)
 {
-    $finances = Finance::with(['purchasings', 'sales'])->paginate(10); 
-    $totalModal = Finance::sum('modal');
-    $totalKeuntungan = Finance::sum('keuntungan');
-    $totalDana = Finance::sum('keuntungan') + Finance::sum('modal');
+    $filter = $request->input('filter', 'harian'); // default harian
+    $date = $request->input('date', date('Y-m-d')); // default hari ini
 
-    return view('finances.index', compact('finances', 'totalModal', 'totalKeuntungan', 'totalDana'));
+    $query = Finance::with(['purchasings', 'sales']);
+
+    switch ($filter) {
+        case 'harian':
+            $query->whereDate('tanggal', $date);
+            break;
+
+        case 'mingguan':
+            // Ambil minggu berdasarkan tanggal
+            $carbonDate = \Carbon\Carbon::parse($date);
+            $startOfWeek = $carbonDate->startOfWeek(); // Senin
+            $endOfWeek = $carbonDate->endOfWeek(); // Minggu
+            $query->whereBetween('tanggal', [$startOfWeek, $endOfWeek]);
+            break;
+
+        case 'bulanan':
+            $carbonDate = \Carbon\Carbon::parse($date);
+            $query->whereYear('tanggal', $carbonDate->year)
+                  ->whereMonth('tanggal', $carbonDate->month);
+            break;
+
+        case 'tahunan':
+            $carbonDate = \Carbon\Carbon::parse($date);
+            $query->whereYear('tanggal', $carbonDate->year);
+            break;
+
+        default:
+            // Jika filter tidak valid, default ke harian
+            $query->whereDate('tanggal', $date);
+            break;
+    }
+
+    $finances = $query->paginate(10)->withQueryString();
+
+    // Hitung total dari data yang sudah difilter
+    $totalModal = $query->sum('modal');
+    $totalKeuntungan = $query->sum('keuntungan');
+    $totalDana = $totalModal + $totalKeuntungan;
+
+    return view('finances.index', compact('finances', 'totalModal', 'totalKeuntungan', 'totalDana', 'filter', 'date'));
 }
+
 
 
 public function store(Request $request)
