@@ -35,11 +35,16 @@
                         <x-date-input label="Tanggal" name="tanggal" :value="date('Y-m-d')" />
            
                         <x-modal-buttons @close="showDanaMasuk = false" color="green"/>
-                    </form>
+                    </form>  
                 </div>
+               
             </div>
         </div>
         <div class="flex justify-end items-center space-x-4">
+             <a href="{{ route('finances.print', ['filter' => $filter, 'date' => $date]) }}"
+                class="bg-red-500 hover:bg-red-800 text-white font-semibold px-4 py-2 rounded shadow inline-flex items-center gap-2">
+                🖨️ Export PDF
+            </a>
                 <form method="GET" action="{{ route('finances.index') }}" class="flex space-x-4 items-center">
                     {{-- <label for="filter" class="font-medium">Filter:</label> --}}
                     <select name="filter" id="filter" onchange="this.form.submit()" class="border rounded px-3 py-2">
@@ -60,29 +65,7 @@
                 <span class="ml-2">Lihat Pengeluaran</span>
             </a>
 
-            {{-- Tombol Dana Keluar --}}
-            <div x-data="{ showModal: false }">
-                <button 
-                @click="showModal = true"
-                class="bg-red-400 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-semibold shadow flex items-center gap-2">
-                <span>➖</span> Tambah Pengeluaran
-                </button>
-
-                <!-- Modal Dana Keluar -->
-                <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
-                <div @click.away="showModal = false" class="bg-white rounded-xl shadow-lg w-[400px] p-6">
-                    <h2 class="text-xl font-bold mb-4 text-red-700">📤 Tambah Dana Keluar</h2>
-                    <form action="{{ route('finances.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="tipe" value="keluar">
-                    <x-text-input label="Keterangan" name="keterangan" />
-                    <x-number-input label="Jumlah (Rp)" name="jumlah" />
-                    <x-date-input label="Tanggal" name="tanggal" :value="date('Y-m-d')" />
-                    <x-modal-buttons @close="showModal = false" color="red"/>
-                    </form>
-                </div>
-                </div>
-            </div>
+         
             </div>
 
     </div>
@@ -134,6 +117,9 @@
         </table>
     </div>
 
+    <div class="mt-4 ">
+  {{ $finances->links('vendor.pagination.custom') }}
+   </div>
     {{-- Ringkasan Total --}}
     <div class="mt-6 p-5 bg-blue-50 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-6 text-lg font-semibold shadow-inner ">
         <div class="mx-auto flex items-center space-x-2 text-red-700">
@@ -153,9 +139,6 @@
         </div>
     </div>
 </div>
-                <div class="mt-4 ">
-              {{ $finances->links('vendor.pagination.custom') }}
-               </div>
 
 
 </x-app-layout>

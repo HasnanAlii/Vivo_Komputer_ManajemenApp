@@ -20,7 +20,20 @@
 
             <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-gray-700">Daftar Service</h3>
+                    <form method="GET" action="{{ route('service.index') }}" class="mb-4 flex items-center gap-4">
+                    <label for="filter" class="font-semibold text-gray-700">Filter Waktu:</label>
+                    <select name="filter" id="filter" class="border rounded pr-8 py-1 ">
+                        <option value="" {{ request('filter') == '' ? 'selected' : '' }}>Semua</option>
+                        <option value="harian" {{ request('filter') == 'harian' ? 'selected' : '' }}>Harian</option>
+                        <option value="mingguan" {{ request('filter') == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
+                        <option value="bulanan" {{ request('filter') == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
+                    </select>
+                    
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded shadow">
+                        Filter
+                    </button>
+                </form>
+
                     <a href="{{ route('service.create') }}" 
                        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center shadow">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
@@ -91,11 +104,11 @@
                             @endforelse
                         </tbody>
                     </table>
-                    <div class="mt-4 ">
-                              {{ $services->links('vendor.pagination.custom') }}
-                               </div>
                 </div>
-
+                <div class="mt-4 ">
+                          {{ $services->links('vendor.pagination.custom') }}
+                </div>
+                
             </div>
         </div>
     </div>

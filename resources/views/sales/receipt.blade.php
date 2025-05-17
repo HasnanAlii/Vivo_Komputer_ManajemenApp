@@ -18,11 +18,14 @@
         </div>
     </div>
 
-    <div class="mt-6 text-center no-print">
-        <a href="{{ route('sales.index') }}" class="text-blue-500 underline">← Kembali ke Kasir</a>
-        <br>
+    <div class="mt-6 text-center no-print gap-5">
+        <button type="button" onclick="window.location='{{ route('sales.index') }}'"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                    🔙
+                </button>
+   
         <button onclick="window.print()" 
-        class="bg-blue-600 hover:bg-blue-700 text-white mt-4 px-4 py-2 rounded">
+        class="bg-blue-600 hover:bg-blue-700 text-white ml-4 mt-4 px-4 py-2 rounded">
         🖨️ Cetak Nota
         </button>
     </div>

@@ -12,81 +12,70 @@ use Illuminate\Support\Facades\DB;
 class SaleController extends Controller
 {
     public function index(Request $request)
-{
-    if ($request->has('search') && !empty($request->search)) {
-        $product = Product::where('namaBarang', 'like', '%' . $request->search . '%')->first();
+    {
+        if ($request->has('search') && !empty($request->search)) {
+            $product = Product::where('namaBarang', 'like', '%' . $request->search . '%')->first();
 
-        if ($product) {
-            // Cari semua transaksi yang belum memiliki idFinance
-            $salesWithNoFinance = Sale::whereNull('idFinance')->get();
+            if ($product) {
+                $salesWithNoFinance = Sale::whereNull('idFinance')->get();
+                $existingFaktur = $salesWithNoFinance->first()->nomorFaktur ?? rand(10000000, 99999999);
+                $existingSale = $salesWithNoFinance->where('idProduct', $product->idProduct)->first();
 
-            // Ambil nomor faktur yang sudah ada atau buat baru
-            $existingFaktur = $salesWithNoFinance->first()->nomorFaktur ?? rand(10000000, 99999999);
+                if ($existingSale) {
+                    $existingSale->jumlah += 1;
+                    $existingSale->totalHarga = $existingSale->jumlah * $product->hargaJual;
+                    $existingSale->keuntungan = $existingSale->jumlah * ($product->hargaJual - $product->hargaBeli);
+                    $existingSale->save();
+                } else {
+                    Sale::create([
+                        'nomorFaktur' => $existingFaktur,
+                        'jumlah' => 1,
+                        'totalHarga' => $product->hargaJual,
+                        'keuntungan' => $product->hargaJual - $product->hargaBeli,
+                        'tanggal' => now(),
+                        'idProduct' => $product->idProduct,
+                    ]);
+                }
 
-            // Cek apakah produk sudah ada dalam transaksi yang belum memiliki idFinance
-            $existingSale = $salesWithNoFinance->where('idProduct', $product->idProduct)->first();
-
-            if ($existingSale) {
-                $existingSale->jumlah += 1;
-                $existingSale->totalHarga = $existingSale->jumlah * $product->hargaJual;
-                $existingSale->keuntungan = $existingSale->jumlah * ($product->hargaJual - $product->hargaBeli);
-                $existingSale->save();
-            } else {
-                Sale::create([
-                    'nomorFaktur' => $existingFaktur,
-                    'jumlah' => 1,
-                    'totalHarga' => $product->hargaJual,
-                    'keuntungan' => $product->hargaJual - $product->hargaBeli,
-                    'tanggal' => now(),
-                    'idProduct' => $product->idProduct,
-                ]);
+                return redirect()->route('sales.index')->with('success', 'Produk berhasil ditambahkan.');
             }
 
-            return redirect()->route('sales.index');
+            return redirect()->route('sales.index')->with('error', 'Produk tidak ditemukan.');
         }
-    }
-    
-    // Jika tidak ada search, cukup tampilkan semua transaksi belum lunas
-    $sales = Sale::whereNull('idFinance')->with('product')->get();
-    return view('sales.index', compact('sales'));
-}
-public function indexx(Request $request)
-{
-    $query = Sale::with(['product']);
 
-    // Filter berdasarkan parameter
-    switch ($request->filter) {
-        case 'today':
-            $query->whereDate('tanggal', Carbon::today());
-            break;
-        case 'week':
-            $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
-            break;
-        case 'month':
-            $query->whereMonth('tanggal', Carbon::now()->month)
-                  ->whereYear('tanggal', Carbon::now()->year);
-            break;
-        case 'year':
-            $query->whereYear('tanggal', Carbon::now()->year);
-            break;
+        $sales = Sale::whereNull('idFinance')->with('product')->get();
+        return view('sales.index', compact('sales'));
     }
 
-    // Clone query sebelum paginate agar sum() ikut terfilter
-    $filteredQuery = clone $query;
+    public function indexx(Request $request)
+    {
+        $query = Sale::with(['product']);
 
-    // Eksekusi paginate
-    $sales = $query->paginate(8);
+        switch ($request->filter) {
+            case 'today':
+                $query->whereDate('tanggal', Carbon::today());
+                break;
+            case 'week':
+                $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+                break;
+            case 'month':
+                $query->whereMonth('tanggal', Carbon::now()->month)
+                      ->whereYear('tanggal', Carbon::now()->year);
+                break;
+            case 'year':
+                $query->whereYear('tanggal', Carbon::now()->year);
+                break;
+        }
 
-    // Gunakan query hasil clone untuk perhitungan total
-    $totalModal = $filteredQuery->sum('totalHarga') - $filteredQuery->sum('keuntungan');
-    $totalKeuntungan = $filteredQuery->sum('keuntungan');
-    $totalPendapatan = $totalModal + $totalKeuntungan;
+        $filteredQuery = clone $query;
+        $sales = $query->paginate(8);
 
-    return view('reports.sale', compact('sales', 'totalModal', 'totalKeuntungan', 'totalPendapatan'));
-}
+        $totalModal = $filteredQuery->sum('totalHarga') - $filteredQuery->sum('keuntungan');
+        $totalKeuntungan = $filteredQuery->sum('keuntungan');
+        $totalPendapatan = $totalModal + $totalKeuntungan;
 
-     
-
+        return view('reports.sale', compact('sales', 'totalModal', 'totalKeuntungan', 'totalPendapatan'));
+    }
 
     public function create()
     {
@@ -106,8 +95,12 @@ public function indexx(Request $request)
             'idProduct' => 'required|exists:products,idProduct',
         ]);
 
-        Sale::create($request->all());
-        return redirect()->route('sales.index');
+        try {
+            Sale::create($request->all());
+            return redirect()->route('sales.index')->with('success', 'Transaksi berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menyimpan transaksi: ' . $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -120,107 +113,131 @@ public function indexx(Request $request)
 
     public function update(Request $request, $id)
     {
-        $sale = Sale::findOrFail($id);
-        $sale->update($request->all());
-        return redirect()->route('sales.index');
+        try {
+            $sale = Sale::findOrFail($id);
+            $sale->update($request->all());
+            return redirect()->route('sales.index')->with('success', 'Transaksi berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memperbarui transaksi: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)
     {
-        Sale::destroy($id);
-        return redirect()->route('sales.index');
+        try {
+            Sale::destroy($id);
+            return redirect()->route('sales.index')->with('success', 'Produk berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('sales.index')->with('error', 'Gagal menghapus transaksi: ' . $e->getMessage());
+        }
     }
 
     public function increase($id)
     {
-        $sale = Sale::findOrFail($id);
-        $sale->jumlah += 1;
-        $sale->totalHarga = $sale->jumlah * $sale->product->hargaJual;
-        $sale->keuntungan = $sale->jumlah * ($sale->product->hargaJual - $sale->product->hargaBeli);
-        $sale->save();
+        try {
+            $sale = Sale::findOrFail($id);
+            $sale->jumlah += 1;
+            $sale->totalHarga = $sale->jumlah * $sale->product->hargaJual;
+            $sale->keuntungan = $sale->jumlah * ($sale->product->hargaJual - $sale->product->hargaBeli);
+            $sale->save();
 
-        return redirect()->route('sales.index');
+            return redirect()->route('sales.index')->with('success', 'Jumlah berhasil ditambah.');
+        } catch (\Exception $e) {
+            return redirect()->route('sales.index')->with('error', 'Gagal menambah jumlah: ' . $e->getMessage());
+        }
     }
+
     public function decrease($id)
     {
-        $sale = Sale::findOrFail($id);
-        $sale->jumlah -= 1;
-        $sale->totalHarga = $sale->jumlah * $sale->product->hargaJual;
-        $sale->keuntungan = $sale->jumlah * ($sale->product->hargaJual - $sale->product->hargaBeli);
-        $sale->save();
+        try {
+            $sale = Sale::findOrFail($id);
+            $sale->jumlah -= 1;
+            $sale->totalHarga = $sale->jumlah * $sale->product->hargaJual;
+            $sale->keuntungan = $sale->jumlah * ($sale->product->hargaJual - $sale->product->hargaBeli);
+            $sale->save();
 
-        return redirect()->route('sales.index');
+            return redirect()->route('sales.index')->with('success', 'Jumlah berhasil dikurangi.');
+        } catch (\Exception $e) {
+            return redirect()->route('sales.index')->with('error', 'Gagal mengurangi jumlah: ' . $e->getMessage());
+        }
     }
 
-    public function checkout(Request $request)
-    {
-        $request->validate([
-            'bayar' => 'required|numeric|min:0',
-            'total' => 'required|numeric|min:0',
+   public function checkout(Request $request)
+{
+    $request->validate([
+        'bayar' => 'required|numeric|min:0',
+        'total' => 'required|numeric|min:0',
+    ]);
+
+    $sales = Sale::with('product')->whereNull('idFinance')->get();
+
+    if ($sales->isEmpty()) {
+        return redirect()->route('sales.index')->with([
+            'message' => 'Tidak ada item yang dibeli.',
+            'alert-type' => 'error'
         ]);
+    }
 
-        $sales = Sale::with('product')
-            ->whereNull('idFinance')
-            ->get();
+    $totalBayar = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaJual);
+    $totalModal = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaBeli);
+    $totalKeuntungan = $totalBayar - $totalModal;
+    $bayar = $request->bayar;
 
-        if ($sales->isEmpty()) {
-            return redirect()->route('sales.index')->with('error', 'Tidak ada item yang dibeli.');
-        }
+    if ($bayar < $totalBayar) {
+        return redirect()->route('sales.index')->with([
+            'message' => 'Pembayaran kurang dari total.',
+            'alert-type' => 'error'
+        ]);
+    }
 
-        $totalBayar = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaJual);
-        $totalModal = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaBeli);
-        $totalKeuntungan = $totalBayar - $totalModal;
-        $bayar = $request->bayar;
+    DB::beginTransaction();
 
-        if ($bayar < $totalBayar) {
-            return redirect()->route('sales.index')->with('error', 'Pembayaran kurang dari total.');
-        }
+    try {
+        $finance = new Finance();
+        $finance->dana = $totalBayar;
+        $finance->modal = $totalModal;
+        $finance->keuntungan = $totalKeuntungan;
+        $finance->totalDana = $totalBayar;
+        $finance->tanggal = now()->toDateString();
+        $finance->keterangan = 'penjualan produk';
+        $finance->save();
 
-        DB::beginTransaction();
+        foreach ($sales as $sale) {
+            $product = $sale->product;
 
-        try {
-            $finance = new Finance();
-            $finance->dana = 'masuk';
-            $finance->dana = $totalBayar;
-            $finance->modal = $totalModal;
-            $finance->keuntungan = $totalKeuntungan;
-            $finance->totalDana = $totalBayar;
-            $finance->tanggal = now()->toDateString();
-            $finance->keterangan = 'penjualan produk';
-            $finance->save();
-
-            foreach ($sales as $sale) {
-                $product = $sale->product;
-
-                if ($product->jumlah < $sale->jumlah) {
-                    throw new \Exception("Stok barang '{$product->namaBarang}' tidak mencukupi.");
-                }
-
-                $product->jumlah -= $sale->jumlah;
-                $product->save();
-
-                $sale->idFinance = $finance->idFinance;
-                $sale->totalHarga = $sale->jumlah * $product->hargaJual;
-                $sale->keuntungan = $sale->jumlah * ($product->hargaJual - $product->hargaBeli);
-                $sale->tanggal = now();
-                $sale->save();
+            if ($product->jumlah < $sale->jumlah) {
+                throw new \Exception("Stok barang '{$product->namaBarang}' tidak mencukupi.");
             }
 
-            DB::commit();
-            session()->flash('bayar', $bayar);
+            $product->jumlah -= $sale->jumlah;
+            $product->save();
 
-            return redirect()->route('sales.print', ['id' => $finance->idFinance]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('sales.index')->with('error', 'Gagal menyelesaikan transaksi: ' . $e->getMessage());
+            $sale->idFinance = $finance->idFinance;
+            $sale->totalHarga = $sale->jumlah * $product->hargaJual;
+            $sale->keuntungan = $sale->jumlah * ($product->hargaJual - $product->hargaBeli);
+            $sale->tanggal = now();
+            $sale->save();
         }
+
+        DB::commit();
+        session()->flash('bayar', $bayar);
+
+        return redirect()->route('sales.print', ['id' => $finance->idFinance])->with([
+            'message' => 'Transaksi berhasil diselesaikan.',
+            'alert-type' => 'success'
+        ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->route('sales.index')->with([
+            'message' => 'Gagal menyelesaikan transaksi: ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ]);
     }
+}
 
     public function printReceipt($id)
     {
-        $sales = Sale::with(['product', 'finance'])
-                    ->where('idFinance', $id)
-                    ->get();
+        $sales = Sale::with(['product', 'finance'])->where('idFinance', $id)->get();
 
         if ($sales->isEmpty()) {
             return redirect()->route('sales.index')->with('error', 'Transaksi tidak ditemukan.');
@@ -231,6 +248,6 @@ public function indexx(Request $request)
         $bayar = session('bayar') ?? $sales->first()->finance->dana ?? $total;
         $kembalian = $bayar - $total;
 
-        return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian','modal'));
+        return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian', 'modal'));
     }
 }

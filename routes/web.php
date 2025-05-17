@@ -44,12 +44,12 @@ Route::middleware('auth')->group(function () {
 
      Route::prefix('finances')->name('finances.')->group(function () {
         Route::get('/', [FinanceController::class, 'index'])->name('index');
+        Route::get('/finances/print', [FinanceController::class, 'exportPDF'])->name('print');
         Route::get('/create', [FinanceController::class, 'create'])->name('create');
         Route::post('/', [FinanceController::class, 'store'])->name('store');
         Route::post('/+', [FinanceController::class, 'storee'])->name('storee');
         Route::get('/moneyOut', [MoneyOutController::class, 'index'])->name('indexx');
-
-        
+        Route::get('/finances/MoneyOut', [MoneyOutController::class, 'exportPDFF'])->name('printt');
 
     });
     

@@ -16,82 +16,131 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
-
     public function create()
     {
-         $categories = Category::orderBy('namaKategori')->get();
+        $categories = Category::orderBy('namaKategori')->get();
         return view('products.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-           'namaBarang' => 'required|max:50',
+            'namaBarang' => 'required|max:50',
             'jumlah' => 'required|integer',
             'hargaBeli' => 'required|integer',
             'hargaJual' => 'required|integer',
             'idCategory' => 'required|exists:categories,idCategory',
         ]);
 
-        Product::create($request->all());
+        try {
+            Product::create($request->all());
+            $notification = [
+                'message' => 'Penambahan produk berhasil dilakukan',
+                'alert-type' => 'success'
+            ];
+        } catch (\Exception $e) {
+            $notification = [
+                'message' => 'Gagal menambahkan produk: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ];
+        }
 
-        return redirect()->route('product.index');
-        
+        return redirect()->route('product.index')->with($notification);
     }
-    
 
     public function edit(Product $product)
     {
         return view('products.edit', compact('product'));
     }
 
-    
     public function editt(Product $product)
     {
         return view('products.edit2', compact('product'));
     }
+
     public function updatee(Request $request, Product $product)
     {
         $request->validate([
-           
             'hargaJual' => 'required|integer',
         ]);
 
-        $product->update($request->all());
+        try {
+            $product->update($request->all());
+            $notification = [
+                'message' => 'Harga jual produk berhasil diperbarui',
+                'alert-type' => 'success'
+            ];
+        } catch (\Exception $e) {
+            $notification = [
+                'message' => 'Gagal memperbarui harga: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ];
+        }
 
-        return redirect()->route('sales.index');
+        return redirect()->route('sales.index')->with($notification);
     }
-    
-  
 
     public function update(Request $request, Product $product)
     {
         $request->validate([
             'namaBarang' => 'required|max:50',
-          
             'jumlah' => 'required|integer',
-           
             'hargaJual' => 'required|integer',
         ]);
 
-        $product->update($request->all());
+        try {
+            $product->update($request->all());
+            $notification = [
+                'message' => 'Produk berhasil diperbarui',
+                'alert-type' => 'success'
+            ];
+        } catch (\Exception $e) {
+            $notification = [
+                'message' => 'Gagal memperbarui produk: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ];
+        }
 
-        return redirect()->route('product.index');
+        return redirect()->route('product.index')->with($notification);
     }
 
     public function destroy(Product $product)
     {
-        $product->delete();
-        return redirect()->route('product.index');
+        try {
+            $product->delete();
+            $notification = [
+                'message' => 'Produk berhasil dihapus',
+                'alert-type' => 'success'
+            ];
+        } catch (\Exception $e) {
+            $notification = [
+                'message' => 'Gagal menghapus produk: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ];
+        }
+
+        return redirect()->route('product.index')->with($notification);
     }
+
     public function import(Request $request)
-{
-    $request->validate([
-        'file' => 'required|file|mimes:xlsx,xls'
-    ]);
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls'
+        ]);
 
-    Excel::import(new ProductImport, $request->file('file'));
+        try {
+            Excel::import(new ProductImport, $request->file('file'));
+            $notification = [
+                'message' => 'Produk berhasil diimpor',
+                'alert-type' => 'success'
+            ];
+        } catch (\Exception $e) {
+            $notification = [
+                'message' => 'Gagal mengimpor produk: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ];
+        }
 
-    return redirect()->route('product.index')->with('success', 'Produk berhasil diimpor.');
-}
+        return redirect()->route('product.index')->with($notification);
+    }
 }

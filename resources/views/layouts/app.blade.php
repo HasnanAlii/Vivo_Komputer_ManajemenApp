@@ -6,8 +6,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Vivo Komputer</title>
-        {{-- <svg style="display: none;"> --}}
         <link rel="icon" href="{{ asset('assets/images/vivologo.png') }}" type="image/png">
+        {{-- <svg style="display: none;"> --}}
 
         <symbol id="icon-archive-box" viewBox="0 0 24 24"><path d="..." /></symbol>
         <symbol id="icon-shopping-cart" viewBox="0 0 24 24"><path d="..." /></symbol>
@@ -22,6 +22,10 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -58,6 +62,63 @@
         });
     });
 </script>
+<script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+        });
+        @if (Session::has('message'))
+            var type = "{{ Session::get('alert-type') }}";
+            switch (type) {
+                case 'info':
+                    Toast.fire({
+                        icon: 'info',
+                        title: "{{ Session::get('message') }}"
+                    });
+                    break;
+                case 'success':
+                    Toast.fire({
+                        icon: 'success',
+                        title: "{{ Session::get('message') }}"
+                    });
+                    break;
+                case 'warning':
+                    Toast.fire({
+                        icon: 'warning',
+                        title: "{{ Session::get('message') }}"
+                    });
+                    break;
+                case 'error':
+                    Toast.fire({
+                        icon: 'error',
+                        title: "{{ Session::get('message') }}"
+                    });
+                    break;
+                case 'dialog_error':
+                    Swal.fire({
+                        icon: 'error',
+                        title: "Ooops",
+                        text: "{{ Session::get('message') }}",
+                        timer: 3000
+                    });
+                    break;
+            }
+        @endif
+        @if ($errors->any())
+            @php $list = null; @endphp
+            @foreach ($errors->all() as $error)
+                @php $list .= '<li>'.$error.'</li>'; @endphp
+            @endforeach
+            Swal.fire({
+                type: 'error',
+                title: "Ooops",
+                html: "<ul>{!! $list !!}</ul>",
+            });
+        @endif
+    </script>
+
 
     </body>
 </html>
