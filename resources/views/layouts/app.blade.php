@@ -51,7 +51,7 @@
 <script>
     $(document).ready(function() {
         $('#select-sparepart').select2({
-            placeholder: "-- Pilih Sparepart --",
+            placeholder: "   Pilih Sparepart",
             allowClear: true
         });
     });

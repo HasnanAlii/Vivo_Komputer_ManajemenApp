@@ -35,7 +35,7 @@
                                 <th class="px-4 py-2 border">Nama Pelanggan</th>
                                 <th class="px-4 py-2 border">Barang</th>
                                 <th class="px-4 py-2 border">Kerusakan</th>
-                                {{-- <th class="px-4 py-2 border">Sparepart Digunakan</th> --}}
+                                <th class="px-4 py-2 border">Sparepart Digunakan</th>
                                 <th class="px-4 py-2 border">Biaya Service</th>
 
                                 <th class="px-4 py-2 border">Tgl Masuk</th>
@@ -51,8 +51,14 @@
                                     <td class="px-4 py-2 border">{{ $service->customer->nama }}</td>
                                     <td class="px-4 py-2 border">{{ $service->jenisPerangkat }}</td>
                                     <td class="px-4 py-2 border">{{ $service->kerusakan ?? '-' }}</td>
-                                    {{-- <td class="px-4 py-2 border"> {{ $service->products->namaBarang ?? '-' }}</td> --}}
-                                    <td class="px-4 py-2 border">{{ $service->totalBiaya }}</td>
+                                 <td class="px-4 py-2 border">
+                                    @if($service->products->isNotEmpty())
+                                        {{ $service->products->pluck('namaBarang')->join(', ') }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                    <td class="px-4 py-2 border">{{ $service->totalHarga }}</td>
 
                                     <td class="px-4 py-2 border">{{ $service->tglMasuk }}</td>
                                     <td class="px-4 py-2 border">{{ $service->tglSelesai ?? '-' }}</td>

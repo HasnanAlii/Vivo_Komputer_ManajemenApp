@@ -11,41 +11,45 @@ use Illuminate\Support\Facades\DB;
 class SaleController extends Controller
 {
     public function index(Request $request)
-    {
-        if ($request->has('search') && !empty($request->search)) {
-            $product = Product::where('namaBarang', 'like', '%' . $request->search . '%')->first();
+{
+    if ($request->has('search') && !empty($request->search)) {
+        $product = Product::where('namaBarang', 'like', '%' . $request->search . '%')->first();
 
-            if ($product) {
-                $existingSale = Sale::whereNull('idFinance')
-                                    ->where('idProduct', $product->idProduct)
-                                    ->first();
+        if ($product) {
+            // Cari semua transaksi yang belum memiliki idFinance
+            $salesWithNoFinance = Sale::whereNull('idFinance')->get();
 
-                if ($existingSale) {
-                    $existingSale->jumlah += 1;
-                    $existingSale->totalHarga = $existingSale->jumlah * $product->hargaJual;
-                    $existingSale->keuntungan = $existingSale->jumlah * ($product->hargaJual - $product->hargaBeli);
-                    $existingSale->save();
-                } else {
-                    Sale::create([
-                        'nomorFaktur' => rand(10000000, 99999999),
-                        'jumlah' => 1,
-                        'totalHarga' => $product->hargaJual,
-                        'keuntungan' => $product->hargaJual - $product->hargaBeli,
-                        'tanggal' => now(),
-                        'idProduct' => $product->idProduct,
-                    ]);
-                }
+            // Ambil nomor faktur yang sudah ada atau buat baru
+            $existingFaktur = $salesWithNoFinance->first()->nomorFaktur ?? rand(10000000, 99999999);
 
-                return redirect()->route('sales.index');
+            // Cek apakah produk sudah ada dalam transaksi yang belum memiliki idFinance
+            $existingSale = $salesWithNoFinance->where('idProduct', $product->idProduct)->first();
+
+            if ($existingSale) {
+                $existingSale->jumlah += 1;
+                $existingSale->totalHarga = $existingSale->jumlah * $product->hargaJual;
+                $existingSale->keuntungan = $existingSale->jumlah * ($product->hargaJual - $product->hargaBeli);
+                $existingSale->save();
+            } else {
+                Sale::create([
+                    'nomorFaktur' => $existingFaktur,
+                    'jumlah' => 1,
+                    'totalHarga' => $product->hargaJual,
+                    'keuntungan' => $product->hargaJual - $product->hargaBeli,
+                    'tanggal' => now(),
+                    'idProduct' => $product->idProduct,
+                ]);
             }
+
+            return redirect()->route('sales.index');
         }
-
-        $sales = Sale::with('product')
-                     ->whereNull('idFinance')
-                     ->get();
-
-        return view('sales.index', compact('sales'));
     }
+
+    // Jika tidak ada search, cukup tampilkan semua transaksi belum lunas
+    $sales = Sale::whereNull('idFinance')->with('product')->get();
+    return view('sales.index', compact('sales'));
+}
+
 
     public function create()
     {
@@ -94,6 +98,16 @@ class SaleController extends Controller
     {
         $sale = Sale::findOrFail($id);
         $sale->jumlah += 1;
+        $sale->totalHarga = $sale->jumlah * $sale->product->hargaJual;
+        $sale->keuntungan = $sale->jumlah * ($sale->product->hargaJual - $sale->product->hargaBeli);
+        $sale->save();
+
+        return redirect()->route('sales.index');
+    }
+    public function decrease($id)
+    {
+        $sale = Sale::findOrFail($id);
+        $sale->jumlah -= 1;
         $sale->totalHarga = $sale->jumlah * $sale->product->hargaJual;
         $sale->keuntungan = $sale->jumlah * ($sale->product->hargaJual - $sale->product->hargaBeli);
         $sale->save();

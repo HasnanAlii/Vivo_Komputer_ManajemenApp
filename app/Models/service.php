@@ -39,4 +39,15 @@ class Service extends Model
     {
         return $this->hasMany(Notification::class, 'idService');
     }
+    public function getProductsAttribute()
+{
+    if (!$this->idProduct) {
+        return collect();  // Kembalikan collection kosong, bukan null
+    }
+
+    $ids = explode(',', $this->idProduct);
+
+    return Product::whereIn('idProduct', $ids)->get();
+}
+
 }
