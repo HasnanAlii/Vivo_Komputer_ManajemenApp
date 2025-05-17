@@ -2,43 +2,43 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Service;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\Finance;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class ServiceSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
-        // Ambil satu produk yang sesuai untuk perbaikan (misalnya kategori = 'Sparepart')
-        $product = Product::first();
+        $customers = Customer::pluck('idCustomer')->toArray();
+        $finances = Finance::pluck('idFinance')->toArray();
 
-        // Jika tidak ditemukan, pakai produk pertama
-        if (!$product) {
-            $product = Product::first();
+        for ($i = 0; $i < 50; $i++) {
+            $tglMasuk = Carbon::now()->subDays(rand(0, 30));
+            $tglSelesai = rand(0, 1) ? $tglMasuk->copy()->addDays(rand(1, 5)) : null;
+
+            Service::create([
+                'nomorFaktur'   => rand(100000, 999999),
+                'kerusakan'     => rand(0, 1) ? fake()->word() : null,
+                'jenisPerangkat'=> fake()->randomElement(['Laptop', 'HP', 'Printer', 'Monitor']),
+                'status'        => $tglSelesai ? true : false,
+                'biayaJasa'     => rand(50000, 150000),
+                'totalHarga'    => rand(100000, 300000),
+                'keuntungan'    => rand(50000, 150000),
+                'tglMasuk'      => $tglMasuk,
+                'tglSelesai'    => $tglSelesai,
+                'idCustomer'    => fake()->randomElement($customers),
+                'idProduct'     => 1,
+                'idFinance'     => fake()->randomElement($finances),
+            ]);
         }
-
-        // Buat customer dummy
-        $customer = Customer::create([
-            'nama' => 'Rina Putri',
-            'noTelp' => '08234567890',
-            'alamat' => 'Jl. Merdeka No.99',
-        ]);
-
-        // Buat data service
-        Service::create([
-            'nomorFaktur' => 2025001,
-            'kerusakan' => 'Keyboard rusak',
-            'jenisPerangkat' => 'Laptop',
-            'status' => false,
-            'totalBiaya' => 300000,
-            'keuntungan' => 100000,
-            'tglMasuk' => now()->subDays(5),
-            'tglSelesai' => now()->addDays(3),
-            'idCustomer' => $customer->idCustomer,
-            'idProduct' => $product->idProduct,
-            'idFinance' => null,
-        ]);
     }
 }

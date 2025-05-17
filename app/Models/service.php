@@ -42,7 +42,7 @@ class Service extends Model
     public function getProductsAttribute()
 {
     if (!$this->idProduct) {
-        return collect();  // Kembalikan collection kosong, bukan null
+        return collect();  
     }
 
     $ids = explode(',', $this->idProduct);

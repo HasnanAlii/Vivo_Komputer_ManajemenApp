@@ -17,6 +17,27 @@ class ServiceController extends Controller
         return view('services.index', compact('services'));
     }
 
+    
+     public function indexx(Request $request)
+    {
+       $query = Service::with(['customer', 'products']);
+
+    // Filter opsional
+    if ($request->filter == 'today') {
+        $query->whereDate('tglMasuk', \Carbon\Carbon::today());
+    } elseif ($request->filter == 'week') {
+        $query->whereBetween('tglMasuk', [now()->startOfWeek(), now()->endOfWeek()]);
+    } elseif ($request->filter == 'month') {
+        $query->whereMonth('tglMasuk', now()->month);
+    } elseif ($request->filter == 'year') {
+        $query->whereYear('tglMasuk', now()->year);
+    }
+
+    $services = $query->paginate(8);
+
+        return view('reports.service', compact('services'));
+    }
+
     public function create()
     {
         $products = Product::where('idCategory', 1)->get();
@@ -69,7 +90,7 @@ class ServiceController extends Controller
         $totalHarga = $modal + $biayaJasa;
         $keuntungan = $totalHarga - $modal;
 
-        $service = Service::create([
+       Service::create([
             'nomorFaktur' => rand(10000000, 99999999),
             'kerusakan' => $request->kerusakan,
             'jenisPerangkat' => $request->jenisPerangkat,

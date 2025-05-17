@@ -44,7 +44,7 @@
                     <div class="mb-8">
                         <label class="block text-gray-700 font-semibold mb-2 ">🧩 Pilih Sparepart</label>
                         <select id="select-sparepart" name="idProduct[]" multiple
-                            class="w-full border rounded-lg select2 focus:ring-2 focus:ring-blue-400 ">
+                            class="w-full border rounded-lg select2 focus:ring-2 focus:ring-blue-400 h-60">
                             @php
                                 $selectedProducts = explode(',', $service->idProduct ?? '');
                             @endphp

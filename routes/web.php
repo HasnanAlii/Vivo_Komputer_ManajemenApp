@@ -73,11 +73,16 @@ Route::middleware('auth')->group(function () {
     // Reports routes
     Route::prefix('reports')->name('reports.')->group(function () {
         Route::get('/', [ReportController::class, 'index'])->name('index');
-        Route::get('/sales', [ReportController::class, 'sales'])->name('sales');
-        Route::get('/purchasing', [ReportController::class, 'purchasing'])->name('purchasing');
-        Route::get('/service', [ReportController::class, 'service'])->name('service');
-        Route::get('/inventory', [ReportController::class, 'inventory'])->name('inventory');
-        Route::get('/finance', [ReportController::class, 'finance'])->name('finance');
+        Route::get('/purchasings', [PurchasingController::class, 'indexx'])->name('purchasings');
+        Route::get('/purchasing/print', [ReportController::class, 'print'])->name('print');
+        Route::get('/sales', [SaleController::class, 'indexx'])->name('sales');
+        Route::get('/sales/print', [ReportController::class, 'printt'])->name('printt');
+        Route::get('/services', [ServiceController::class, 'indexx'])->name('services');
+        Route::get('/services/print', [ReportController::class, 'printtt'])->name('printtt');
+
+
+
+
     });
     
     // Inventory routes

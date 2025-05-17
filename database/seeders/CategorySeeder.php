@@ -12,7 +12,7 @@ class CategorySeeder extends Seeder
         DB::table('categories')->insert([
             [
                 'kodeKategori' => 'ELEC001',
-                'namaKategori' => 'Elektronik',
+                'namaKategori' => 'Sparepart',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

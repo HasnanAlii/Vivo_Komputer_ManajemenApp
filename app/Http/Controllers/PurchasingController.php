@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Purchasing;
-use App\Models\User;
 use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Finance;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PurchasingController extends Controller
@@ -18,6 +17,25 @@ class PurchasingController extends Controller
     {
         $purchasings = Purchasing::with(['user', 'customer', 'product'])->get();
         return view('purchasings.index', compact('purchasings'));
+    }
+       public function indexx(Request $request)
+    {
+         $query = Purchasing::with(['customer', 'product']);
+
+    if ($request->filter == 'today') {
+        $query->whereDate('tanggal', Carbon::today());
+    } elseif ($request->filter == 'week') {
+        $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+    } elseif ($request->filter == 'month') {
+        $query->whereMonth('tanggal', Carbon::now()->month)
+              ->whereYear('tanggal', Carbon::now()->year);
+    } elseif ($request->filter == 'year') {
+        $query->whereYear('tanggal', Carbon::now()->year);
+    }
+
+    $purchasings = $query->paginate(8);
+ 
+        return view('reports.purchasing', compact('purchasings'));
     }
 
     public function create()

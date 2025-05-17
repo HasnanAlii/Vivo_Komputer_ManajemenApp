@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id('idLaporan');
-            $table->date('tanggal');
-            $table->enum('jenisLaporan', ['harian', 'mingguan', 'bulanan', 'tahunan']);
+            
 
 
             $table->unsignedBigInteger('idSale')->nullable();

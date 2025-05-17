@@ -7,72 +7,50 @@ use App\Models\Sale;
 use App\Models\Purchasing;
 use App\Models\Service;
 use App\Models\Finance;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use \Illuminate\Database\Eloquent\Builder;
 
 class ReportController extends Controller
 {
-    public function index()
-    {
-        $reports = Report::all();
-        return view('reports.index', compact('reports'));
-    }
+public function index()
+{
+    return view('reports.index');
+}
+public function print(Request $request)
+{
+    // logika serupa seperti index untuk ambil $purchasings dengan filter
+    $query = Purchasing::with(['customer', 'product']);
 
-    public function create()
-    {
-        $sales = Sale::all();
-        $purchasings = Purchasing::all();
-        $services = Service::all();
-        $finances = Finance::all();
+    // filter logika sama seperti di atas...
 
-        return view('reports.create', compact('sales', 'purchasings', 'services', 'finances'));
-    }
+    $purchasings = $query->get();
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'tanggal' => 'required|date',
-            'jenisLaporan' => 'required|in:harian,mingguan,bulanan,tahunan',
-            'idSale' => 'nullable|exists:sales,idSale',
-            'idPurchasing' => 'nullable|exists:purchasings,idPurchasing',
-            'idService' => 'nullable|exists:services,idService',
-            'idFinance' => 'nullable|exists:finance,idFinance',
-        ]);
+    $pdf = PDF::loadView('purchasing.pdf', compact('purchasings'));
+    return $pdf->stream('laporan-pembelian.pdf');
+}
+public function printt(Request $request)
+{
+    // logika serupa seperti index untuk ambil $purchasings dengan filter
+    $query = Purchasing::with(['customer', 'product']);
 
-        Report::create($request->all());
+    // filter logika sama seperti di atas...
 
-        return redirect()->route('reports.index')->with('success', 'Report created successfully.');
-    }
+    $purchasings = $query->get();
 
-    public function edit(Report $report)
-    {
-        $sales = Sale::all();
-        $purchasings = Purchasing::all();
-        $services = Service::all();
-        $finances = Finance::all();
+    $pdf = Pdf::loadView('purchasing.pdf', compact('purchasings'));
+    return $pdf->stream('laporan-pembelian.pdf');
+}
+public function printtt(Request $request)
+{
+    // logika serupa seperti index untuk ambil $purchasings dengan filter
+    $query = Purchasing::with(['customer', 'product']);
 
-        return view('reports.edit', compact('report', 'sales', 'purchasings', 'services', 'finances'));
-    }
+    // filter logika sama seperti di atas...
 
-    public function update(Request $request, Report $report)
-    {
-        $request->validate([
-            'tanggal' => 'required|date',
-            'jenisLaporan' => 'required|in:harian,mingguan,bulanan,tahunan',
-            'idSale' => 'nullable|exists:sales,idSale',
-            'idPurchasing' => 'nullable|exists:purchasings,idPurchasing',
-            'idService' => 'nullable|exists:services,idService',
-            'idFinance' => 'nullable|exists:finance,idFinance',
-        ]);
+    $purchasings = $query->get();
 
-        $report->update($request->all());
-
-        return redirect()->route('reports.index')->with('success', 'Report updated successfully.');
-    }
-
-    public function destroy(Report $report)
-    {
-        $report->delete();
-
-        return redirect()->route('reports.index')->with('success', 'Report deleted successfully.');
-    }
+    $pdf = PDF::loadView('purchasing.pdf', compact('purchasings'));
+    return $pdf->stream('laporan-pembelian.pdf');
+}
 }

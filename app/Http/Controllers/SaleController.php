@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Finance;
 use App\Models\Sale;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -49,6 +50,30 @@ class SaleController extends Controller
     $sales = Sale::whereNull('idFinance')->with('product')->get();
     return view('sales.index', compact('sales'));
 }
+public function indexx(Request $request)
+    {
+     $query = Sale::with(['product']);
+
+    // Filter berdasarkan parameter yang dikirim
+    switch ($request->filter) {
+        case 'today':
+            $query->whereDate('tanggal', Carbon::today());
+            break;
+        case 'week':
+            $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            break;
+        case 'month':
+            $query->whereMonth('tanggal', Carbon::now()->month)
+                  ->whereYear('tanggal', Carbon::now()->year);
+            break;
+        case 'year':
+            $query->whereYear('tanggal', Carbon::now()->year);
+            break;
+    }
+    $sales = $query->paginate(8);
+        return view('reports.sale', compact('sales'));
+    }
+
 
 
     public function create()
