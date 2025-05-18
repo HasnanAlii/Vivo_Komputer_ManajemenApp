@@ -8,6 +8,8 @@ use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ServiceController extends Controller
 {
@@ -107,7 +109,7 @@ class ServiceController extends Controller
         $totalHarga = $modal + $biayaJasa;
         $keuntungan = $totalHarga - $modal;
 
-        Service::create([
+        $service = Service::create([
             'nomorFaktur' => rand(10000000, 99999999),
             'kerusakan' => $request->kerusakan,
             'jenisPerangkat' => $request->jenisPerangkat,
@@ -122,7 +124,7 @@ class ServiceController extends Controller
             'idFinance' => null,
         ]);
 
-        return redirect()->route('service.index')->with([
+        return redirect()->route('service.struk', ['id' => $service->idService])->with([
             'message' => 'Data service berhasil disimpan.',
             'alert-type' => 'success'
         ]);
@@ -134,9 +136,28 @@ class ServiceController extends Controller
     }
 }
 
+
+public function struk($id)
+{
+    $service = Service::with('customer')->findOrFail($id);
+
+    // Jika perlu ambil detail produk berdasarkan ID di string
+    $products = [];
+    if ($service->idProduct) {
+        $productIds = explode(',', $service->idProduct);
+        $products = Product::whereIn('idProduct', $productIds)->get();
+    }
+
+    return view('services.struk', compact('service', 'products'));
+}
+
+
+
+
 public function update(Request $request, $id)
 {
     $service = Service::findOrFail($id);
+    $oldStatus = $service->status;
 
     $request->validate([
         'kerusakan' => 'required|string|max:50',
@@ -193,10 +214,22 @@ public function update(Request $request, $id)
         $service->tglSelesai = $request->status ? now() : null;
         $service->save();
 
-        return redirect()->route('service.index')->with([
-            'message' => 'Data service berhasil diperbarui.',
-            'alert-type' => 'success'
-        ]);
+        
+     if ($oldStatus == 0 && $request->status == 1) {
+    $this->sendWhatsappNotification($service);
+    
+        return redirect()->route('service.struk', ['id' => $service->idService])->with([
+        'message' => 'Pesan pemberitahuan berhasil terkirim dan data service diperbarui.',
+        'alert-type' => 'success'
+            ]);
+        } else {
+            return redirect()->route('service.index')->with([
+                'message' => 'Data service berhasil diperbarui.',
+                'alert-type' => 'success'
+            ]);
+        }
+
+
     } catch (\Exception $e) {
         return back()->with([
             'message' => 'Gagal memperbarui data service. ' . $e->getMessage(),
@@ -204,14 +237,29 @@ public function update(Request $request, $id)
         ])->withInput();
     }
 }
+private function sendWhatsappNotification($service)
+{
+    $customer = $service->customer; 
+    $phone = $customer->noTelp;     
+    $message = "Halo {$customer->nama}, service Anda dengan {$service->kerusakan} sudah SELESAI.\nSilakan datang ke toko untuk mengambil barang Anda.\nTerima kasih telah menggunakan layanan kami. 🙏";
 
+  $response = Http::withHeaders([
+    'Authorization' => 'L9PaGYokqbue5GHechJR',
+])->post('https://api.fonnte.com/send', [
+    'target' => $phone,
+    'message' => $message,
+    'countryCode' => '62',
+]);
 
-    public function edit($id)
-    {
+Log::info('Fonnte response:', $response->json());
+
+}
+ public function edit($id)
+{
         $service = Service::findOrFail($id);
         $products = Product::where('idCategory', 1)->get();
         return view('services.update', compact('service', 'products'));
-    }
+}
 
   
 }

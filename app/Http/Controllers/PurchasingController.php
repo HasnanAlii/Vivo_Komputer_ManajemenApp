@@ -73,7 +73,7 @@ class PurchasingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'nullable|string|max:255',
             'noTelp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string|max:255',
             'namaBarang' => 'required|string|max:255',

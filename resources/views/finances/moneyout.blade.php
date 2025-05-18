@@ -56,7 +56,7 @@
                     <!-- Modal Dana Keluar -->
                     <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
                         <div @click.away="showModal = false" class="bg-white rounded-xl shadow-lg w-[400px] p-6">
-                            <h2 class="text-xl font-bold mb-4 text-grey-700">📤 Tambah Dana Keluar</h2>
+                            <h2 class="text-xl font-bold mb-4 text-grey-700">📤 Tambah Pengeluaran</h2>
                             <form action="{{ route('finances.store') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="tipe" value="keluar">

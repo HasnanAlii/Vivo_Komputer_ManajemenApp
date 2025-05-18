@@ -42,7 +42,7 @@
                             <input type="text" name="kerusakan" class="border px-3 py-2 rounded w-full" placeholder="Kerusakan">
                             <button type="submit" class="bg-blue-600 justify-center hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded inline-flex ">
                                 
-                                💾 Simpan Transaksi
+                                💾 Simpan 
                             </button>
                         </div>
                         
@@ -54,10 +54,10 @@
                         class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
                     🔙
                 </button>
-                        <button type="submit" class="bg-blue-600 justify-center hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded inline-flex ">
+                        {{-- <button type="submit" class="bg-blue-600 justify-center hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded inline-flex ">
                             
                             Cetak Struk
-                        </button>
+                        </button> --}}
                     </div>
                     </div>
             </div>

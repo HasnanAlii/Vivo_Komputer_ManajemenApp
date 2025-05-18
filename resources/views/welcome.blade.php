@@ -49,7 +49,7 @@
         </main>
     
         <!-- Footer -->
-        <footer class="bg-gray-100 py-3">
+        {{-- <footer class="bg-gray-100 py-3">
             <div class="flex justify-center items-center space-x-6 text-sm text-gray-700">
                 <div class="flex items-center space-x-2">
                     <i class="fab fa-facebook"></i>
@@ -64,6 +64,6 @@
                     <span>0858xxxxxxxx</span>
                 </div>
             </div>
-        </footer>
+        </footer> --}}
     </body>
 </html>

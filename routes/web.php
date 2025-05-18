@@ -72,6 +72,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/{service}/edit', [ServiceController::class, 'edit'])->name('edit');
         Route::put('/{service}', [ServiceController::class, 'update'])->name('update');
         Route::delete('/{service}', [ServiceController::class, 'destroy'])->name('destroy');
+        Route::get('/service/struk/{id}', [ServiceController::class, 'struk'])->name('struk');
+
     });
     
     // Reports routes
@@ -82,7 +84,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/sales', [SaleController::class, 'indexx'])->name('sales');
         Route::get('/sales/print', [ReportController::class, 'printt'])->name('printt');
         Route::get('/services', [ServiceController::class, 'indexx'])->name('services');
-        Route::get('/services/print', [ReportController::class, 'printtt'])->name('printtt');
+
 
 
 

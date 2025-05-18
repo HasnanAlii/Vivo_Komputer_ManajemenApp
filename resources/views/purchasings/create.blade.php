@@ -43,7 +43,7 @@
                             Data Customer
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="nama" placeholder="Nama Customer" class="input" required>
+                            <input type="text" name="nama" placeholder="Nama Customer" class="input">
                             <input type="text" name="noTelp" placeholder="No Telepon" class="input">
                             <input type="text" name="alamat" placeholder="Alamat" class="input">
                         </div>

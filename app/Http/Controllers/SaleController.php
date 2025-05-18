@@ -236,18 +236,22 @@ class SaleController extends Controller
 }
 
     public function printReceipt($id)
-    {
-        $sales = Sale::with(['product', 'finance'])->where('idFinance', $id)->get();
+{
+    $sales = Sale::with(['product', 'finance'])->where('idFinance', $id)->get();
 
-        if ($sales->isEmpty()) {
-            return redirect()->route('sales.index')->with('error', 'Transaksi tidak ditemukan.');
-        }
-
-        $total = $sales->sum('totalHarga');
-        $modal = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaBeli);
-        $bayar = session('bayar') ?? $sales->first()->finance->dana ?? $total;
-        $kembalian = $bayar - $total;
-
-        return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian', 'modal'));
+    if ($sales->isEmpty()) {
+        return redirect()->route('sales.index')->with('error', 'Transaksi tidak ditemukan.');
     }
+
+    $total = $sales->sum('totalHarga');
+    $modal = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaBeli);
+    $bayar = session('bayar') ?? $sales->first()->finance->dana ?? $total;
+    $kembalian = $bayar - $total;
+
+    // Ambil nomor faktur dari finance terkait
+    $nomorFaktur = $sales->first()->finance->nomorFaktur ?? '-';
+
+    return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian', 'modal', 'nomorFaktur'));
+}
+
 }
