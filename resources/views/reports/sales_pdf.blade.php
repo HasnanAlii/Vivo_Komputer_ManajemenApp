@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Penjualan</title>
+    <title>Laporan Penjualan Vivo Komputer</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -15,6 +15,8 @@
 <body>
     <h2 style="text-align: center;">Laporan Penjualan</h2>
     <p>Filter: {{ ucfirst($filter) ?: 'Semua' }}</p>
+    <p>Tanggal Cetak: {{ now()->format('d-m-Y ') }}</p>
+
 
     <table>
         <thead>
@@ -39,7 +41,7 @@
                     <td style="text-align: center;">{{ $item->jumlah }}</td>
                     <td>Rp {{ number_format($item->keuntungan, 0, ',', '.') }}</td>
                     <td>Rp {{ number_format($item->totalHarga, 0, ',', '.') }}</td>
-                    <td style="text-align: center;">{{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}</td>
+                    <td style="text-align: center;">{{ Carbon::parse($item->tanggal)->format('d-m-Y') }}</td>
                 </tr>
             @empty
                 <tr>
@@ -50,17 +52,17 @@
     </table>
 
     <br><br>
-    <table class="summary-table" style="width: 60%;">
+    <table style="width: 50%;">
         <tr>
-            <td><strong>Total Modal:</strong></td>
+            <td><strong>Total Modal</strong></td>
             <td>Rp {{ number_format($totalModal, 0, ',', '.') }}</td>
         </tr>
         <tr>
-            <td><strong>Total Keuntungan:</strong></td>
+            <td><strong>Total Keuntungan</strong></td>
             <td>Rp {{ number_format($totalKeuntungan, 0, ',', '.') }}</td>
         </tr>
         <tr>
-            <td><strong>Total Pendapatan:</strong></td>
+            <td><strong>Total Pendapatan</strong></td>
             <td>Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</td>
         </tr>
     </table>

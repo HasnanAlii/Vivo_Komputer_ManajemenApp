@@ -10,11 +10,19 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
-    public function index()
-    {
-        $products = Product::with('category')->orderBy('namaBarang')->paginate(5);
-        return view('products.index', compact('products'));
+   public function index(Request $request)
+{
+    $query = Product::with('category');
+
+    if ($request->has('category') && $request->category != '') {
+        $query->where('idCategory', $request->category);
     }
+
+    $products = $query->orderBy('namaBarang')->paginate(10);
+    $categories = Category::orderBy('namaKategori')->get();
+
+    return view('products.index', compact('products', 'categories'));
+}
 
     public function create()
     {

@@ -241,7 +241,7 @@ private function sendWhatsappNotification($service)
 {
     $customer = $service->customer; 
     $phone = $customer->noTelp;     
-    $message = "Halo {$customer->nama}, service Anda dengan {$service->kerusakan} sudah SELESAI.\nSilakan datang ke toko untuk mengambil barang Anda.\nTerima kasih telah menggunakan layanan kami. 🙏";
+    $message = "Halo {$customer->nama}, service Anda dengan kerusakan {$service->kerusakan} sudah SELESAI.\nSilakan datang ke toko untuk mengambil barang Anda.\nTerima kasih telah menggunakan layanan kami. 🙏";
 
   $response = Http::withHeaders([
     'Authorization' => 'L9PaGYokqbue5GHechJR',

@@ -14,27 +14,53 @@
    <div class="py-4">
        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
            <div class="bg-white shadow-lg sm:rounded-lg p-6">
-               <div class="flex justify-end items-center mb-6">
-                   <form action="{{ route('product.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center space-x-3 bg-gray-50 p-1 rounded-lg shadow-sm border border-dashed border-gray-300 hover:border-green-500 transition duration-200">
-                    @csrf
-                    <label for="excel-upload" class="flex items-center space-x-2 cursor-pointer text-sm text-gray-600 hover:text-green-600 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Pilih File Excel</span>
-                    </label>
-                    <input id="excel-upload" type="file" name="file" accept=".xlsx,.xls" class="hidden" required>
-                    
-                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-medium text-sm px-4 py-2 rounded shadow-sm transition duration-200">
-                        Import
-                    </button>
-                </form>
-                <a href="{{ route('product.create') }}"
-                   class="ml-4 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition">
-                    ➕ <span class="ml-2">Tambah Produk</span>
-                </a>
+             <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                    <!-- Filter Kategori -->
+                    <form method="GET" action="{{ route('product.index') }}" class="flex items-center gap-2">
+                        <label for="filter_kategori" class="text-lg font-medium text-gray-700">Filter Kategori:</label>
+                        <select name="category" id="filter_kategori"
+                            class="border-gray-300 inline-flex items-center py-2 rounded shadow transition focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">-- Semua Kategori --</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->idCategory }}" {{ request('category') == $category->idCategory ? 'selected' : '' }}>
+                                    {{ $category->namaKategori }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button type="submit"
+                            class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition">
+                            Filter
+                        </button>
+                    </form>
 
-               </div>
+                    <!-- Import dan Tambah Produk -->
+                    <div class="flex items-center gap-3">
+                        <form action="{{ route('product.import') }}" method="POST" enctype="multipart/form-data"
+                            class="flex items-center space-x-3 bg-gray-50 p-1 rounded-lg shadow-sm border border-dashed border-gray-300 hover:border-green-500 transition duration-200">
+                            @csrf
+                            <label for="excel-upload"
+                                class="flex items-center space-x-2 cursor-pointer text-sm text-gray-600 hover:text-green-600 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>Pilih File Excel</span>
+                            </label>
+                            <input id="excel-upload" type="file" name="file" accept=".xlsx,.xls" class="hidden" required>
+                            <button type="submit"
+                                class="bg-green-500 hover:bg-green-600 text-white font-medium text-sm px-4 py-2 rounded shadow-sm transition duration-200">
+                                Import
+                            </button>
+                        </form>
+
+                        <a href="{{ route('product.create') }}"
+                            class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition">
+                            ➕ <span class="ml-2">Tambah Produk</span>
+                        </a>
+                    </div>
+                </div>
+
 
                @if(session('success'))
                    <div class="mb-4 px-4 py-2 bg-green-100 text-green-800 rounded">
@@ -50,7 +76,7 @@
                                <th class="px-4 py-2 text-center">No</th>
                                <th class="px-4 py-2">Nama Produk</th>
                                <th class="px-4 py-2 ">Kategori</th>
-                               <th class="px-4 py-2 text-center">Kode</th>
+                               <th class="px-4 py-2 text-left">Kode</th>
                                <th class="px-4 py-2 text-center">Stok</th>
                                <th class="px-4 py-2 ">Harga</th>
                                <th class="px-4 py-2 text-center">Aksi</th>
@@ -62,10 +88,10 @@
                                    <td class="px-4 py-2 text-center">{{ $products->firstItem() + $i }}</td>
                                    <td class="px-4 py-2 font-medium">{{ $product->namaBarang }}</td>
                                    <td class="px-4 py-2">
+                                       {{ $product->category->namaKategori ?? 'Kategori Tidak Ditemukan' }}
+                                   </td>
+                                   <td class="px-4 py-2">
                                         {{ $product->category->kodeKategori ?? 'Kategori Tidak Ditemukan' }}
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        {{ $product->category->namaKategori ?? 'Kategori Tidak Ditemukan' }}
                                     </td>
 
                                    <td class="px-4 py-2 text-center">{{ $product->jumlah }}</td>

@@ -12,19 +12,43 @@ class CategorySeeder extends Seeder
         DB::table('categories')->insert([
             [
                 'kodeKategori' => 'ELEC001',
-                'namaKategori' => 'Sparepart',
+                'namaKategori' => 'Sparepart', 
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'kodeKategori' => 'FASH001',
-                'namaKategori' => 'Fashion',
+                'kodeKategori' => 'LAPT001',
+                'namaKategori' => 'Laptop',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'kodeKategori' => 'FOOD001',
-                'namaKategori' => 'Makanan & Minuman',
+                'kodeKategori' => 'PCAC001',
+                'namaKategori' => 'Aksesoris Komputer',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'kodeKategori' => 'SERV001',
+                'namaKategori' => 'Jasa Service',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'kodeKategori' => 'SOFT001',
+                'namaKategori' => 'Software',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'kodeKategori' => 'PRNT001',
+                'namaKategori' => 'Printer & Tinta',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'kodeKategori' => 'NETW001',
+                'namaKategori' => 'Perangkat Jaringan',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Data Perbaikan Barang</title>
+    <title>Laporan Perbaikan Barang Vivo Komputer</title>
     <style>
         body { font-family: sans-serif; font-size: 12px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -15,7 +15,7 @@
 
     <h2 style="text-align: center;">Laporan Data Perbaikan Barang</h2>
     <p>Filter: {{ ucfirst($filter ?? 'Semua') }}</p>
-    <p>Tanggal Cetak: {{ now()->format('d-m-Y H:i') }}</p>
+    <p>Tanggal Cetak: {{ now()->format('d-m-Y ') }}</p>
 
     <table>
         <thead>
@@ -57,12 +57,21 @@
             @endforelse
         </tbody>
     </table>
-
-    <div class="summary">
-        <p><strong>Total Modal:</strong> Rp {{ number_format($totalModal, 0, ',', '.') }}</p>
-        <p><strong>Total Keuntungan:</strong> Rp {{ number_format($totalKeuntungan, 0, ',', '.') }}</p>
-        <p><strong>Total Pendapatan:</strong> Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</p>
-    </div>
+  <br><br>
+     <table style="width: 50%;">
+        <tr>
+            <td><strong>Total Modal</strong></td>
+            <td>Rp {{ number_format($totalModal, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td><strong>Total Keuntungan</strong></td>
+            <td>Rp {{ number_format($totalKeuntungan, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td><strong>Total Pendapatan</strong></td>
+            <td>Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</td>
+        </tr>
+    </table>
 
 </body>
 </html>

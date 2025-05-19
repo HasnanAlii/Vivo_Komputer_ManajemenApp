@@ -18,7 +18,7 @@
                             <label class="block text-gray-700 font-semibold mb-2">🔧 Kerusakan</label>
                             <input type="text" name="kerusakan" value="{{ old('kerusakan', $service->kerusakan) }}"
                                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                placeholder="Contoh: Tidak bisa nyala" required>
+                                required>
                         </div>
 
                         <!-- Status Service -->
@@ -37,7 +37,7 @@
                         <label class="block text-gray-700 font-semibold mb-2">💰 Biaya Jasa (Rp)</label>
                         <input type="number" name="biayaJasa" value="{{ old('biayaJasa', $service->biayaJasa) }}"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-                            placeholder="Contoh: 50000" min="0">
+                         min="0">
                     </div>
 
                     <!-- Pilih Sparepart -->
