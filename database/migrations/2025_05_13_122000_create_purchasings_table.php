@@ -17,7 +17,14 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->integer('hargaBeli');
             $table->integer('hargaJual');
-            $table->integer('keuntungan');
+            $table->string('type', 50);
+            $table->string('serialNumber', 50)->nullable();
+            $table->string('spek', 50);
+            $table->string('buktiTransaksi')->nullable();
+
+
+
+
             $table->date('tanggal');
 
             $table->unsignedBigInteger('idCustomer');

@@ -31,64 +31,72 @@
             @endif
 
             <div class="bg-white shadow-md rounded-xl p-8 space-y-6">
-                <form action="{{ route('purchasing.store') }}" method="POST">
-                    @csrf
+               <form action="{{ route('purchasing.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
 
-                    <!-- Customer Info -->
-                    <div>
-                        <h3 class="text-xl font-semibold text-blue-700 mb-4 border-b pb-2 flex items-center">
-                               <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm0 2c-3.333 0-10 1.667-10 5v1h20v-1c0-3.333-6.667-5-10-5z"/>
-                            </svg>
-                            Data Customer
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="nama" placeholder="Nama Customer" class="input">
-                            <input type="text" name="noTelp" placeholder="No Telepon" class="input">
-                            <input type="text" name="alamat" placeholder="Alamat" class="input">
-                        </div>
-                    </div>
+    <!-- Customer Info -->
+    <div>
+        <h3 class="text-xl font-semibold text-blue-700 mb-4 border-b pb-2 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm0 2c-3.333 0-10 1.667-10 5v1h20v-1c0-3.333-6.667-5-10-5z"/>
+            </svg>
+            Data Customer
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input type="text" name="nama" placeholder="Nama Customer" class="input" required>
+            <input type="text" name="noTelp" placeholder="No Telepon" class="input" required>
+            <input type="text" name="alamat" placeholder="Alamat" class="input" required>
+            <input type="text" name="noKtp" placeholder="Nomor Ktp" class="input" required>
+            
+            <!-- Input untuk upload bukti transaksi -->
+            <div class="md:col-span-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Upload Bukti Transaksi</label>
+                <input type="file" name="buktiTransaksi" accept="image/*" class="input file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
+        </div>
+    </div>
 
-                    <!-- Product Info -->
-                    <div>
-                      
-                        <h3 class="text-xl font-semibold text-green-700 mb-4 border-b pb-2 py-3 flex items-center">
-                       <!-- Ikon produk (box/package) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511l-8.25 4.74-8.25-4.74M12 3l9 5.25v7.5l-9 5.25-9-5.25v-7.5L12 3z" />
-                        </svg>
+    <!-- Product Info -->
+    <div>
+        <h3 class="text-xl font-semibold text-green-700 mb-4 border-b pb-2 py-3 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511l-8.25 4.74-8.25-4.74M12 3l9 5.25v7.5l-9 5.25-9-5.25v-7.5L12 3z" />
+            </svg>
+            Data Produk
+        </h3>
 
-                        Data Produk
-                        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input type="text" name="namaBarang" placeholder="Nama Barang" class="input" required>
+            <input type="text" name="type" placeholder="Type" class="input" required>
+            <input type="text" name="spek" placeholder="Spesifikasi" class="input" required>
 
-                    
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input type="text" name="namaBarang" placeholder="Nama Barang" class="input" required>
+            <input type="text" name="serialNumber" placeholder="Serial Number" class="input">
 
-                    <select name="idCategory" class="input" required>
-                        <option value="">-- Pilih Kategori --</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->idCategory }}">{{ $category->namaKategori }}</option>
-                        @endforeach
-                    </select>
+            <select name="idCategory" class="input" required>
+                <option value="">-- Pilih Kategori --</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->idCategory }}">{{ $category->namaKategori }}</option>
+                @endforeach
+            </select>
+            {{-- Kode Barang dihapus karena tidak dipakai --}}
+        </div>
 
-                    {{-- Kode Barang dihapus karena tidak dipakai --}}
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <input type="number" name="jumlah" placeholder="Jumlah" class="input" required min="1">
+            <input type="number" name="hargaBeli" placeholder="Harga Beli /pcs" class="input" required min="0">
+            <input type="number" name="hargaJual" placeholder="Harga Jual /pcs" class="input" required min="0">
+        </div>
+    </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    <input type="number" name="jumlah" placeholder="Jumlah" class="input" required min="1">
-                    <input type="number" name="hargaBeli" placeholder="Harga Beli /pcs" class="input" required min="0">
-                    <input type="number" name="hargaJual" placeholder="Harga Jual /pcs" class="input" required min="0">
-                </div>
+    <!-- Submit -->
+    <div class="pt-6 flex justify-end space-x-4">
+        <button type="submit"
+            class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+            💾 Simpan Transaksi
+        </button>
+    </div>
+</form>
 
-
-                    <!-- Submit -->
-                    <div class="pt-6 flex justify-end">
-                        <button type="submit" class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
-                            💾 Simpan Transaksi
-                        </button>
-                    </div>
-                </form>
             </div>
 
         </div>

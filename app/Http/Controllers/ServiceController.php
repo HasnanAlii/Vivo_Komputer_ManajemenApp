@@ -69,6 +69,9 @@ class ServiceController extends Controller
         'noTelp' => 'required|string|max:20',
         'alamat' => 'required|string|max:255',
         'jenisPerangkat' => 'required|string|max:50',
+        'kondisi' => 'nullable|string|max:50',
+        'keterangan' => 'nullable|string|max:50',
+        'kelengkapan' => 'nullable|string|max:50',
         'kerusakan' => 'nullable|string|max:50',
         'idProduct' => 'nullable|array',
         'idProduct.*' => 'exists:products,idProduct',
@@ -113,6 +116,9 @@ class ServiceController extends Controller
             'nomorFaktur' => rand(10000000, 99999999),
             'kerusakan' => $request->kerusakan,
             'jenisPerangkat' => $request->jenisPerangkat,
+            'kondisi' => $request->kondisi,
+            'keterangan' => $request->keterangan,
+            'kelengkapan' => $request->kelengkapan,
             'status' => false,
             'biayaJasa' => $biayaJasa,
             'totalHarga' => $totalHarga,
@@ -144,8 +150,8 @@ public function struk($id)
     // Jika perlu ambil detail produk berdasarkan ID di string
     $products = [];
     if ($service->idProduct) {
-        $productIds = explode(',', $service->idProduct);
-        $products = Product::whereIn('idProduct', $productIds)->get();
+        $productId = explode(',', $service->idProduct);
+        $products = Product::whereIn('idProduct', $productId)->get();
     }
 
     return view('services.struk', compact('service', 'products'));
@@ -163,6 +169,9 @@ public function update(Request $request, $id)
         'kerusakan' => 'required|string|max:50',
         'status' => 'required|boolean',
         'biayaJasa' => 'nullable|integer|min:0',
+        'kondisi' => 'nullable|string|max:50',
+        'keterangan' => 'nullable|string|max:50',
+        'kelengkapan' => 'nullable|string|max:50',
         'idProduct' => 'nullable|array',
         'idProduct.*' => 'exists:products,idProduct',
     ]);
@@ -205,6 +214,9 @@ public function update(Request $request, $id)
         ]);
 
         $service->kerusakan = $request->kerusakan;
+        $service->kondisi = $request->kondisi;
+        $service->keterangan = $request->keterangan;
+        $service->kelengkapan = $request->kelengkapan;
         $service->status = $request->status;
         $service->biayaJasa = $biayaJasa;
         $service->totalHarga = $totalHarga;

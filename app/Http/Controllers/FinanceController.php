@@ -66,7 +66,9 @@ class FinanceController extends Controller
         try {
             Finance::create([
                 'dana' => -$request->jumlah,
-                'modal' => -$request->jumlah,
+                // 'modal' => $request->jumlah,
+                'keuntungan' => -$request->jumlah,
+
                 'tanggal' => $request->tanggal,
                 'keterangan' => $request->keterangan,
             ]);

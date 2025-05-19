@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('/sales/{id}/decrease', [SaleController::class, 'decrease'])->name('decrease');
         Route::get('/sales/print/{id}', [SaleController::class, 'printReceipt'])->name('print');
         Route::put('/sales/{id}/update-bayar', [SaleController::class, 'updateBayar'])->name('updateBayar');
+        Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('search');
+
 
 
     });
@@ -58,10 +60,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [PurchasingController::class, 'index'])->name('index');
         Route::get('/create', [PurchasingController::class, 'create'])->name('create');
         Route::post('/', [PurchasingController::class, 'store'])->name('store');
-        Route::get('/{purchasing}', [PurchasingController::class, 'show'])->name('show');
+        // Route::get('/{purchasing}{id}', [PurchasingController::class, 'show'])->name('show');
         Route::get('/{purchasing}/edit', [PurchasingController::class, 'edit'])->name('edit');
         Route::put('/{purchasing}', [PurchasingController::class, 'update'])->name('update');
         Route::delete('/{purchasing}', [PurchasingController::class, 'destroy'])->name('destroy');
+         Route::get('/purchasing/{purchasing}', [PurchasingController::class, 'show'])->name('show');
+
+
     });
     
     // Service routes

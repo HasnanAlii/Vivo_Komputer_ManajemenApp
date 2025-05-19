@@ -38,27 +38,31 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="jenisPerangkat" class="border px-3 py-2 rounded w-full" placeholder="Nama Barang / Jenis Perangkat" required>
-                            <input type="text" name="kerusakan" class="border px-3 py-2 rounded w-full" placeholder="Kerusakan">
-                            <button type="submit" class="bg-blue-600 justify-center hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded inline-flex ">
-                                
-                                💾 Simpan 
-                            </button>
+                            <input type="text" name="jenisPerangkat" class="border px-3 py-2 rounded w-full mb-2" placeholder="Nama Barang / Jenis Perangkat" required>
+
+                            <input type="text" name="kerusakan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kerusakan">
+
+                            <input type="text" name="kondisi" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kondisi awal">
+
+
+                            <input type="text" name="kelengkapan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan ">
+
                         </div>
                         
                         
                         {{-- Tombol Submit --}}
-                    </form>
-                    <div class="text-center pt-5">
-                          <button type="button" onclick="window.location='{{ route('service.index') }}'"
-                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
-                    🔙
-                </button>
-                        {{-- <button type="submit" class="bg-blue-600 justify-center hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded inline-flex ">
+                        <div class="text-center pt-5 ">
+                            <button type="button" onclick="window.location='{{ route('service.index') }}'"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                            🔙
+                        </button>
+                        <button type="submit" class="bg-blue-600 justify-center ml-4 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded inline-flex ">
                             
-                            Cetak Struk
-                        </button> --}}
-                    </div>
+                            💾 Simpan 
+                        </button>
+                          
+                        </div>
+                    </form>
                     </div>
             </div>
         </div>

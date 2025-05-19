@@ -51,6 +51,7 @@
                                 <th class="p-3 border">Harga Beli</th>
                                 <th class="p-3 border">Harga Jual</th>
                                 <th class="p-3 border">Keuntungan</th>
+                                <th class="p-3 border">Bukti Transaksi</th>
                                 <th class="p-3 border">Tanggal</th>
                             </tr>
                         </thead>
@@ -64,6 +65,17 @@
                                     <td class="p-3 border">Rp {{ number_format($p->hargaBeli, 0, ',', '.') }}</td>
                                     <td class="p-3 border">Rp {{ number_format($p->hargaJual, 0, ',', '.') }}</td>
                                     <td class="p-3 border">Rp {{ number_format($p->keuntungan, 0, ',', '.') }}</td>
+                                    <td class="p-3 border text-center align-middle">
+                                        <div class="flex justify-center items-center">
+                                            @if ($p->buktiTransaksi)
+                                                <a href="{{ asset($p->buktiTransaksi) }}" target="_blank">
+                                                    <img src="{{ asset($p->buktiTransaksi) }}" alt="Bukti" class="w-16 h-16 rounded shadow object-contain">
+                                                </a>
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
+                                        </div>
+                                    </td>
                                     <td class="p-3 border">{{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}</td>
                                 </tr>
                             @empty

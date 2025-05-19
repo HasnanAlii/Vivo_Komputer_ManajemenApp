@@ -8,10 +8,12 @@
                 </button>
                 🛒 <span>Halaman Kasir</span>
             </h2>
-            <form action="{{ route('sales.index') }}" method="GET" class="flex items-center space-x-2">
+            {{-- <form action="{{ route('sales.index') }}" method="GET" class="flex items-center space-x-2">
                 <input type="text" name="search" placeholder="Cari Produk..." value="{{ request('search') }}"
                     class="pl-3 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300">
-            </form>
+            </form> --}}
+            <select id="select-product" style="width: 250px;"></select>
+
         </div>
     </x-slot>
 
@@ -164,4 +166,51 @@
             updateKembalian();
         });
     </script>
+
+
+<script>
+$(document).ready(function() {
+    $('#select-product').select2({
+        placeholder: 'Cari produk...',
+        ajax: {
+            url: '{{ route('sales.search') }}',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return { q: params.term }; // term dari inputan user
+            },
+            processResults: function(data) {
+                return {
+                    results: data.results
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 1,
+    });
+
+    // Event saat produk dipilih
+    $('#select-product').on('select2:select', function(e) {
+        var productId = e.params.data.id;
+
+        // Kirim ajax untuk tambah produk ke penjualan
+        $.ajax({
+            url: '{{ route('sales.index') }}',  // route ke index yang sudah kamu punya
+            type: 'GET',
+            data: { search: productId },
+            success: function(response) {
+                // Refresh halaman atau update tabel penjualan secara dinamis
+                location.reload(); // paling simpel reload halaman biar data sales update
+            },
+            error: function() {
+                alert('Gagal menambahkan produk.');
+            }
+        });
+
+        // Reset select agar bisa tambah produk lain lagi
+        $('#select-product').val(null).trigger('change');
+    });
+});
+</script>
+
 </x-app-layout>

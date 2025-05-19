@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('finance', function (Blueprint $table) {
             $table->id('idFinance');
             $table->integer('dana');
-            $table->integer('modal');
+            $table->integer('modal')->nullable();
             $table->integer('totalDana')->nullable();
             $table->date('tanggal');
             $table->integer('keuntungan')->nullable();

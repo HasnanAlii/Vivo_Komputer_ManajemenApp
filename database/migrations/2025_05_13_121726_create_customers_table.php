@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('nama', 50)->nullable();
             $table->string('alamat',  255)->nullable();
             $table->string('noTelp', 255)->nullable();
+            $table->string('noKtp', 255)->nullable();
+
             $table->timestamps();
         });
     }

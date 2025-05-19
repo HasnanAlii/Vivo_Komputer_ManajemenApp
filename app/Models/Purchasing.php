@@ -8,10 +8,11 @@ class Purchasing extends Model
 {
     protected $primaryKey = 'idPurchasing';
 
-    protected $fillable = [
-    'nomorFaktur', 'jumlah', 'hargaBeli', 'hargaJual', 'keuntungan', 'tanggal',
-    'idCustomer', 'idProduct', 'idFinance',
+   protected $fillable = [
+    'nomorFaktur', 'jumlah', 'hargaBeli', 'hargaJual', 'type', 'spek', 'serialNumber',
+    'keuntungan', 'tanggal', 'idCustomer', 'idProduct', 'idFinance','buktiTransaksi'
 ];
+
 
 
     public function user()

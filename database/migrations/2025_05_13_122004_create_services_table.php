@@ -16,6 +16,9 @@ return new class extends Migration
             $table->integer('nomorFaktur');
             $table->string('kerusakan', 50)->nullable();
             $table->string('jenisPerangkat', 50);
+            $table->string('kondisi', 50)->nullable();
+            $table->string('keterangan', 50)->nullable();
+            $table->string('kelengkapan', 50)->nullable();
             $table->boolean('status')->default(false);
             $table->integer('biayaJasa')->nullable();
             $table->integer('totalHarga')->nullable();

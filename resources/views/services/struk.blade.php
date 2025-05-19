@@ -29,7 +29,7 @@
             
             <div class="flex items-center justify-between border-b pb-4 mb-4">
                 <div class="flex items-center space-x-4">
-                    <img src="/assets/images/struk.png" alt="Vivo Komputer Logo" class="w-16 h-auto">
+                    <img src="/assets/images/struk.png" alt="Vivo Komputer Logo" class="w-24 h-auto">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-800">Vivo Komputer</h1>
                         <p class="text-sm text-gray-600">Jl. Pasirgede Raya Bojongherang Cianjur </p>
@@ -48,12 +48,20 @@
                     <p><strong>Nama:</strong> {{ $service->customer->nama }}</p>
                     <p><strong>No Telp:</strong> {{ $service->customer->noTelp }}</p>
                     <p><strong>Alamat:</strong> {{ $service->customer->alamat }}</p>
+                    <p><strong>Tanggal Masuk:</strong> {{ $service->created_at->format('d M Y') }}</p>
                 </div>
                 <div class="w-1/2">
                     <h3 class="font-semibold text-gray-700 mb-1">Informasi Service</h3>
                     <p><strong>Perangkat:</strong> {{ $service->jenisPerangkat }}</p>
                     <p><strong>Kerusakan:</strong> {{ $service->kerusakan ?? '-' }}</p>
-                    <p><strong>Tanggal Masuk:</strong> {{ $service->created_at->format('d M Y, H:i') }}</p>
+                    <p><strong>Kelengkapan:</strong> {{ $service->kelengkapan?? '-' }}</p>
+                    <p><strong>Kondisi awal Barang :</strong> {{ $service->kondisi ?? '-' }}</p>
+                    <p><strong>Status:</strong>   @if ($service->status)
+                        <span class="">Selesai</span>
+                        @else
+                        <span class="">Proses</span>
+                        @endif</p>
+                        <p><strong>Catatan Teknisi:</strong> {{ $service->keterangan ?? '-' }}</p>
                 </div>
             </div>
 
@@ -70,14 +78,14 @@
                         @php
                             $produkList = [];
                             if ($service->idProduct) {
-                                $produkIDs = explode(',', $service->idProduct);
-                                $produkList = \App\Models\Product::whereIn('idProduct', $produkIDs)->get();
+                                $produkID = explode(',', $service->idProduct);
+                                $products = \App\Models\Product::whereIn('idProduct', $produkID)->get();
                             }
                         @endphp
 
-                        @foreach ($produkList as $product)
+                        @foreach ($products as $product)
                             <tr>
-                                <td class="p-2 border">{{ $product->namaBarang }}</td>
+                                <td class="p-2 border"> sparepart{{ $product->namaBarang }}</td>
                                 <td class="p-2 border text-right">
                                     {{ $product->hargaBeli > 0 ? 'Rp ' . number_format($product->hargaBeli, 0, ',', '.') : '-' }}
                                 </td>
@@ -102,12 +110,12 @@
         </div>
 
         <!-- Tombol hanya di luar #print-area agar tidak ikut tercetak -->
-        <div class="text-center mt-8">
+        <div class="text-center mt-8 " >
             <button type="button" onclick="window.location='{{ route('service.index') }}'"
                     class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
                 🔙
             </button>
-            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded shadow">
+            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 ml-4 text-white font-semibold px-6 py-2 rounded shadow">
                 🖨️ Cetak Struk
             </button>
         </div>

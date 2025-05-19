@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Finance;
@@ -11,41 +10,302 @@ use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
-    public function index(Request $request)
-    {
-        if ($request->has('search') && !empty($request->search)) {
+
+
+
+// class SaleController extends Controller
+// {
+//     public function index(Request $request)
+//     {
+//         if ($request->has('search') && !empty($request->search)) {
+//             $product = Product::where('namaBarang', 'like', '%' . $request->search . '%')->first();
+
+//             if ($product) {
+//                 $salesWithNoFinance = Sale::whereNull('idFinance')->get();
+//                 $existingFaktur = $salesWithNoFinance->first()->nomorFaktur ?? rand(10000000, 99999999);
+//                 $existingSale = $salesWithNoFinance->where('idProduct', $product->idProduct)->first();
+
+//                 if ($existingSale) {
+//                     $existingSale->jumlah += 1;
+//                     $existingSale->totalHarga = $existingSale->jumlah * $product->hargaJual;
+//                     $existingSale->keuntungan = $existingSale->jumlah * ($product->hargaJual - $product->hargaBeli);
+//                     $existingSale->save();
+//                 } else {
+//                     Sale::create([
+//                         'nomorFaktur' => $existingFaktur,
+//                         'jumlah' => 1,
+//                         'totalHarga' => $product->hargaJual,
+//                         'keuntungan' => $product->hargaJual - $product->hargaBeli,
+//                         'tanggal' => now(),
+//                         'idProduct' => $product->idProduct,
+//                     ]);
+//                 }
+
+//                 return redirect()->route('sales.index')->with('success', 'Produk berhasil ditambahkan.');
+//             }
+
+//             return redirect()->route('sales.index')->with('error', 'Produk tidak ditemukan.');
+//         }
+
+//         $sales = Sale::whereNull('idFinance')->with('product')->get();
+//         return view('sales.index', compact('sales'));
+//     }
+
+//     public function indexx(Request $request)
+//     {
+//         $query = Sale::with(['product']);
+
+//         switch ($request->filter) {
+//             case 'today':
+//                 $query->whereDate('tanggal', Carbon::today());
+//                 break;
+//             case 'week':
+//                 $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+//                 break;
+//             case 'month':
+//                 $query->whereMonth('tanggal', Carbon::now()->month)
+//                       ->whereYear('tanggal', Carbon::now()->year);
+//                 break;
+//             case 'year':
+//                 $query->whereYear('tanggal', Carbon::now()->year);
+//                 break;
+//         }
+
+//         $filteredQuery = clone $query;
+//         $sales = $query->paginate(8);
+
+//         $totalModal = $filteredQuery->sum('totalHarga') - $filteredQuery->sum('keuntungan');
+//         $totalKeuntungan = $filteredQuery->sum('keuntungan');
+//         $totalPendapatan = $totalModal + $totalKeuntungan;
+
+//         return view('reports.sale', compact('sales', 'totalModal', 'totalKeuntungan', 'totalPendapatan'));
+//     }
+
+//     public function create()
+//     {
+//         return view('sales.create', [
+//             'products' => Product::all(),
+//         ]);
+//     }
+
+//     public function store(Request $request)
+//     {
+//         $request->validate([
+//             'nomorFaktur' => 'required|integer',
+//             'jumlah' => 'required|integer',
+//             'totalHarga' => 'required|integer',
+//             'keuntungan' => 'required|integer',
+//             'tanggal' => 'required|date',
+//             'idProduct' => 'required|exists:products,idProduct',
+//         ]);
+
+//         try {
+//             Sale::create($request->all());
+//             return redirect()->route('sales.index')->with('success', 'Transaksi berhasil ditambahkan.');
+//         } catch (\Exception $e) {
+//             return redirect()->back()->with('error', 'Gagal menyimpan transaksi: ' . $e->getMessage());
+//         }
+//     }
+
+//     public function edit($id)
+//     {
+//         return view('sales.edit', [
+//             'sale' => Sale::findOrFail($id),
+//             'products' => Product::all(),
+//         ]);
+//     }
+
+//     public function update(Request $request, $id)
+//     {
+//         try {
+//             $sale = Sale::findOrFail($id);
+//             $sale->update($request->all());
+//             return redirect()->route('sales.index')->with('success', 'Transaksi berhasil diperbarui.');
+//         } catch (\Exception $e) {
+//             return redirect()->back()->with('error', 'Gagal memperbarui transaksi: ' . $e->getMessage());
+//         }
+//     }
+
+//     public function destroy($id)
+//     {
+//         try {
+//             Sale::destroy($id);
+//             return redirect()->route('sales.index')->with('success', 'Produk berhasil dihapus.');
+//         } catch (\Exception $e) {
+//             return redirect()->route('sales.index')->with('error', 'Gagal menghapus transaksi: ' . $e->getMessage());
+//         }
+//     }
+
+//     public function increase($id)
+//     {
+//         try {
+//             $sale = Sale::findOrFail($id);
+//             $sale->jumlah += 1;
+//             $sale->totalHarga = $sale->jumlah * $sale->product->hargaJual;
+//             $sale->keuntungan = $sale->jumlah * ($sale->product->hargaJual - $sale->product->hargaBeli);
+//             $sale->save();
+
+//             return redirect()->route('sales.index')->with('success', 'Jumlah berhasil ditambah.');
+//         } catch (\Exception $e) {
+//             return redirect()->route('sales.index')->with('error', 'Gagal menambah jumlah: ' . $e->getMessage());
+//         }
+//     }
+
+//     public function decrease($id)
+//     {
+//         try {
+//             $sale = Sale::findOrFail($id);
+//             $sale->jumlah -= 1;
+//             $sale->totalHarga = $sale->jumlah * $sale->product->hargaJual;
+//             $sale->keuntungan = $sale->jumlah * ($sale->product->hargaJual - $sale->product->hargaBeli);
+//             $sale->save();
+
+//             return redirect()->route('sales.index')->with('success', 'Jumlah berhasil dikurangi.');
+//         } catch (\Exception $e) {
+//             return redirect()->route('sales.index')->with('error', 'Gagal mengurangi jumlah: ' . $e->getMessage());
+//         }
+//     }
+
+//    public function checkout(Request $request)
+// {
+//     $request->validate([
+//         'bayar' => 'required|numeric|min:0',
+//         'total' => 'required|numeric|min:0',
+//     ]);
+
+//     $sales = Sale::with('product')->whereNull('idFinance')->get();
+
+//     if ($sales->isEmpty()) {
+//         return redirect()->route('sales.index')->with([
+//             'message' => 'Tidak ada item yang dibeli.',
+//             'alert-type' => 'error'
+//         ]);
+//     }
+
+//     $totalBayar = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaJual);
+//     $totalModal = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaBeli);
+//     $totalKeuntungan = $totalBayar - $totalModal;
+//     $bayar = $request->bayar;
+
+//     if ($bayar < $totalBayar) {
+//         return redirect()->route('sales.index')->with([
+//             'message' => 'Pembayaran kurang dari total.',
+//             'alert-type' => 'error'
+//         ]);
+//     }
+
+//     DB::beginTransaction();
+
+//     try {
+//         $finance = new Finance();
+//         $finance->dana = $totalBayar;
+//         $finance->modal = $totalModal;
+//         $finance->keuntungan = $totalKeuntungan;
+//         $finance->totalDana = $totalBayar;
+//         $finance->tanggal = now()->toDateString();
+//         $finance->keterangan = 'penjualan produk';
+//         $finance->save();
+
+//         foreach ($sales as $sale) {
+//             $product = $sale->product;
+
+//             if ($product->jumlah < $sale->jumlah) {
+//                 throw new \Exception("Stok barang '{$product->namaBarang}' tidak mencukupi.");
+//             }
+
+//             $product->jumlah -= $sale->jumlah;
+//             $product->save();
+
+//             $sale->idFinance = $finance->idFinance;
+//             $sale->totalHarga = $sale->jumlah * $product->hargaJual;
+//             $sale->keuntungan = $sale->jumlah * ($product->hargaJual - $product->hargaBeli);
+//             $sale->tanggal = now();
+//             $sale->save();
+//         }
+
+//         DB::commit();
+//         session()->flash('bayar', $bayar);
+
+//         return redirect()->route('sales.print', ['id' => $finance->idFinance])->with([
+//             'message' => 'Transaksi berhasil diselesaikan.',
+//             'alert-type' => 'success'
+//         ]);
+//     } catch (\Exception $e) {
+//         DB::rollBack();
+//         return redirect()->route('sales.index')->with([
+//             'message' => 'Gagal menyelesaikan transaksi: ' . $e->getMessage(),
+//             'alert-type' => 'error'
+//         ]);
+//     }
+// }
+
+//     public function printReceipt($id)
+// {
+//     $sales = Sale::with(['product', 'finance'])->where('idFinance', $id)->get();
+
+//     if ($sales->isEmpty()) {
+//         return redirect()->route('sales.index')->with('error', 'Transaksi tidak ditemukan.');
+//     }
+
+//     $total = $sales->sum('totalHarga');
+//     $modal = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaBeli);
+//     $bayar = session('bayar') ?? $sales->first()->finance->dana ?? $total;
+//     $kembalian = $bayar - $total;
+
+//     // Ambil nomor faktur dari finance terkait
+//     $nomorFaktur = $sales->first()->finance->nomorFaktur ?? '-';
+
+//     return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian', 'modal', 'nomorFaktur'));
+// }
+
+
+
+
+
+
+
+
+   public function index(Request $request)
+{
+    if ($request->has('search') && !empty($request->search)) {
+        // Search berdasarkan idProduct kalau dari ajax select2
+        if (is_numeric($request->search)) {
+            $product = Product::find($request->search);
+        } else {
             $product = Product::where('namaBarang', 'like', '%' . $request->search . '%')->first();
-
-            if ($product) {
-                $salesWithNoFinance = Sale::whereNull('idFinance')->get();
-                $existingFaktur = $salesWithNoFinance->first()->nomorFaktur ?? rand(10000000, 99999999);
-                $existingSale = $salesWithNoFinance->where('idProduct', $product->idProduct)->first();
-
-                if ($existingSale) {
-                    $existingSale->jumlah += 1;
-                    $existingSale->totalHarga = $existingSale->jumlah * $product->hargaJual;
-                    $existingSale->keuntungan = $existingSale->jumlah * ($product->hargaJual - $product->hargaBeli);
-                    $existingSale->save();
-                } else {
-                    Sale::create([
-                        'nomorFaktur' => $existingFaktur,
-                        'jumlah' => 1,
-                        'totalHarga' => $product->hargaJual,
-                        'keuntungan' => $product->hargaJual - $product->hargaBeli,
-                        'tanggal' => now(),
-                        'idProduct' => $product->idProduct,
-                    ]);
-                }
-
-                return redirect()->route('sales.index')->with('success', 'Produk berhasil ditambahkan.');
-            }
-
-            return redirect()->route('sales.index')->with('error', 'Produk tidak ditemukan.');
         }
 
-        $sales = Sale::whereNull('idFinance')->with('product')->get();
-        return view('sales.index', compact('sales'));
+        if ($product) {
+            $salesWithNoFinance = Sale::whereNull('idFinance')->get();
+            $existingFaktur = $salesWithNoFinance->first()->nomorFaktur ?? rand(10000000, 99999999);
+            $existingSale = $salesWithNoFinance->where('idProduct', $product->idProduct)->first();
+
+            if ($existingSale) {
+                $existingSale->jumlah += 1;
+                $existingSale->totalHarga = $existingSale->jumlah * $product->hargaJual;
+                $existingSale->keuntungan = $existingSale->jumlah * ($product->hargaJual - $product->hargaBeli);
+                $existingSale->save();
+            } else {
+                Sale::create([
+                    'nomorFaktur' => $existingFaktur,
+                    'jumlah' => 1,
+                    'totalHarga' => $product->hargaJual,
+                    'keuntungan' => $product->hargaJual - $product->hargaBeli,
+                    'tanggal' => now(),
+                    'idProduct' => $product->idProduct,
+                ]);
+            }
+
+            return redirect()->route('sales.index')->with('success', 'Produk berhasil ditambahkan.');
+        }
+
+        return redirect()->route('sales.index')->with('error', 'Produk tidak ditemukan.');
     }
+
+    $sales = Sale::whereNull('idFinance')->with('product')->get();
+    return view('sales.index', compact('sales'));
+}
+
 
     public function indexx(Request $request)
     {
@@ -83,6 +343,7 @@ class SaleController extends Controller
             'products' => Product::all(),
         ]);
     }
+    
 
     public function store(Request $request)
     {
@@ -253,5 +514,16 @@ class SaleController extends Controller
 
     return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian', 'modal', 'nomorFaktur'));
 }
+public function searchProducts(Request $request)
+{
+    $search = $request->get('q');
+
+    $products = Product::where('namaBarang', 'like', '%' . $search . '%')
+        ->limit(10)
+        ->get(['idProduct as id', 'namaBarang as text']);
+
+    return response()->json(['results' => $products]);
+}
 
 }
+

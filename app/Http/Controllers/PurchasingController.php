@@ -6,11 +6,11 @@ use App\Models\Category;
 use App\Models\Purchasing;
 use App\Models\Customer;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use App\Models\Finance;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\DB;
 
 class PurchasingController extends Controller
 {
@@ -19,7 +19,7 @@ class PurchasingController extends Controller
         try {
             $purchasings = Purchasing::with(['user', 'customer', 'product'])->get();
             return view('purchasings.index', compact('purchasings'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->with([
                 'message' => 'Gagal mengambil data pembelian: ' . $e->getMessage(),
                 'alert-type' => 'error'
@@ -70,84 +70,106 @@ class PurchasingController extends Controller
         }
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama' => 'nullable|string|max:255',
-            'noTelp' => 'nullable|string|max:20',
-            'alamat' => 'nullable|string|max:255',
-            'namaBarang' => 'required|string|max:255',
-            'idCategory' => 'required|exists:categories,idCategory',
-            'jumlah' => 'required|integer|min:1',
-            'hargaBeli' => 'required|numeric|min:0',
-            'hargaJual' => 'required|numeric|min:0',
-            'keterangan' => 'nullable|string|max:100',
+   public function store(Request $request)
+{
+    $request->validate([
+        'nama' => 'nullable|string|max:255',
+        'noTelp' => 'nullable|string|max:20',
+        'alamat' => 'nullable|string|max:255',
+        'namaBarang' => 'required|string|max:255',
+        'type' => 'required|string|max:255',
+        'spek' => 'required|string|max:255',
+        'serialNumber' => 'nullable|string|max:255',
+        'idCategory' => 'required|exists:categories,idCategory',
+        'jumlah' => 'required|integer|min:1',
+        'hargaBeli' => 'required|numeric|min:0',
+        'hargaJual' => 'required|numeric|min:0',
+        'keterangan' => 'nullable|string|max:100',
+        'buktiTransaksi' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', 
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        $customer = Customer::create([
+            'nama' => $request->nama,
+            'noTelp' => $request->noTelp,
+            'alamat' => $request->alamat,
         ]);
 
-        DB::beginTransaction();
+        $product = Product::where('namaBarang', $request->namaBarang)
+            ->where('idCategory', $request->idCategory)
+            ->first();
 
-        try {
-            $customer = Customer::create([
-                'nama' => $request->nama,
-                'noTelp' => $request->noTelp,
-                'alamat' => $request->alamat,
-            ]);
-
-            $product = Product::where('namaBarang', $request->namaBarang)
-                ->where('idCategory', $request->idCategory)
-                ->first();
-
-            if (!$product) {
-                $product = Product::create([
-                    'namaBarang' => $request->namaBarang,
-                    'idCategory' => $request->idCategory,
-                    'jumlah' => $request->jumlah,
-                    'hargaBeli' => $request->hargaBeli,
-                    'hargaJual' => $request->hargaJual,
-                ]);
-            } else {
-                $product->jumlah += $request->jumlah;
-                $product->hargaBeli = $request->hargaBeli;
-                $product->hargaJual = $request->hargaJual;
-                $product->save();
-            }
-
-            $total = $request->jumlah * $request->hargaBeli;
-            $keuntungan = ($request->hargaJual - $request->hargaBeli) * $request->jumlah;
-
-            $finance = Finance::create([
-                'dana' => -$total,
-                'modal' => $total,
-                'totalDana' => $keuntungan,
-                'tanggal' => now(),
-                'keuntungan' => $keuntungan,
-                'keterangan' => 'Pembelian produk',
-            ]);
-
-            Purchasing::create([
-                'nomorFaktur' => rand(10000000, 99999999),
+        if (!$product) {
+            $product = Product::create([
+                'namaBarang' => $request->namaBarang,
+                'idCategory' => $request->idCategory,
                 'jumlah' => $request->jumlah,
                 'hargaBeli' => $request->hargaBeli,
                 'hargaJual' => $request->hargaJual,
-                'keuntungan' => $keuntungan,
-                'tanggal' => now(),
-                'idCustomer' => $customer->idCustomer,
-                'idProduct' => $product->idProduct,
-                'idFinance' => $finance->idFinance,
             ]);
-
-            DB::commit();
-
-            return redirect()->route('purchasing.create')->with([
-                'message' => 'Transaksi berhasil disimpan.',
-                'alert-type' => 'success'
-            ]);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with([
-                'message' => 'Gagal menyimpan transaksi: ' . $e->getMessage(),
-                'alert-type' => 'error'
-            ]);
+        } else {
+            $product->jumlah += $request->jumlah;
+            $product->hargaBeli = $request->hargaBeli;
+            $product->hargaJual = $request->hargaJual;
+            $product->save();
         }
+
+        $total = $request->jumlah * $request->hargaBeli;
+
+        $finance = Finance::create([
+            'dana' => -$total,
+            'modal' => -$total,
+            'tanggal' => now(),
+            'keterangan' => 'Pembelian produk',
+        ]);
+
+        // Simpan file jika ada
+       $pathBukti = null;
+
+        if ($request->hasFile('buktiTransaksi')) {
+            $file = $request->file('buktiTransaksi');
+            $namaFile = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName()); // hindari spasi
+            $file->move(public_path('uploads/bukti_transaksi'), $namaFile);
+            $pathBukti = 'uploads/bukti_transaksi/' . $namaFile;
+        }
+
+
+        $purchasing = Purchasing::create([
+            'nomorFaktur' => rand(10000000, 99999999),
+            'jumlah' => $request->jumlah,
+            'hargaBeli' => $request->hargaBeli,
+            'hargaJual' => $request->hargaJual,
+            'type' => $request->type,
+            'spek' => $request->spek,
+            'serialNumber' => $request->serialNumber,
+            'tanggal' => now(),
+            'idCustomer' => $customer->idCustomer,
+            'idProduct' => $product->idProduct,
+            'idFinance' => $finance->idFinance,
+            'buktiTransaksi' => $pathBukti, // ← simpan path gambar di sini
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('purchasing.show', $purchasing)->with([
+            'message' => 'Transaksi berhasil disimpan.',
+            'alert-type' => 'success'
+        ]);
+    } catch (Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withInput()->with([
+            'message' => 'Gagal menyimpan transaksi: ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ]);
+    }
+}
+
+
+    public function show(Purchasing $purchasing)
+    {
+        $purchasing->load(['customer', 'product', 'category']);
+        return view('purchasings.print', compact('purchasing'));
     }
 }

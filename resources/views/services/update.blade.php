@@ -34,6 +34,11 @@
 
                     <!-- Biaya Jasa -->
                     <div class="mb-6">
+                       <label class="block text-gray-700 font-semibold mb-2">Catatan Teknisi</label>
+                        <textarea name="keterangan" rows="3"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">{{ old('keterangan', $service->keterangan) }}</textarea>
+
+
                         <label class="block text-gray-700 font-semibold mb-2">💰 Biaya Jasa (Rp)</label>
                         <input type="number" name="biayaJasa" value="{{ old('biayaJasa', $service->biayaJasa) }}"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
@@ -63,6 +68,7 @@
                         class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
                     🔙
                            </button>
+          
                         <button type="submit"
                             class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-all shadow-md">
                             💾 Simpan Perubahan

@@ -4,7 +4,7 @@
             <img src="/assets/images/struk.png" alt="Vivo Komputer Logo" class="w-24 h-auto">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">Vivo Komputer</h1>
-                <p class="text-sm text-gray-600">Jl. Teknologi No.123, Bandung</p>
+                <p class="text-sm text-gray-600">Jl. Pasirgede Raya Bojongherang Cianjur</p>
                 <p class="text-sm text-gray-600">Telp: 0812-3456-7890</p>
             </div>
           <div class="text-right">

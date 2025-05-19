@@ -10,7 +10,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
 
             @if (session('success'))
                 <div class="mb-4 px-4 py-2 bg-green-100 text-green-700 rounded">
@@ -52,8 +52,11 @@
                                 <th class="px-4 py-2 border">Nama Pelanggan</th>
                                 <th class="px-4 py-2 border">Barang</th>
                                 <th class="px-4 py-2 border">Kerusakan</th>
+                                <th class="px-4 py-2 border">Kelengkapan</th>
+                                <th class="px-4 py-2 border">Kondisi awal</th>
                                 <th class="px-4 py-2 border">Sparepart Digunakan</th>
                                 <th class="px-4 py-2 border">Biaya Service</th>
+
 
                                 <th class="px-4 py-2 border">Tgl Masuk</th>
                                 <th class="px-4 py-2 border">Tgl Selesai</th>
@@ -68,6 +71,9 @@
                                     <td class="px-4 py-2 border">{{ $service->customer->nama }}</td>
                                     <td class="px-4 py-2 border">{{ $service->jenisPerangkat }}</td>
                                     <td class="px-4 py-2 border">{{ $service->kerusakan ?? '-' }}</td>
+                                    <td class="px-4 py-2 border">{{ $service->kelengkapan?? '-' }}</td>
+                                    <td class="px-4 py-2 border">{{ $service->kondisi ?? '-' }}</td>
+
                                  <td class="px-4 py-2 border">
                                     @if($service->products->isNotEmpty())
                                         {{ $service->products->pluck('namaBarang')->join(', ') }}
@@ -86,16 +92,23 @@
                                             <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-semibold">Proses</span>
                                         @endif
                                     </td>
-                                    <td class="px-5  flex py-2 border justify-center text-center">
-                                        <a href="{{ route('service.edit', $service->idService) }}" 
-                                           class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs shadow">
-                                            ✏️ Update
-                                        </a>
-                                           {{-- <a href="{{ route('service.edit', $service->idService) }}" 
-                                           class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs shadow">
-                                            ✏️Print
-                                        </a> --}}
-                                    </td>
+                                    <td class="px-5 py-2 border text-center">
+    <div class="flex justify-center gap-2">
+        <!-- Tombol Update -->
+        <a href="{{ route('service.edit', $service->idService) }}" 
+           class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1.5 rounded text-sm shadow transition">
+            ✏️ <span>Update</span>
+        </a>
+
+        <!-- Tombol Cetak Struk -->
+        <button type="button" 
+                onclick="window.location='{{ route('service.struk', ['id' => $service->idService]) }}'" 
+                class="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm shadow transition">
+            🧾 <span>Struk</span>
+        </button>
+    </div>
+</td>
+
                                 </tr>
                             @empty
                                 <tr>
