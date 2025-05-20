@@ -27,6 +27,10 @@ return new class extends Migration
 
             $table->unsignedBigInteger('idFinance')->nullable();
             $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('set null');
+            
+            $table->unsignedBigInteger('idCustomer');
+            $table->foreign('idCustomer')->references('idCustomer')->on('customers')->onDelete('cascade');
+
 
 
             $table->timestamps();

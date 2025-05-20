@@ -11,7 +11,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-20">
                 
                 {{-- Laporan Sales --}}
                 <a href="{{ route('reports.sales', ['jenis' => 'sales']) }}"
@@ -51,6 +51,19 @@
                         Laporan Pembelian
                     </div>
                 </a>
+                {{-- Laporan Customers --}}
+                    <a href="{{ route('reports.customer', ['jenis' => 'customers']) }}"
+                    class="group block bg-purple-600 hover:bg-purple-700 text-white font-semibold py-10 px-6 rounded-2xl text-center text-xl shadow-xl transform transition hover:-translate-y-1 hover:scale-105">
+                        <div class="flex flex-col items-center justify-center">
+                            <svg class="w-12 h-12 mb-4 group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M5.121 17.804A7 7 0 0112 15a7 7 0 016.879 2.804M12 12a5 5 0 100-10 5 5 0 000 10z" />
+                            </svg>
+                            Laporan Pelanggan
+                        </div>
+                    </a>
+
 
             </div>
         </div>

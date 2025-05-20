@@ -20,21 +20,26 @@
 
             <div class="bg-white overflow-hidden shadow-md sm:rounded-lg p-6">
                 <div class="flex justify-between items-center mb-4">
-                    <form method="GET" action="{{ route('service.index') }}" class="mb-4 flex items-center gap-4">
-                    <label for="filter" class="font-semibold text-gray-700">Filter Waktu:</label>
-                    <select name="filter" id="filter" class="border rounded pr-8 py-1 ">
-                        <option value="" {{ request('filter') == '' ? 'selected' : '' }}>Semua</option>
-                        <option value="harian" {{ request('filter') == 'harian' ? 'selected' : '' }}>Harian</option>
-                        <option value="mingguan" {{ request('filter') == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
-                        <option value="bulanan" {{ request('filter') == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
-                    </select>
-                    
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded shadow">
-                        Filter
-                    </button>
-                </form>
+                   <form method="GET" action="{{ route('service.index') }}" class="mb-4 flex items-center gap-4">
+    <label for="filter" class="font-semibold text-gray-700">Filter Waktu:</label>
+    <select name="filter" id="filter" class="border rounded pr-8 py-1">
+        <option value="" {{ request('filter') == '' ? 'selected' : '' }}>Semua</option>
+        <option value="harian" {{ request('filter') == 'harian' ? 'selected' : '' }}>Harian</option>
+        <option value="mingguan" {{ request('filter') == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
+        <option value="bulanan" {{ request('filter') == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
+    </select>
 
-                    <a href="{{ route('service.create') }}" 
+    {{-- Input Pencarian Nomor Faktur --}}
+    <input type="text" name="cari_faktur" placeholder="Cari Nomor Faktur" 
+           value="{{ request('cari_faktur') }}"
+           class="border rounded px-3 py-1 text-sm focus:outline-none focus:ring focus:border-blue-300">
+
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded shadow">
+        Filter
+    </button>
+</form>
+
+                    <a href="{{ route('service.menu') }}" 
                        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center shadow">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +53,7 @@
                     <table class="min-w-full text-sm border border-gray-200 rounded-lg shadow-sm">
                         <thead class="bg-gray-100 text-gray-600 uppercase text-xs font-semibold">
                             <tr>
-                                <th class="px-4 py-2 border">NO</th>
+                                <th class="px-4 py-2 border">NO Faktur</th>
                                 <th class="px-4 py-2 border">Nama Pelanggan</th>
                                 <th class="px-4 py-2 border">Barang</th>
                                 <th class="px-4 py-2 border">Kerusakan</th>
@@ -56,8 +61,6 @@
                                 <th class="px-4 py-2 border">Kondisi awal</th>
                                 <th class="px-4 py-2 border">Sparepart Digunakan</th>
                                 <th class="px-4 py-2 border">Biaya Service</th>
-
-
                                 <th class="px-4 py-2 border">Tgl Masuk</th>
                                 <th class="px-4 py-2 border">Tgl Selesai</th>
                                 <th class="px-4 py-2 border">Status</th>
@@ -67,7 +70,7 @@
                         <tbody class="text-gray-700">
                             @forelse ($services as $index => $service)
                                 <tr class="hover:bg-gray-50 transition">
-                                    <td class="px-4 py-2 border text-center">{{ $index + 1 }}</td>
+                                    <td class="px-4 py-2 border text-center">{{ $service->nomorFaktur }}</td>
                                     <td class="px-4 py-2 border">{{ $service->customer->nama }}</td>
                                     <td class="px-4 py-2 border">{{ $service->jenisPerangkat }}</td>
                                     <td class="px-4 py-2 border">{{ $service->kerusakan ?? '-' }}</td>
@@ -106,6 +109,12 @@
                 class="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm shadow transition">
             🧾 <span>Struk</span>
         </button>
+         <button type="button" 
+                onclick="window.location='{{ route('service.label', ['id' => $service->idService]) }}'" 
+                class="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm shadow transition">
+            🧾 <span>label</span>
+        </button>
+        
     </div>
 </td>
 

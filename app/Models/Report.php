@@ -13,7 +13,7 @@ class Report extends Model
 
     protected $primaryKey = 'idLaporan';
 
-    protected $fillable = ['tanggal', 'jenisLaporan', 'idSale', 'idPurchasing', 'idService', 'idFinance'];
+    protected $fillable = ['tanggal', 'jenisLaporan', 'idSale', 'idPurchasing', 'idService', 'idFinance', 'idCustomer'];
 
     public function sale()
     {
@@ -28,6 +28,10 @@ class Report extends Model
     public function service()
     {
         return $this->belongsTo(Service::class, 'idService');
+    }
+     public function customers()
+    {
+        return $this->belongsTo(Service::class, 'idCustomer');
     }
 
     public function finance()

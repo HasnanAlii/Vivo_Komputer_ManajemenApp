@@ -26,7 +26,19 @@ class PurchasingController extends Controller
             ]);
         }
     }
-
+     public function menu()
+    {
+        try {
+            $purchasings = Purchasing::with(['user', 'customer', 'product'])->get();
+            return view('purchasings.menu', compact('purchasings'));
+        } catch (Exception $e) {
+            return redirect()->back()->with([
+                'message' => 'Gagal mengambil data pembelian: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
+    }
+  
     public function indexx(Request $request)
     {
         try {
@@ -56,6 +68,21 @@ class PurchasingController extends Controller
             ]);
         }
     }
+       public function createe()
+        {
+    try {
+        $categories = Category::all();
+        $customers = Customer::all();  // <-- ambil semua customer
+
+        return view('purchasings.create2', compact('categories', 'customers'));
+    } catch (Exception $e) {
+        return redirect()->back()->with([
+            'message' => 'Gagal membuka form pembelian: ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ]);
+    }
+}
+
 
     public function create()
     {
@@ -69,6 +96,93 @@ class PurchasingController extends Controller
             ]);
         }
     }
+    public function storee(Request $request)
+{
+    $request->validate([
+        'idCustomer' => 'required|exists:customers,idCustomer', 
+        'namaBarang' => 'required|string|max:255',
+        'type' => 'required|string|max:255',
+        'spek' => 'required|string|max:255',
+        'serialNumber' => 'nullable|string|max:255',
+        'idCategory' => 'required|exists:categories,idCategory',
+        'jumlah' => 'required|integer|min:1',
+        'hargaBeli' => 'required|numeric|min:0',
+        'hargaJual' => 'required|numeric|min:0',
+        'keterangan' => 'nullable|string|max:100',
+        'buktiTransaksi' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', 
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // customer wajib ada, jadi langsung ambil
+        $customer = Customer::findOrFail($request->idCustomer);
+
+        $product = Product::where('namaBarang', $request->namaBarang)
+            ->where('idCategory', $request->idCategory)
+            ->first();
+
+        if (!$product) {
+            $product = Product::create([
+                'namaBarang' => $request->namaBarang,
+                'idCategory' => $request->idCategory,
+                'jumlah' => $request->jumlah,
+                'hargaBeli' => $request->hargaBeli,
+                'hargaJual' => $request->hargaJual,
+            ]);
+        } else {
+            $product->jumlah += $request->jumlah;
+            $product->hargaBeli = $request->hargaBeli;
+            $product->hargaJual = $request->hargaJual;
+            $product->save();
+        }
+
+        $total = $request->jumlah * $request->hargaBeli;
+
+        $finance = Finance::create([
+            'dana' => -$total,
+            'modal' => -$total,
+            'tanggal' => now(),
+            'keterangan' => 'Pembelian produk',
+        ]);
+
+        $pathBukti = null;
+        if ($request->hasFile('buktiTransaksi')) {
+            $file = $request->file('buktiTransaksi');
+            $namaFile = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            $file->move(public_path('uploads/bukti_transaksi'), $namaFile);
+            $pathBukti = 'uploads/bukti_transaksi/' . $namaFile;
+        }
+
+        $purchasing = Purchasing::create([
+            'nomorFaktur' => rand(10000000, 99999999),
+            'jumlah' => $request->jumlah,
+            'hargaBeli' => $request->hargaBeli,
+            'hargaJual' => $request->hargaJual,
+            'type' => $request->type,
+            'spek' => $request->spek,
+            'serialNumber' => $request->serialNumber,
+            'tanggal' => now(),
+            'idCustomer' => $customer->idCustomer,  // selalu ada customer
+            'idProduct' => $product->idProduct,
+            'idFinance' => $finance->idFinance,
+            'buktiTransaksi' => $pathBukti,
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('purchasing.index')->with([
+            'message' => 'Transaksi berhasil disimpan.',
+            'alert-type' => 'success'
+        ]);
+    } catch (Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withInput()->with([
+            'message' => 'Gagal menyimpan transaksi: ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ]);
+    }
+}
 
    public function store(Request $request)
 {
@@ -76,6 +190,7 @@ class PurchasingController extends Controller
         'nama' => 'nullable|string|max:255',
         'noTelp' => 'nullable|string|max:20',
         'alamat' => 'nullable|string|max:255',
+        'noKtp' => 'nullable|string|max:20',
         'namaBarang' => 'required|string|max:255',
         'type' => 'required|string|max:255',
         'spek' => 'required|string|max:255',
@@ -95,6 +210,7 @@ class PurchasingController extends Controller
             'nama' => $request->nama,
             'noTelp' => $request->noTelp,
             'alamat' => $request->alamat,
+            'noKtp' => $request->noKtp
         ]);
 
         $product = Product::where('namaBarang', $request->namaBarang)
@@ -153,7 +269,7 @@ class PurchasingController extends Controller
 
         DB::commit();
 
-        return redirect()->route('purchasing.show', $purchasing)->with([
+        return redirect()->route('purchasing.index', $purchasing)->with([
             'message' => 'Transaksi berhasil disimpan.',
             'alert-type' => 'success'
         ]);

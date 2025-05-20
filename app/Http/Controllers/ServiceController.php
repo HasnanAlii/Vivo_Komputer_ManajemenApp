@@ -8,32 +8,36 @@ use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Container\Attributes\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class ServiceController extends Controller
 {
-    public function index(Request $request)
-    {
-           $filter = $request->input('filter');
-
+public function index(Request $request)
+{
     $query = Service::with(['customer', 'products']);
 
-    if ($filter) {
-        if ($filter == 'harian') {
-            $query->whereDate('tglMasuk', Carbon::today());
-        } elseif ($filter == 'mingguan') {
-            $query->whereBetween('tglMasuk', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
-        } elseif ($filter == 'bulanan') {
-            $query->whereYear('tglMasuk', Carbon::now()->year)
-                  ->whereMonth('tglMasuk', Carbon::now()->month);
-        }
+    // Filter berdasarkan waktu
+    if ($request->filter === 'harian') {
+        $query->whereDate('created_at', now());
+    } elseif ($request->filter === 'mingguan') {
+        $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+    } elseif ($request->filter === 'bulanan') {
+        $query->whereMonth('created_at', now()->month);
     }
 
-    $services = $query->orderBy('tglMasuk', 'desc')->paginate(8)->withQueryString();
+    // Filter berdasarkan nomor faktur
+    if ($request->filled('cari_faktur')) {
+        $query->where('nomorFaktur', 'like', '%' . $request->cari_faktur . '%');
+    }
+
+    $services = $query->orderByDesc('created_at')->paginate(10);
 
     return view('services.index', compact('services'));
 }
+
     public function indexx(Request $request)
     {
         $query = Service::with(['customer', 'products']);
@@ -62,17 +66,29 @@ class ServiceController extends Controller
         return view('services.create', compact('products'));
     }
 
+         public function menu()
+    {
+            return view('services.menu');
+       
+    }
+          public function createe()
+        {
+        $products = Product::where('idCategory', 1)->get();
+        $customers = Customer::all(); 
+        return view('services.create2', compact('products','customers'));  
+        }
+
    public function store(Request $request)
 {
     $request->validate([
         'nama' => 'required|string|max:255',
         'noTelp' => 'required|string|max:20',
         'alamat' => 'required|string|max:255',
-        'jenisPerangkat' => 'required|string|max:50',
-        'kondisi' => 'nullable|string|max:50',
-        'keterangan' => 'nullable|string|max:50',
-        'kelengkapan' => 'nullable|string|max:50',
-        'kerusakan' => 'nullable|string|max:50',
+        'jenisPerangkat' => 'required|string|max:255',
+        'kondisi' => 'nullable|string|max:255',
+        'ciriCiri' => 'nullable|string|max:255',
+        'kelengkapan' => 'nullable|string|max:255',
+        'kerusakan' => 'nullable|string|max:255',
         'idProduct' => 'nullable|array',
         'idProduct.*' => 'exists:products,idProduct',
         'biayaJasa' => 'nullable|integer|min:0',
@@ -117,7 +133,88 @@ class ServiceController extends Controller
             'kerusakan' => $request->kerusakan,
             'jenisPerangkat' => $request->jenisPerangkat,
             'kondisi' => $request->kondisi,
-            'keterangan' => $request->keterangan,
+            'ciriCiri' => $request->ciriCiri,
+            'kelengkapan' => $request->kelengkapan,
+            'status' => false,
+            'biayaJasa' => $biayaJasa,
+            'totalHarga' => $totalHarga,
+            'keuntungan' => $keuntungan,
+            'tglMasuk' => Carbon::now(),
+            'tglSelesai' => null,
+            'idCustomer' => $customer->idCustomer,
+            'idProduct' => count($usedProducts) ? implode(',', $usedProducts) : null,
+            'idFinance' => null,
+        ]);
+
+        return redirect()->route('service.struk', ['id' => $service->idService])->with([
+            'message' => 'Data service berhasil disimpan.',
+            'alert-type' => 'success'
+        ]);
+    } catch (\Exception $e) {
+        return back()->with([
+            'message' => 'Gagal menyimpan data service: ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ])->withInput();
+    }
+}
+public function storee(Request $request)
+{
+    $request->validate([
+       'idCustomer' => 'required|exists:customers,idCustomer', 
+        'jenisPerangkat' => 'required|string|max:255',
+        'kondisi' => 'nullable|string|max:255',
+        'ciriCiri' => 'nullable|string|max:255',
+        'kelengkapan' => 'nullable|string|max:255',
+        'kerusakan' => 'nullable|string|max:255',
+        'idProduct' => 'nullable|array',
+        'idProduct.*' => 'exists:products,idProduct',
+        'biayaJasa' => 'nullable|integer|min:0',
+    ]);
+
+  
+
+    try {
+        // customer wajib ada, jadi langsung ambil
+        $customer = Customer::findOrFail($request->idCustomer);
+
+        $product = Product::where('namaBarang', $request->namaBarang)
+            ->where('idCategory', $request->idCategory)
+            ->first();
+
+
+        $modal = 0;
+        $usedProducts = [];
+
+        if ($request->filled('idProduct')) {
+            $products = Product::whereIn('idProduct', $request->idProduct)->get();
+
+            foreach ($request->idProduct as $productId) {
+                $product = $products->where('idProduct', $productId)->first();
+
+                if ($product) {
+                    if ($product->jumlah > 0) {
+                        $product->jumlah -= 1;
+                        $product->save();
+                        $modal += $product->hargaBeli;
+                        $usedProducts[] = $productId;
+                    } else {
+                        return back()->withErrors(['idProduct' => "Stok produk '{$product->namaBarang}' habis."])
+                                     ->withInput();
+                    }
+                }
+            }
+        }
+
+        $biayaJasa = $request->biayaJasa ?? 0;
+        $totalHarga = $modal + $biayaJasa;
+        $keuntungan = $totalHarga - $modal;
+
+        $service = Service::create([
+            'nomorFaktur' => rand(10000000, 99999999),
+            'kerusakan' => $request->kerusakan,
+            'jenisPerangkat' => $request->jenisPerangkat,
+            'kondisi' => $request->kondisi,
+            'ciriCiri' => $request->ciriCiri,
             'kelengkapan' => $request->kelengkapan,
             'status' => false,
             'biayaJasa' => $biayaJasa,
@@ -156,6 +253,20 @@ public function struk($id)
 
     return view('services.struk', compact('service', 'products'));
 }
+public function label($id)
+{
+    $service = Service::with('customer')->findOrFail($id);
+
+    // Jika perlu ambil detail produk berdasarkan ID di string
+    $products = [];
+    if ($service->idProduct) {
+        $productId = explode(',', $service->idProduct);
+        $products = Product::whereIn('idProduct', $productId)->get();
+    }
+
+    return view('services.label', compact('service', 'products'));
+}
+
 
 
 

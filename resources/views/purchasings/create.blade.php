@@ -2,10 +2,10 @@
     <x-slot name="header">
         
         <h2 class="font-semibold text-2xl text-gray-800 leading-tight flex items-center gap-2">
-            <button type="button" onclick="window.location='{{ route('dashboard') }}'"
-                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
-                    🔙
-                </button>
+          <button type="button" onclick="window.location='{{ route('purchasing.menu') }}'"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                🔙
+            </button>
           🛒 {{ __('Halaman Pembelian Barang') }}
         </h2>
 
@@ -91,7 +91,7 @@
     <!-- Submit -->
     <div class="pt-6 flex justify-end space-x-4">
         <button type="submit"
-            class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+            class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200"target="_blank" >
             💾 Simpan Transaksi
         </button>
     </div>
@@ -109,4 +109,4 @@
             }
         </style>
     @endpush
-</x-app-layout>
+</x-app-layout>  

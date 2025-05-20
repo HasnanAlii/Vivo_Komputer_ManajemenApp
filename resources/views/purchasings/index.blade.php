@@ -2,7 +2,10 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             
-            <h2 class="font-bold text-2xl text-gray-800">Daftar Pembelian</h2>
+            <h2 class="font-bold text-2xl text-gray-800"> <button type="button" onclick="window.location='{{ route('dashboard') }}'"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+                    🔙
+                </button>Daftar Pembelian</h2>
         </div>
     </x-slot>
 
@@ -32,8 +35,8 @@
                         <th class="p-3 border">Harga Beli</th>
                         <th class="p-3 border">Harga Jual</th>
                         <th class="p-3 border">Keuntungan</th>
-
                         <th class="p-3 border">Tanggal</th>
+                        <th class="p-3 border text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm text-gray-800">
@@ -47,7 +50,15 @@
                             <td class="p-3 border">Rp {{ number_format($p->hargaJual, 0, ',', '.') }}</td>
                             <td class="p-3 border">Rp {{ number_format($p->keuntungan, 0, ',', '.') }}</td>
                             <td class="p-3 border">{{ $p->tanggal }}</td>
-                        </tr>
+                           <td class="p-3 border text-center">
+                                <a href="{{ route('purchasing.show', $p->idPurchasing) }}"
+                                target="_blank"
+                                class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200 inline-block">
+                                    🧾 cetak surat
+                                </a>
+                            </td>
+
+                         </tr>
                     @empty
                         <tr>
                             <td colspan="11" class="p-4 text-center text-gray-500">Belum ada data pembelian.</td>

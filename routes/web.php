@@ -58,13 +58,16 @@ Route::middleware('auth')->group(function () {
     // Purchasing routes
     Route::prefix('purchasing')->name('purchasing.')->group(function () {
         Route::get('/', [PurchasingController::class, 'index'])->name('index');
+        Route::get('/menu', [PurchasingController::class, 'menu'])->name('menu');
+        Route::get('/purchasing/{purchasing}', [PurchasingController::class, 'show'])->name('show');
         Route::get('/create', [PurchasingController::class, 'create'])->name('create');
+        Route::get('/createe', [PurchasingController::class, 'createe'])->name('createe');
         Route::post('/', [PurchasingController::class, 'store'])->name('store');
+        Route::post('/langganan', [PurchasingController::class, 'storee'])->name('storee');
         // Route::get('/{purchasing}{id}', [PurchasingController::class, 'show'])->name('show');
         Route::get('/{purchasing}/edit', [PurchasingController::class, 'edit'])->name('edit');
         Route::put('/{purchasing}', [PurchasingController::class, 'update'])->name('update');
         Route::delete('/{purchasing}', [PurchasingController::class, 'destroy'])->name('destroy');
-         Route::get('/purchasing/{purchasing}', [PurchasingController::class, 'show'])->name('show');
 
 
     });
@@ -78,6 +81,11 @@ Route::middleware('auth')->group(function () {
         Route::put('/{service}', [ServiceController::class, 'update'])->name('update');
         Route::delete('/{service}', [ServiceController::class, 'destroy'])->name('destroy');
         Route::get('/service/struk/{id}', [ServiceController::class, 'struk'])->name('struk');
+        Route::get('/service/label/{id}', [ServiceController::class, 'label'])->name('label');
+        Route::get('/createe', [ServiceController::class, 'createe'])->name('createe');
+        Route::get('/menu', [ServiceController::class, 'menu'])->name('menu');
+        Route::post('/langganan', [ServiceController::class, 'storee'])->name('storee');
+
 
     });
     
@@ -90,6 +98,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/sales/print_sales', [ReportController::class, 'printt'])->name('printt');
         Route::get('/services', [ServiceController::class, 'indexx'])->name('services');
         Route::get('/sales/print_services', [ReportController::class, 'printtt'])->name('printtt');
+        Route::get('/sales/customers', [ReportController::class, 'customers'])->name('customer');
+
 
 
 

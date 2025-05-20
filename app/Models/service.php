@@ -13,7 +13,7 @@ class Service extends Model
 
     protected $primaryKey = 'idService';
 
-    protected $fillable = ['nomorFaktur', 'kerusakan', 'jenisPerangkat','kelengkapan','kondisi','keterangan' ,'status', 'totalBiaya', 'keuntungan', 'tglMasuk', 'tglSelesai', 'idCustomer', 'idUser', 'idProduct'];
+    protected $fillable = ['nomorFaktur', 'kerusakan', 'jenisPerangkat','kelengkapan','kondisi','keterangan' ,'status', 'totalBiaya','ciriCiri', 'keuntungan', 'tglMasuk', 'tglSelesai', 'idCustomer', 'idUser', 'idProduct'];
 
     public function customer()
     {

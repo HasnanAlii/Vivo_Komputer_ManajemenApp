@@ -44,13 +44,6 @@
 
             <div class="flex justify-between gap-8 mb-6">
                 <div class="w-1/2">
-                    <h3 class="font-semibold text-gray-700 mb-1">Customer</h3>
-                    <p><strong>Nama:</strong> {{ $service->customer->nama }}</p>
-                    <p><strong>No Telp:</strong> {{ $service->customer->noTelp }}</p>
-                    <p><strong>Alamat:</strong> {{ $service->customer->alamat }}</p>
-                    <p><strong>Tanggal Masuk:</strong> {{ $service->created_at->format('d M Y') }}</p>
-                </div>
-                <div class="w-1/2">
                     <h3 class="font-semibold text-gray-700 mb-1">Informasi Service</h3>
                     <p><strong>Perangkat:</strong> {{ $service->jenisPerangkat }}</p>
                     <p><strong>Kerusakan:</strong> {{ $service->kerusakan ?? '-' }}</p>
@@ -62,6 +55,13 @@
                         <span class="">Proses</span>
                         @endif</p>
                         <p><strong>Catatan Teknisi:</strong> {{ $service->keterangan ?? '-' }}</p>
+                </div>
+                <div class="w-1/2">
+                    <h3 class="font-semibold text-gray-700 mb-1">Customer</h3>
+                    <p><strong>Nama:</strong> {{ $service->customer->nama }}</p>
+                    <p><strong>No Telp:</strong> {{ $service->customer->noTelp }}</p>
+                    <p><strong>Alamat:</strong> {{ $service->customer->alamat }}</p>
+                    <p><strong>Tanggal Masuk:</strong> {{ $service->created_at->format('d M Y') }}</p>
                 </div>
             </div>
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\Purchasing;
 use App\Models\Service;
@@ -107,5 +107,10 @@ public function printtt(Request $request)
     ])->setPaper('A4', 'landscape');
 
     return $pdf->stream('laporan-service.pdf');
+}
+public function customers()
+{
+    $customers = Customer::all(); // Ambil semua data pelanggan
+    return view('reports.customers', compact('customers'));
 }
 }

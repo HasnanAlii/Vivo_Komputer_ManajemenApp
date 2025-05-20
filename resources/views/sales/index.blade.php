@@ -12,17 +12,17 @@
                 <input type="text" name="search" placeholder="Cari Produk..." value="{{ request('search') }}"
                     class="pl-3 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300">
             </form> --}}
-            <select id="select-product" style="width: 250px;"></select>
-
+            
         </div>
     </x-slot>
-
+    
     <div class="py-6">
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-
+            
             <!-- Produk -->
             <div class="col-span-2 bg-white p-6 rounded-xl shadow-md">
-                <table class="min-w-full divide-y divide-gray-200">
+                <select id="select-product" style="width: 350px;" ></select>
+                <table class="min-w-full divide-y divide-gray-200 mt-4">
                     <thead class="bg-gray-100">
                         <tr class="text-gray-700 text-sm">
                             <th class="px-4 py-2 text-left">No</th>

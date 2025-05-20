@@ -8,7 +8,7 @@
     <div class="py-6">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-md rounded-lg p-6">
-                <form action="{{ route('service.store') }}" method="POST">
+                <form action="{{ route('service.storee') }}" method="POST">
                     @csrf
 
                     {{-- Data Customer --}}
@@ -19,11 +19,16 @@
                             </svg>
                             <h3 class="text-blue-700 font-bold">Data Customer</h3>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="nama" class="border px-3 py-2 rounded w-full" placeholder="Nama Customer" required>
-                            <input type="text" name="noTelp" class="border px-3 py-2 rounded w-full" placeholder="No Telepon" required>
-                            <input type="text" name="alamat" class="border px-3 py-2 rounded w-full" placeholder="Alamat" required>
+                        <div class="mb-6">
+                            <label for="customerSearch" class="block text-sm font-medium text-gray-700 mb-1">Cari Customer</label>
+                            <select name="idCustomer" class="select-customer w-full">
+                                <option value="">-- Pilih Customer --</option>
+                                @foreach ($customers as $customer)
+                                    <option value="{{ $customer->idCustomer }}">{{ $customer->nama }}</option>
+                                @endforeach
+                            </select>
                         </div>
+
                     </div>
 
                     {{-- Data Produk / Service --}}
@@ -37,7 +42,7 @@
                                 <h3 class="text-green-500 font-bold">Data Service</h3>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <input type="text" name="jenisPerangkat" class="border px-3 py-2 rounded w-full mb-2" placeholder="Nama Barang / Jenis Perangkat" required>
                             <input type="text" name="kerusakan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kerusakan (dapat diisi nanti)">
                             <input type="text" name="kondisi" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kondisi awal" required>
@@ -68,4 +73,31 @@
             </div>
         </div>
     </div>
+      @push('scripts')
+        <script>
+            function fillCustomerData(select) {
+                const selectedOption = select.options[select.selectedIndex];
+                if (!selectedOption.value) return;
+
+                const namaInput = document.getElementById('nama');
+                const noTelpInput = document.getElementById('noTelp');
+                const alamatInput = document.getElementById('alamat');
+                const noKtpInput = document.getElementById('noKtp');
+
+                if (namaInput) namaInput.value = selectedOption.dataset.nama || '';
+                if (noTelpInput) noTelpInput.value = selectedOption.dataset['noTelp'] || '';
+                if (alamatInput) alamatInput.value = selectedOption.dataset['alamat'] || '';
+                if (noKtpInput) noKtpInput.value = selectedOption.dataset['noKtp'] || '';
+            }
+        </script>
+    @endpush
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('.select-customer').select2({
+            placeholder: "-- Pilih Customer --",
+            allowClear: true
+        });
+    });
+</script>
 </x-app-layout>

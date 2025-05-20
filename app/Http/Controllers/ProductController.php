@@ -10,16 +10,22 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
-   public function index(Request $request)
+public function index(Request $request)
 {
-    $query = Product::with('category');
+    $query = Product::query();
 
-    if ($request->has('category') && $request->category != '') {
+    // Filter kategori jika dipilih
+    if ($request->filled('category')) {
         $query->where('idCategory', $request->category);
     }
 
+    // Pencarian nama barang
+    if ($request->filled('namaBarang')) {
+        $query->where('namaBarang', 'like', '%' . $request->namaBarang . '%');
+    }
+
     $products = $query->orderBy('namaBarang')->paginate(10);
-    $categories = Category::orderBy('namaKategori')->get();
+    $categories = Category::all();
 
     return view('products.index', compact('products', 'categories'));
 }
