@@ -113,4 +113,22 @@ public function customers()
     $customers = Customer::all(); // Ambil semua data pelanggan
     return view('reports.customers', compact('customers'));
 }
+  public function destroyy($id)
+{
+    try {
+        Customer::destroy($id);
+        $notification = [
+            'message' => 'Customer berhasil dihapus.',
+            'alert-type' => 'success'
+        ];
+        return redirect()->route('reports.customer')->with($notification);
+    } catch (\Exception $e) {
+        $notification = [
+            'message' => 'Gagal menghapus customer: ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ];
+        return redirect()->route('reports.customer')->with($notification);
+    }
+}
+
 }

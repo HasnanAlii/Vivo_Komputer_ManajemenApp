@@ -69,17 +69,15 @@
 </div>
 
           
-        </div>
-
-        <!-- Tombol hanya di luar #print-area agar tidak ikut tercetak -->
-        <div class="text-center mt-8 " >
-            <button type="button" onclick="window.location='{{ route('service.index') }}'"
-                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
-                🔙
-            </button>
-            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 ml-4 text-white font-semibold px-6 py-2 rounded shadow">
-                🖨️ Cetak Struk
-            </button>
+<div class="text-center mt-8 " >
+    <button type="button" onclick="window.location='{{ route('service.index') }}'"
+            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+        🔙
+    </button>
+    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 ml-4 text-white font-semibold px-6 py-2 rounded shadow">
+        🖨️ Cetak Label
+    </button>
+</div>
         </div>
     </div>
 </x-app-layout>

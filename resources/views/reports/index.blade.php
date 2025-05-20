@@ -28,7 +28,7 @@
 
                 {{-- Laporan Services --}}
                 <a href="{{ route('reports.services', ['jenis' => 'service']) }}"
-                   class="group block bg-green-600 hover:bg-green-700 text-white font-semibold py-10 px-6 rounded-2xl text-center text-xl shadow-xl transform transition hover:-translate-y-1 hover:scale-105">
+                   class="group block bg-blue-800 hover:bg-grey-700 text-white font-semibold py-10 px-6 rounded-2xl text-center text-xl shadow-xl transform transition hover:-translate-y-1 hover:scale-105">
                     <div class="flex flex-col items-center justify-center">
                     <svg class="w-12 h-12 mb-4 group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="2" 
                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -41,7 +41,7 @@
 
                 {{-- Laporan Purchasings --}}
                 <a href="{{ route('reports.purchasings', ['jenis' => 'purchasings']) }}"
-                   class="group block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-10 px-6 rounded-2xl text-center text-xl shadow-xl transform transition hover:-translate-y-1 hover:scale-105">
+                   class="group block bg-blue-800 hover:bg-grey-700 text-white font-semibold py-10 px-6 rounded-2xl text-center text-xl shadow-xl transform transition hover:-translate-y-1 hover:scale-105">
                     <div class="flex flex-col items-center justify-center">
                         <svg class="w-12 h-12 mb-4 group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="2"
                              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +53,7 @@
                 </a>
                 {{-- Laporan Customers --}}
                     <a href="{{ route('reports.customer', ['jenis' => 'customers']) }}"
-                    class="group block bg-purple-600 hover:bg-purple-700 text-white font-semibold py-10 px-6 rounded-2xl text-center text-xl shadow-xl transform transition hover:-translate-y-1 hover:scale-105">
+                    class="group block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-10 px-6 rounded-2xl text-center text-xl shadow-xl transform transition hover:-translate-y-1 hover:scale-105">
                         <div class="flex flex-col items-center justify-center">
                             <svg class="w-12 h-12 mb-4 group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

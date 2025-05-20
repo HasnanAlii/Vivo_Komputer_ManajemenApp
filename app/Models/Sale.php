@@ -22,6 +22,7 @@ class Sale extends Model
         'tanggal',
         'idUser',
         'idProduct',
+        'hargaTransaksi'
     ];
 
 

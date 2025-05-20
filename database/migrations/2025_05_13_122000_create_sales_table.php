@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('idSale');
             $table->integer('nomorFaktur');
             $table->integer('jumlah');
+            $table->integer('hargaTransaksi')->nullable();
             $table->integer('totalHarga');
             $table->integer('keuntungan');
             $table->date('tanggal');

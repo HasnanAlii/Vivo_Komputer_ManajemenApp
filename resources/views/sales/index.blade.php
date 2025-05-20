@@ -37,7 +37,10 @@
                             <tr>
                                 <td class="px-4 py-2">{{ $loop->iteration }}</td>
                                 <td class="px-4 py-2 font-medium">{{ $sale->product->namaBarang }}</td>
-                                <td class="px-4 py-2 text-grey-600 text-center" >Rp {{ number_format($sale->product->hargaJual, 0, ',', '.') }}</td>
+                                <td class="px-4 py-2 text-grey-600 text-center">
+                                    Rp {{ number_format($sale->hargaTransaksi, 0, ',', '.') }}
+                                </td>
+                                {{-- <td class="px-4 py-2 text-grey-600 text-center" >Rp {{ number_format($sale->product->hargaJual, 0, ',', '.') }}</td> --}}
                                 <td class="px-4 py-2 text-center">{{ $sale->jumlah }}</td>
                                 <td class="flex space-x-2 items-center px-4 py-2 justify-center">
                                     <form action="{{ route('sales.decrease', $sale->idSale) }}" method="POST">
@@ -52,15 +55,23 @@
                                         <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm">+</button>
                                     </form>
                                     
-                                    <a href="{{ route('product.editt', $sale->idProduct) }}"
+                                    {{-- <a href="{{ route('product.editt', $sale->idProduct) }}"
                                           class="inline-flex items-center bg-yellow-400 hover:bg-yellow-500 text-white px-1 py-1 rounded ml-2 shadow-sm">
                                            ✏️ <span class="ml-1"></span>
-                                       </a>
+                                       </a> --}}
 
                                     <form action="{{ route('sales.destroy', $sale->idSale) }}" method="POST">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded  shadow-sm">🗑</button>
                                     </form>
+                                    <!-- Tombol Edit Harga -->
+                                    <form action="{{ route('sales.editPrice', $sale->idSale) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="number" name="hargaTransaksi" value="{{ $sale->hargaTransaksi }}" class="form-control" style="width: 100px; display:inline-block;" required>
+                                        <button type="submit" class="btn btn-sm btn-primary">Ubah</button>
+                                    </form>
+
 
 
                                     
@@ -78,7 +89,7 @@
             <!-- Ringkasan Transaksi -->
             <div class="bg-white p-6 rounded-xl shadow-md space-y-6">
                 @php
-                    $subTotal = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaJual);
+                    $subTotal = $sales->sum(fn($s) => $s->jumlah * $s->hargaTransaksi);
                     $total = $subTotal;
                 @endphp
 
@@ -93,7 +104,7 @@
                         @foreach ($sales as $sale)
                             <li class="flex justify-between text-gray-700">
                                 <span>{{ $sale->product->namaBarang }} ({{ $sale->jumlah }}x)</span>
-                                <span>Rp {{ number_format($sale->jumlah * $sale->product->hargaJual, 0, ',', '.') }}</span>
+                                <span>Rp {{ number_format($sale->jumlah * $sale->hargaTransaksi, 0, ',', '.') }}</span>
                             </li>
                         @endforeach
                     </ul>

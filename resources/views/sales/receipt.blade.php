@@ -24,7 +24,7 @@
                         <span class="text-gray-500 text-sm ml-2">({{ $sale->jumlah }}x)</span>
                     </div>
                     <div class="font-semibold text-gray-900">
-                        Rp {{ number_format($sale->jumlah * $sale->product->hargaJual, 0, ',', '.') }}
+                        Rp {{ number_format($sale->jumlah * $sale->hargaTransaksi, 0, ',', '.') }}
                     </div>
                 </li>
             @endforeach

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\ProductImport;
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -157,4 +158,5 @@ public function index(Request $request)
 
         return redirect()->route('product.index')->with($notification);
     }
+     
 }

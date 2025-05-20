@@ -26,7 +26,7 @@
                         </div>
                     </a>
                     <a href="{{ route('service.createe', ['jenis' => 'customers']) }}"
-                        class="group block bg-gray-500 hover:bg-gray-700 text-white font-semibold py-10 px-6 rounded-2xl text-center text-xl shadow-xl transform transition hover:-translate-y-1 hover:scale-105">
+                        class="group block  bg-blue-800 hover:bg-grey-700 text-white font-semibold py-10 px-6 rounded-2xl text-center text-xl shadow-xl transform transition hover:-translate-y-1 hover:scale-105">
                         <div class="flex flex-col items-center justify-center">
                             <svg class="w-12 h-12 mb-4 group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

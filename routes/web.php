@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/sales/print/{id}', [SaleController::class, 'printReceipt'])->name('print');
         Route::put('/sales/{id}/update-bayar', [SaleController::class, 'updateBayar'])->name('updateBayar');
         Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('search');
+        Route::patch('/sales/edit-price/{id}', [SaleController::class, 'editPrice'])->name('editPrice');
+
 
 
 
@@ -99,6 +101,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/services', [ServiceController::class, 'indexx'])->name('services');
         Route::get('/sales/print_services', [ReportController::class, 'printtt'])->name('printtt');
         Route::get('/sales/customers', [ReportController::class, 'customers'])->name('customer');
+        Route::delete('/{reports}', [ReportController::class, 'destroyy'])->name('destroyy');
+
 
 
 
