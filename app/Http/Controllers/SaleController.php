@@ -144,6 +144,7 @@ public function index(Request $request)
             return redirect()->back()->with('error', 'Gagal menyimpan transaksi: ' . $e->getMessage());
         }
     }
+    
 
     public function edit($id)
     {

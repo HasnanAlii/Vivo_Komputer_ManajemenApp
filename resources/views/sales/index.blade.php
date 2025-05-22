@@ -23,7 +23,7 @@
             <div class="col-span-2 bg-white p-6 rounded-xl shadow-md">
                 
                 <select id="select-product" style="width: 350px;" ></select>
-                <select id="select-customer" style="width: 350px"></select>
+                {{-- <select id="select-customer" style="width: 350px"></select> --}}
       
 
                 
