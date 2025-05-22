@@ -28,6 +28,7 @@
                             <th class="px-4 py-2 text-left">No</th>
                             <th class="px-4 py-2 text-left">Nama Produk</th>
                             <th class="px-4 py-2 text-center">Harga</th>
+                            {{-- <th class="px-4 py-2 text-center">Stok Barang</th> --}}
                             <th class="px-4 py-2 text-center">Jumlah</th>
                             <th class="px-4 py-2 text-center">Aksi</th>
                         </tr>
@@ -40,42 +41,54 @@
                                 <td class="px-4 py-2 text-grey-600 text-center">
                                     Rp {{ number_format($sale->hargaTransaksi, 0, ',', '.') }}
                                 </td>
+                                 {{-- <td class="px-4 py-2 text-grey-600 text-center">
+                                                       {{ $sale->product->jumlah }}
+                                </td> --}}
+
                                 {{-- <td class="px-4 py-2 text-grey-600 text-center" >Rp {{ number_format($sale->product->hargaJual, 0, ',', '.') }}</td> --}}
                                 <td class="px-4 py-2 text-center">{{ $sale->jumlah }}</td>
-                                <td class="flex space-x-2 items-center px-4 py-2 justify-center">
-                                    <form action="{{ route('sales.decrease', $sale->idSale) }}" method="POST">
-                                        @csrf @method('PATCH')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow-sm">-</button>
-                                    </form>
+                          <td class="flex flex-wrap gap-2 items-center px-4 py-2">
+                        {{-- Tombol Kurangi Jumlah --}}
+                        <form action="{{ route('sales.decrease', $sale->idSale) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow-sm">-</button>
+                        </form>
 
-                                    <span class="font-semibold">{{ $sale->jumlah }}</span>
+                        {{-- Jumlah Produk --}}
 
-                                    <form action="{{ route('sales.increase', $sale->idSale) }}" method="POST">
-                                        @csrf @method('PATCH')
-                                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm">+</button>
-                                    </form>
-                                    
-                                    {{-- <a href="{{ route('product.editt', $sale->idProduct) }}"
-                                          class="inline-flex items-center bg-yellow-400 hover:bg-yellow-500 text-white px-1 py-1 rounded ml-2 shadow-sm">
-                                           ✏️ <span class="ml-1"></span>
-                                       </a> --}}
+                        <span class="font-semibold text-gray-800">{{ $sale->jumlah }}</span>
 
-                                    <form action="{{ route('sales.destroy', $sale->idSale) }}" method="POST">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded  shadow-sm">🗑</button>
-                                    </form>
-                                    <!-- Tombol Edit Harga -->
-                                    <form action="{{ route('sales.editPrice', $sale->idSale) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('PATCH')
-                                        <input type="number" name="hargaTransaksi" value="{{ $sale->hargaTransaksi }}" class="form-control" style="width: 100px; display:inline-block;" required>
-                                        <button type="submit" class="btn btn-sm btn-primary">Ubah</button>
-                                    </form>
+                        {{-- Tombol Tambah Jumlah --}}
+                        <form action="{{ route('sales.increase', $sale->idSale) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm">+</button>
+                        </form>
 
+                        {{-- Tombol Hapus --}}
+                        <form action="{{ route('sales.destroy', $sale->idSale) }}" method="POST">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded shadow-sm">🗑</button>
+                        </form>
 
+                        {{-- Form Ubah Harga --}}
+                        <form action="{{ route('sales.editPrice', $sale->idSale) }}" method="POST" class="flex items-center gap-2">
+                            @csrf @method('PATCH')
+                            <input 
+                                type="number" 
+                                name="hargaTransaksi" 
+                                value="{{ $sale->hargaTransaksi }}" 
+                                class="w-40 px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                required
+                            >
+                            <button 
+                                type="submit" 
+                                class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm text-sm"
+                            >
+                                Ubah
+                            </button>
+                          </form>
+                            </td>
 
-                                    
-                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -115,44 +128,57 @@
                     <p class="text-xl font-bold text-grey-600">Rp {{ number_format($total, 0, ',', '.') }}</p>
                 </div>
 
-                <form method="POST">
-                    @csrf
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-sm text-gray-600">Bayar</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="number" name="bayar" id="bayar-input"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-400 focus:ring focus:outline-none"
-                                    oninput="updateKembalian()" />
-                                <button type="submit" formaction="{{ route('sales.checkout') }}"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md">
-                                    Checkout
-                                </button>
-                            </div>
-                            <p class="text-blue-500 text-xs mt-1 hover:underline cursor-pointer" onclick="setExact()">Uang Pas</p>
-                        </div>
+   <form method="POST">
+    @csrf
+    <div class="space-y-4">
+        {{-- Hidden: ID Customer jika ada --}}
+        @if(isset($customer))
+            <input type="hidden" name="idCustomer" value="{{ $customer->idCustomer }}">
+        @endif
 
-                        @if(session('success'))
-                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                        @if(session('error'))
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                                {{ session('error') }}
-                            </div>
-                        @endif
+        {{-- Bayar --}}
+        <div>
+            <label class="text-sm text-gray-600">Bayar</label>
+            <div class="flex items-center space-x-2">
+                <input type="number" name="bayar" id="bayar-input"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-400 focus:ring focus:outline-none"
+                    value="{{ old('bayar') }}"
+                    oninput="updateKembalian()" />
 
-                        <div>
-                            <label class="text-sm text-gray-600">Kembalian</label>
-                            <p id="kembalian-output" class="text-lg font-bold text-gray-700">
-                                Rp. {{ (int)old('bayar', 0) <= 0 ? '0' : number_format(old('bayar') - $total, 0, ',', '.') }}
-                            </p>
-                        </div>
+                <button type="submit" formaction="{{ route('sales.checkout') }}"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md">
+                    Checkout
+                </button>
+            </div>
+            <p class="text-blue-500 text-xs mt-1 hover:underline cursor-pointer" onclick="setExact()">Uang Pas</p>
+        </div>
 
-                        <input type="hidden" name="total" value="{{ $total }}">
-                    </div>
-                </form>
+        {{-- Flash Message --}}
+        @if(session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        {{-- Kembalian --}}
+        <div>
+            <label class="text-sm text-gray-600">Kembalian</label>
+            <p id="kembalian-output" class="text-lg font-bold text-gray-700">
+                Rp. {{ old('bayar') ? number_format(old('bayar') - $total, 0, ',', '.') : '0' }}
+            </p>
+        </div>
+
+        {{-- Hidden: Total --}}
+        <input type="hidden" name="total" value="{{ $total }}">
+    </div>
+</form>
+
+
             </div>
         </div>
     </div>

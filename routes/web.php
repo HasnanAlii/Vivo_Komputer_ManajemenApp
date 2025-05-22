@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\MoneyOutController;
 use App\Http\Controllers\ProfileController;
@@ -102,6 +103,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/sales/print_services', [ReportController::class, 'printtt'])->name('printtt');
         Route::get('/sales/customers', [ReportController::class, 'customers'])->name('customer');
         Route::delete('/{reports}', [ReportController::class, 'destroyy'])->name('destroyy');
+        Route::get('/cicilan/bayar/{idCustomer}', [CustomerController::class, 'editCicilan'])->name('edit');
+        Route::get('/cicilan/edit/{idCustomer}', [CustomerController::class, 'edit'])->name('editt');
+        Route::post('/cicilan/update/{idCustomer}', [CustomerController::class, 'updateCicilan'])->name('update');
+        Route::post('/cicilan/bayar/{idCustomer}', [CustomerController::class, 'update'])->name('updatee');
+
+
 
 
 

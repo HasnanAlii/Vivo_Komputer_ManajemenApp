@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Finance;
 use App\Models\Sale;
 use App\Models\Purchasing;
 use App\Models\Service;
@@ -110,9 +111,10 @@ public function printtt(Request $request)
 }
 public function customers()
 {
-    $customers = Customer::all(); // Ambil semua data pelanggan
+    $customers = Customer::with(['sales.product', 'services', 'purchasings.product'])->get();
     return view('reports.customers', compact('customers'));
 }
+
   public function destroyy($id)
 {
     try {
@@ -131,4 +133,25 @@ public function customers()
     }
 }
 
+public function pay(Request $request)
+{
+    // Ambil data penjualan
+    $sale = Sale::findOrFail($request->idSale);
+
+    // Simpan ke tabel finance
+    $finance = new Finance();
+    $finance->idSale = $sale->idSale;
+    $finance->pemasukan = $sale->totalHarga; // Atau sesuai kebutuhan
+    $finance->pengeluaran = 0;
+    $finance->keuntungan = $sale->keuntungan;
+    $finance->tanggal = now(); // Atur sesuai kebutuhan
+    $finance->save();
+
+    // Update sale jika perlu (misalnya status lunas)
+    $sale->status = 'lunas';
+    $sale->idFinance = $finance->idFinance;
+    $sale->save();
+
+    return redirect()->back()->with('success', 'Pembayaran berhasil dan data keuangan tercatat.');
+}
 }

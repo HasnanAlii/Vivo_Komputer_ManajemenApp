@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('alamat',  255)->nullable();
             $table->string('noTelp', 255)->nullable();
             $table->string('noKtp', 255)->nullable();
+            $table->integer('cicilan')->nullable();
+
+             $table->unsignedBigInteger('idFinance')->nullable();
+             $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('set null');
+
 
             $table->timestamps();
         });

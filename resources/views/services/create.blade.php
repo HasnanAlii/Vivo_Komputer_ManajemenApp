@@ -42,7 +42,7 @@
                             <input type="text" name="kerusakan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kerusakan (dapat diisi nanti)">
                             <input type="text" name="kondisi" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kondisi awal" required>
                             <input type="text" name="kelengkapan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan" required>
-                            <input type="text" name="kelengkapan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan" required>
+                            {{-- <input type="text" name="keterangan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan" required> --}}
                             {{-- <input type="text" name="ciriCiri" class="border px-3 py-2 rounded w-full mb-2" placeholder="Ciri-ciri barang" required> --}}
                         </div>
                         <div class="mb-3">

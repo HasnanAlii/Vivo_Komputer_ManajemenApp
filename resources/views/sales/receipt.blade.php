@@ -35,14 +35,30 @@
                 <span>Total:</span>
                 <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
             </p>
-            <p class="flex justify-between font-semibold">
+            @if ($bayar == 0)
+                <p class="flex justify-between font-semibold">
+                    <span>Pembayaran:</span>
+                    <span class="text-gray-600">Cicilan</span>
+                </p>
+            @else
+                <p class="flex justify-between font-semibold">
+                    <span>Bayar:</span>
+                    <span>Rp {{ number_format($bayar, 0, ',', '.') }}</span>
+                </p>
+                <p class="flex justify-between font-bold text-gray-900 text-lg">
+                    <span>Kembalian:</span>
+                    <span>Rp {{ number_format($kembalian, 0, ',', '.') }}</span>
+                </p>
+            @endif
+
+            {{-- <p class="flex justify-between font-semibold">
                 <span>Bayar:</span>
                 <span>Rp {{ number_format($bayar, 0, ',', '.') }}</span>
             </p>
             <p class="flex justify-between font-bold text-gray-900 text-lg">
                 <span>Kembalian:</span>
                 <span>Rp {{ number_format($kembalian, 0, ',', '.') }}</span>
-            </p>
+            </p> --}}
         </div>
     </div>
 

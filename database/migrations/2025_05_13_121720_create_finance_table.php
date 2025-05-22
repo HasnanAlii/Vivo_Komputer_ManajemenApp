@@ -19,6 +19,8 @@ return new class extends Migration
             $table->date('tanggal');
             $table->integer('keuntungan')->nullable();
             $table->string('keterangan', 50);
+            $table->enum('status_pembayaran', ['lunas', 'cicilan', 'sebagian'])->default('lunas');
+            $table->decimal('sisa_cicilan', 15, 2)->default(0);
 
 
             // $table->unsignedBigInteger('idUser')->nullable();

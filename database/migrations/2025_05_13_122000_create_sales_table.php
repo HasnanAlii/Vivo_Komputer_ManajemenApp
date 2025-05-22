@@ -25,8 +25,11 @@ return new class extends Migration
             $table->unsignedBigInteger('idProduct');
             $table->foreign('idProduct')->references('idProduct')->on('products')->onDelete('cascade');
 
-             $table->unsignedBigInteger('idFinance')->nullable();
-             $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('set null');
+            $table->unsignedBigInteger('idFinance')->nullable();
+            $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('set null');
+
+            $table->unsignedBigInteger('idCustomer')->nullable();
+            $table->foreign('idCustomer')->references('idCustomer')->on('customers')->onDelete('set null');
 
             
 

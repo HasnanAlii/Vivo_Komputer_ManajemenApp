@@ -13,7 +13,7 @@ class Customer extends Model
 
     protected $primaryKey = 'idCustomer';
 
-    protected $fillable = ['nama', 'alamat', 'noTelp'];
+    protected $fillable = ['nama', 'alamat', 'noTelp','cicilan'];
 
     public function services()
     {
@@ -24,4 +24,17 @@ class Customer extends Model
     {
         return $this->hasMany(Purchasing::class, 'idCustomer');
     }
+  // Customer.php
+public function sales()
+{
+    return $this->hasMany(Sale::class, 'idCustomer', 'idCustomer'); 
+    // pastikan foreign key dan local key sesuai skema tabelmu
+}
+
+    // Sale.php
+public function product()
+{
+    return $this->belongsTo(Product::class, 'idProduct', 'idProduct');
+}
+
 }

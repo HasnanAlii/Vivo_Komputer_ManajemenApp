@@ -22,7 +22,8 @@ class Sale extends Model
         'tanggal',
         'idUser',
         'idProduct',
-        'hargaTransaksi'
+        'hargaTransaksi',
+         'idCustomer',
     ];
 
 
@@ -35,7 +36,11 @@ class Sale extends Model
     {
         return $this->belongsTo(Finance::class, 'idFinance', 'idFinance');
     }
-    
+    public function customer()
+{
+    return $this->belongsTo(Customer::class, 'idCustomer', 'idCustomer');
+}
+
 
 
 
