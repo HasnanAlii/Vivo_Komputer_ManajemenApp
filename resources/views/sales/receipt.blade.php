@@ -1,70 +1,63 @@
 <x-app-layout>
-    <div id="print-area" class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg border">
-        <div class="flex items-center justify-between border-b pb-4 mb-4">
-            <img src="/assets/images/struk.png" alt="Vivo Komputer Logo" class="w-24 h-auto">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">Vivo Komputer</h1>
-                <p class="text-sm text-gray-600">Jl. Pasirgede Raya Bojongherang Cianjur</p>
-                <p class="text-sm text-gray-600">Telp: 0812-3456-7890</p>
-            </div>
-          <div class="text-right">
-    <p class="text-sm text-gray-600">Nomor Faktur :</p>
-    <p class="text-lg font-bold text-gray-900">{{ $sales->first()->nomorFaktur ?? '-' }}</p>
-</div>
+    <div id="print-area" class="p-4 font-mono text-xs leading-tight" style="width: 21.6cm; max-width: 21.6cm;">
 
+        <div class="flex justify-between items-start border-b border-black pb-2 mb-2">
+            <div class="flex gap-4">
+                <img src="/assets/images/struk.png" alt="Logo" style="width: 70px;">
+                <div>
+                    <div class="text-base font-bold">Vivo Komputer</div>
+                    <div>Jl. Pasirgede Raya Bojongherang Cianjur</div>
+                    <div>Telp: 0812-3456-7890</div>
+                </div>
+            </div>
+            <div class="text-center text-base font-bold mb-2">
+                Nota Pembelian
+            </div>
+            <div class="text-right">
+                <div>Nomor Faktur:</div>
+                <div class="font-bold text-base">{{ $sales->first()->nomorFaktur ?? '-' }}</div>
+            </div>
         </div>
 
-        <h2 class="text-lg font-semibold mb-4 text-center">Nota Pembelian</h2>
 
-        <ul class="divide-y divide-gray-200 mb-6">
-            @foreach ($sales as $sale)
-                <li class="flex justify-between py-2">
-                    <div>
-                        <span class="font-medium text-gray-700">{{ $sale->product->namaBarang }}</span>
-                        <span class="text-gray-500 text-sm ml-2">({{ $sale->jumlah }}x)</span>
-                    </div>
-                    <div class="font-semibold text-gray-900">
-                        Rp {{ number_format($sale->jumlah * $sale->hargaTransaksi, 0, ',', '.') }}
-                    </div>
-                </li>
-            @endforeach
-        </ul>
+        <table class="w-full text-xs mb-4" style="border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid #000;">
+                    <th align="left">Barang</th>
+                    <th align="right">Jumlah</th>
+                    <th align="right">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($sales as $sale)
+                    <tr>
+                        <td>{{ $sale->product->namaBarang }}</td>
+                        <td align="right">{{ $sale->jumlah }}</td>
+                        <td align="right">Rp {{ number_format($sale->jumlah * $sale->hargaTransaksi, 0, ',', '.') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
 
-        <div class="border-t pt-4 space-y-2 text-right text-gray-700">
-            <p class="flex justify-between font-semibold">
-                <span>Total:</span>
-                <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
-            </p>
+        <div class="text-right mt-2 pr-2">
+            <div>Total: <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></div>
             @if ($bayar == 0)
-                <p class="flex justify-between font-semibold">
-                    <span>Pembayaran:</span>
-                    <span class="text-gray-600">Cicilan</span>
-                </p>
+                <div>Pembayaran: <strong>Cicilan</strong></div>
             @else
-                <p class="flex justify-between font-semibold">
-                    <span>Bayar:</span>
-                    <span>Rp {{ number_format($bayar, 0, ',', '.') }}</span>
-                </p>
-                <p class="flex justify-between font-bold text-gray-900 text-lg">
-                    <span>Kembalian:</span>
-                    <span>Rp {{ number_format($kembalian, 0, ',', '.') }}</span>
-                </p>
+                <div>Bayar: Rp {{ number_format($bayar, 0, ',', '.') }}</div>
+                <div><strong>Kembalian: Rp {{ number_format($kembalian, 0, ',', '.') }}</strong></div>
             @endif
+        </div>
 
-            {{-- <p class="flex justify-between font-semibold">
-                <span>Bayar:</span>
-                <span>Rp {{ number_format($bayar, 0, ',', '.') }}</span>
-            </p>
-            <p class="flex justify-between font-bold text-gray-900 text-lg">
-                <span>Kembalian:</span>
-                <span>Rp {{ number_format($kembalian, 0, ',', '.') }}</span>
-            </p> --}}
+        <div class="mt-4 border border-red-600 text-red-700 p-2 w-fit text-xs leading-snug">
+            <p>- Barang yang sudah dibeli tidak dapat dikembalikan.</p>
+            <p>- Simpan struk sebagai bukti transaksi.</p>
         </div>
     </div>
 
-    <div class="mt-6 text-center no-print flex justify-center gap-5">
+    <div class="no-print flex justify-center gap-4 mt-4">
         <button type="button" onclick="window.location='{{ route('sales.index') }}'"
-            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
+            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow">
             🔙 Kembali
         </button>
 
@@ -78,24 +71,23 @@
 <style>
     @media print {
         body * {
-            visibility: hidden !important;
+            visibility: hidden;
         }
 
         #print-area,
         #print-area * {
-            visibility: visible !important;
+            visibility: visible;
         }
 
         #print-area {
             position: fixed;
-            top: 0;
             left: 0;
-            right: 0;
-            margin: 0;
-            padding: 1cm;
-            width: 100%;
-            background: white;
-            box-shadow: none !important;
+            top: 0;
+            width: 21.6cm;
+            max-width: 21.6cm;
+            padding: 0.5cm;
+            font-size: 11px;
+            line-height: 1.3;
         }
 
         .no-print {
@@ -103,15 +95,13 @@
         }
 
         @page {
-            size: A4 portrait;
-            margin: 0;
+            size: 9.5in 11in;
+            margin: 0.5cm;
         }
 
-        html,
-        body {
-            margin: 0 !important;
-            padding: 0 !important;
-            height: 100%;
+        html, body {
+            margin: 0;
+            padding: 0;
         }
     }
 </style>

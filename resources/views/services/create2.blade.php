@@ -24,12 +24,15 @@
                             <select name="idCustomer" class="select-customer w-full">
                                 <option value="">-- Pilih Customer --</option>
                                 @foreach ($customers as $customer)
-                                    <option value="{{ $customer->idCustomer }}">{{ $customer->nama }}</option>
+                                    <option value="{{ $customer->idCustomer }}">{{ $customer->noTelp }}</option>
                                 @endforeach
                             </select>
                         </div>
-
+                    <a href="{{ route('service.create') }}" class="mt-2 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ">
+                       Pelanggan Baru
+                   </a>
                     </div>
+                    
 
                     {{-- Data Produk / Service --}}
                                  <div class="mb-3">

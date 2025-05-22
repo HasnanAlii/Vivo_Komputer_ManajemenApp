@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-2xl text-gray-800 leading-tight flex items-center gap-2">
-            <button type="button" onclick="window.location='{{ route('purchasing.menu') }}'"
+            <button type="button" onclick="window.location='{{ route('purchasing.index') }}'"
                 class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
                 🔙
             </button>
@@ -33,15 +33,18 @@
                     @csrf
 
                     <!-- Customer Info -->
-           <div class="mb-6">
-            <label for="customerSearch" class="block text-sm font-medium text-gray-700 mb-1">Cari Customer</label>
-            <select name="idCustomer" class="select-customer w-full">
-                <option value="">-- Pilih Customer --</option>
-                @foreach ($customers as $customer)
-                    <option value="{{ $customer->idCustomer }}">{{ $customer->nama }}</option>
-                @endforeach
-            </select>
-        </div>
+                    <div class="mb-6">
+                        <label for="customerSearch" class="block text-sm font-medium text-gray-700 mb-1">Cari Customer</label>
+                        <select name="idCustomer" class="select-customer w-full">
+                            <option value="">-- Pilih Customer --</option>
+                            @foreach ($customers as $customer)
+                            <option value="{{ $customer->idCustomer }}">{{ $customer->noTelp }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <a href="{{ route('purchasing.create') }}" class="mt-2 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ">
+                       Pelanggan Baru
+                   </a>
 
 
                     <!-- Product Info -->
@@ -55,32 +58,63 @@
                             </svg>
                             Data Produk
                         </h3>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="namaBarang" placeholder="Nama Barang" class="input" required>
-                            <input type="text" name="type" placeholder="Type" class="input" required>
-                            <input type="text" name="spek" placeholder="Spesifikasi" class="input" required>
-
-                            <input type="text" name="serialNumber" placeholder="Serial Number" class="input">
-
-                            <select name="idCategory" class="input" required>
-                                <option value="">-- Pilih Kategori --</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->idCategory }}">{{ $category->namaKategori }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                            <input type="number" name="jumlah" placeholder="Jumlah" class="input" required min="1">
-                            <input type="number" name="hargaBeli" placeholder="Harga Beli /pcs" class="input" required
-                                min="0">
-                            <input type="number" name="hargaJual" placeholder="Harga Jual /pcs" class="input" required
-                                min="0">
+                       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                    <label class="block font-medium text-gray-700 mb-1">Nama Barang / Jenis Perangkat</label>
+                    <input type="text" name="namaBarang" class="border px-3 py-2 rounded w-full mb-2"required>
+                    </div>
+                    <div>
+                    <label class="block font-medium text-gray-700 mb-1">Type</label>
+                    <input type="text" name="type" class="border px-3 py-2 rounded w-full mb-2">
+                    </div> 
+                    <div>
+                     <label class="block font-medium text-gray-700 mb-1">Spesifikasi</label>
+                     <input type="text" name="spek" class="border px-3 py-2 rounded w-full mb-2"  required>
+                    </div> 
+                    <div>
+                    <label class="block font-medium text-gray-700 mb-1">Serial Number</label>
+                    <input type="text" name="serialNumber" class="border px-3 py-2 rounded w-full mb-2"  required>
+                    </div>
+                    <div > 
+                    <label class="block font-medium text-gray-700 mb-1">Kategori</label>
+                        <select name="idCategory" class="input" required>
+                        <option value="">Pilih Kategori </option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->idCategory }}">{{ $category->namaKategori }}</option>
+                        @endforeach
+                    </select>
                         </div>
                     </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
 
-                    <!-- Submit -->
+                    <div>
+  <label class="block font-medium text-gray-700 mb-1">Jumlah</label>
+  <input type="text" name="jumlah" class="border px-3 py-2 rounded w-full mb-2 format-ribuan" required>
+</div>
+<div>
+  <label class="block font-medium text-gray-700 mb-1">Harga Beli</label>
+  <input type="text" name="hargaBeli" class="border px-3 py-2 rounded w-full mb-2 format-ribuan" required>
+</div>
+<div>
+  <label class="block font-medium text-gray-700 mb-1">Harga Jual</label>
+  <input type="text" name="hargaJual" class="border px-3 py-2 rounded w-full mb-2 format-ribuan" required>
+</div>
+
+<script>
+  document.querySelectorAll('.format-ribuan').forEach(function(input) {
+    input.addEventListener('input', function(e) {
+      // Hapus semua titik dulu
+      let value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '');
+      // Format angka dengan pemisah ribuan
+      e.target.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    });
+  });
+</script>
+
+         
+                     </div>
+                    </div>
+
                     <div class="pt-6 flex justify-end space-x-4">
                         <button type="submit"
                             class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">

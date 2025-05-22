@@ -101,6 +101,11 @@ class SaleController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+        'hargaTransaksi' => str_replace('.', '', $request->hargaTransaksi),
+        'totalHarga' => str_replace('.', '', $request->totalHarga),
+        'keuntungan' => str_replace('.', '', $request->keuntungan),
+    ]);
         $request->validate([
             'nomorFaktur' => 'required|integer',
             'jumlah' => 'required|integer',
@@ -129,6 +134,11 @@ class SaleController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->merge([
+        'hargaTransaksi' => str_replace('.', '', $request->hargaTransaksi),
+        'totalHarga' => str_replace('.', '', $request->totalHarga),
+        'keuntungan' => str_replace('.', '', $request->keuntungan),
+    ]);
         try {
             $sale = Sale::findOrFail($id);
             $sale->update($request->all());
@@ -180,6 +190,10 @@ class SaleController extends Controller
 
 public function checkout(Request $request)
 {
+        $request->merge([
+        'bayar' => str_replace('.', '', $request->bayar),
+        'total' => str_replace('.', '', $request->total),
+    ]);
     $request->validate([
         'bayar' => 'required|numeric|min:0',
         'total' => 'required|numeric|min:0',
@@ -205,14 +219,7 @@ public function checkout(Request $request)
             ]);
         }
 
-        if ($bayar > $totalBayar) {
-            DB::rollBack();
-            return redirect()->route('sales.index')->with([
-                'message' => 'Pembayaran melebihi total.',
-                'alert-type' => 'error'
-            ]);
-        }
-
+       
         $statusPembayaran = $bayar == 0 ? 'cicilan' : ($sisaCicilan > 0 ? 'sebagian' : 'lunas');
 
         // Jika bayar = 0, set modal dan keuntungan jadi 0
@@ -300,6 +307,10 @@ public function checkout(Request $request)
 
 public function editPrice(Request $request, $id)
 {
+     $request->merge([
+        'hargaTransaksi' => str_replace('.', '', $request->hargaTransaksi),
+    ]);
+
     $request->validate([
         'hargaTransaksi' => 'required|numeric|min:0',
     ]);

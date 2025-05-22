@@ -140,8 +140,8 @@
         <div>
             <label class="text-sm text-gray-600">Bayar</label>
             <div class="flex items-center space-x-2">
-                <input type="number" name="bayar" id="bayar-input"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-400 focus:ring focus:outline-none"
+                <input type="text" name="bayar" id="bayar-input"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-400 focus:ring focus:outline-none format-ribuan"
                     value="{{ old('bayar') }}"
                     oninput="updateKembalian()" />
 
@@ -183,7 +183,7 @@
         </div>
     </div>
 
-    <script>
+    {{-- <script>
         function updateKembalian() {
             const bayarInput = document.getElementById('bayar-input');
             const kembalianOutput = document.getElementById('kembalian-output');
@@ -202,7 +202,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateKembalian();
         });
-    </script>
+    </script> --}}
 
 
 <script>
@@ -249,5 +249,52 @@ $(document).ready(function() {
     });
 });
 </script>
+<script>
+    // Format input angka menjadi format ribuan Indonesia
+    function formatRibuanAngka(value) {
+        return value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // Ambil nilai angka numerik dari input bertipe string ribuan (misalnya: "1.000.000" -> 1000000)
+    function parseRupiah(value) {
+        return parseInt(value.replace(/\./g, '')) || 0;
+    }
+
+    // Update tampilan kembalian secara real-time
+    function updateKembalian() {
+        const bayarInput = document.getElementById('bayar-input');
+        const kembalianOutput = document.getElementById('kembalian-output');
+        const total = {{ $total }}; // Total dari server (angka tanpa titik)
+
+        const bayar = parseRupiah(bayarInput.value);
+        const kembalian = Math.max(0, bayar - total);
+        
+        kembalianOutput.innerText = 'Rp. ' + new Intl.NumberFormat('id-ID').format(kembalian);
+    }
+
+    // Tombol "Uang Pas"
+    function setExact() {
+        const bayarInput = document.getElementById('bayar-input');
+        bayarInput.value = formatRibuanAngka(String({{ $total }}));
+        updateKembalian();
+    }
+
+    // Saat dokumen dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+        // Format ribuan otomatis pada semua input yang diberi class .format-ribuan
+        document.querySelectorAll('.format-ribuan').forEach(function(input) {
+            input.addEventListener('input', function(e) {
+                e.target.value = formatRibuanAngka(e.target.value);
+                if (e.target.id === 'bayar-input') {
+                    updateKembalian();
+                }
+            });
+        });
+
+        updateKembalian();
+    });
+</script>
+
 
 </x-app-layout>

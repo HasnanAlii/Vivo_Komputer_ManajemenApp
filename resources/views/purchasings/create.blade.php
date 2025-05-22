@@ -2,7 +2,7 @@
     <x-slot name="header">
         
         <h2 class="font-semibold text-2xl text-gray-800 leading-tight flex items-center gap-2">
-          <button type="button" onclick="window.location='{{ route('purchasing.menu') }}'"
+          <button type="button" onclick="window.location='{{ route('purchasing.index') }}'"
                 class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
                 🔙
             </button>
@@ -43,11 +43,23 @@
             Data Customer
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <input type="text" name="nama" placeholder="Nama Customer" class="input" required>
-            <input type="text" name="noTelp" placeholder="No Telepon" class="input" required>
-            <input type="text" name="alamat" placeholder="Alamat" class="input" required>
-            <input type="text" name="noKtp" placeholder="Nomor Ktp" class="input" required>
-            
+
+             <div>
+                            <label class="block font-medium text-gray-700 mb-1">Nama Customer</label>
+                            <input type="text" name="nama" class="border px-3 py-2 rounded w-full" required>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700 mb-1">No Telepon</label>
+                            <input type="text" name="noTelp" class="border px-3 py-2 rounded w-full" required>
+                        </div><div>
+                            <label class="block font-medium text-gray-700 mb-1">Alamat</label>
+                            <input type="text" name="alamat" class="border px-3 py-2 rounded w-full" required>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700 mb-1">No Ktp</label>
+                            <input type="text" name="noKto" class="border px-3 py-2 rounded w-full" required>
+                        </div>
+                        
             <!-- Input untuk upload bukti transaksi -->
             <div class="md:col-span-3">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Upload Bukti Transaksi</label>
@@ -64,9 +76,71 @@
             </svg>
             Data Produk
         </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                    <label class="block font-medium text-gray-700 mb-1">Nama Barang / Jenis Perangkat</label>
+                    <input type="text" name="namaBarang" class="border px-3 py-2 rounded w-full mb-2"required>
+                    </div>
+                    <div>
+                    <label class="block font-medium text-gray-700 mb-1">Type</label>
+                    <input type="text" name="type" class="border px-3 py-2 rounded w-full mb-2">
+                    </div> 
+                    <div>
+                     <label class="block font-medium text-gray-700 mb-1">Spesifikasi</label>
+                     <input type="text" name="spek" class="border px-3 py-2 rounded w-full mb-2"  required>
+                    </div> 
+                    <div>
+                    <label class="block font-medium text-gray-700 mb-1">Serial Number</label>
+                    <input type="text" name="serialNumber" class="border px-3 py-2 rounded w-full mb-2"  required>
+                    </div>
+                    <div > 
+                    <label class="block font-medium text-gray-700 mb-1">Kategori</label>
+                        <select name="idCategory" class="input" required>
+                        <option value="">Pilih Kategori </option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->idCategory }}">{{ $category->namaKategori }}</option>
+                        @endforeach
+                    </select>
+                        </div>
+                            {{-- <input type="text" name="keterangan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan" required> --}}
+                            {{-- <input type="text" name="ciriCiri" class="border px-3 py-2 rounded w-full mb-2" placeholder="Ciri-ciri barang" required> --}}
+                    </div>
+                                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
 
+                    <div>
+  <label class="block font-medium text-gray-700 mb-1">Jumlah</label>
+  <input type="text" name="jumlah" class="border px-3 py-2 rounded w-full mb-2 format-ribuan" required>
+</div>
+<div>
+  <label class="block font-medium text-gray-700 mb-1">Harga Beli</label>
+  <input type="text" name="hargaBeli" class="border px-3 py-2 rounded w-full mb-2 format-ribuan" required>
+</div>
+<div>
+  <label class="block font-medium text-gray-700 mb-1">Harga Jual</label>
+  <input type="text" name="hargaJual" class="border px-3 py-2 rounded w-full mb-2 format-ribuan" required>
+</div>
+
+<script>
+  document.querySelectorAll('.format-ribuan').forEach(function(input) {
+    input.addEventListener('input', function(e) {
+      // Hapus semua titik dulu
+      let value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '');
+      // Format angka dengan pemisah ribuan
+      e.target.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    });
+  });
+</script>
+
+         
+                     </div>
+                    </div>
+
+{{-- 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <input type="text" name="namaBarang" placeholder="Nama Barang" class="input" required>
+            <div>
+            <label class="block font-medium text-gray-700 mb-1">Nama Barang / Jenis Perangkat</label>
+                <input type="text" name="namaBarang" placeholder="Nama Barang" class="input" required>
+            </div>
             <input type="text" name="type" placeholder="Type" class="input" required>
             <input type="text" name="spek" placeholder="Spesifikasi" class="input" required>
 
@@ -79,13 +153,9 @@
                 @endforeach
             </select>
             {{-- Kode Barang dihapus karena tidak dipakai --}}
-        </div>
+        {{-- </div> --}} 
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <input type="number" name="jumlah" placeholder="Jumlah" class="input" required min="1">
-            <input type="number" name="hargaBeli" placeholder="Harga Beli /pcs" class="input" required min="0">
-            <input type="number" name="hargaJual" placeholder="Harga Jual /pcs" class="input" required min="0">
-        </div>
+        
     </div>
 
     <!-- Submit -->

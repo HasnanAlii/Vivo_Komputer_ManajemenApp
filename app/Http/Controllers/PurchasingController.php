@@ -26,18 +26,7 @@ class PurchasingController extends Controller
             ]);
         }
     }
-     public function menu()
-    {
-        try {
-            $purchasings = Purchasing::with(['user', 'customer', 'product'])->get();
-            return view('purchasings.menu', compact('purchasings'));
-        } catch (Exception $e) {
-            return redirect()->back()->with([
-                'message' => 'Gagal mengambil data pembelian: ' . $e->getMessage(),
-                'alert-type' => 'error'
-            ]);
-        }
-    }
+  
   
     public function indexx(Request $request)
     {
@@ -96,26 +85,33 @@ class PurchasingController extends Controller
             ]);
         }
     }
-    public function storee(Request $request)
+public function storee(Request $request)
 {
     $request->validate([
-        'idCustomer' => 'required|exists:customers,idCustomer', 
+        'idCustomer' => 'required|exists:customers,idCustomer',
         'namaBarang' => 'required|string|max:255',
         'type' => 'required|string|max:255',
         'spek' => 'required|string|max:255',
         'serialNumber' => 'nullable|string|max:255',
         'idCategory' => 'required|exists:categories,idCategory',
         'jumlah' => 'required|integer|min:1',
-        'hargaBeli' => 'required|numeric|min:0',
-        'hargaJual' => 'required|numeric|min:0',
+        'hargaBeli' => 'required|string',
+        'hargaJual' => 'required|string',
         'keterangan' => 'nullable|string|max:100',
-        'buktiTransaksi' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', 
+        'buktiTransaksi' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
     ]);
+
+    $request->merge([
+        'hargaBeli' => str_replace('.', '', $request->hargaBeli),
+        'hargaJual' => str_replace('.', '', $request->hargaJual),
+    ]);
+
+    $hargaBeli = (int) $request->hargaBeli;
+    $hargaJual = (int) $request->hargaJual;
 
     DB::beginTransaction();
 
     try {
-        // customer wajib ada, jadi langsung ambil
         $customer = Customer::findOrFail($request->idCustomer);
 
         $product = Product::where('namaBarang', $request->namaBarang)
@@ -127,17 +123,17 @@ class PurchasingController extends Controller
                 'namaBarang' => $request->namaBarang,
                 'idCategory' => $request->idCategory,
                 'jumlah' => $request->jumlah,
-                'hargaBeli' => $request->hargaBeli,
-                'hargaJual' => $request->hargaJual,
+                'hargaBeli' => $hargaBeli,
+                'hargaJual' => $hargaJual,
             ]);
         } else {
             $product->jumlah += $request->jumlah;
-            $product->hargaBeli = $request->hargaBeli;
-            $product->hargaJual = $request->hargaJual;
+            $product->hargaBeli = $hargaBeli;
+            $product->hargaJual = $hargaJual;
             $product->save();
         }
 
-        $total = $request->jumlah * $request->hargaBeli;
+        $total = $request->jumlah * $hargaBeli;
 
         $finance = Finance::create([
             'dana' => -$total,
@@ -157,13 +153,13 @@ class PurchasingController extends Controller
         $purchasing = Purchasing::create([
             'nomorFaktur' => rand(10000000, 99999999),
             'jumlah' => $request->jumlah,
-            'hargaBeli' => $request->hargaBeli,
-            'hargaJual' => $request->hargaJual,
+            'hargaBeli' => $hargaBeli,
+            'hargaJual' => $hargaJual,
             'type' => $request->type,
             'spek' => $request->spek,
             'serialNumber' => $request->serialNumber,
             'tanggal' => now(),
-            'idCustomer' => $customer->idCustomer,  // selalu ada customer
+            'idCustomer' => $customer->idCustomer,
             'idProduct' => $product->idProduct,
             'idFinance' => $finance->idFinance,
             'buktiTransaksi' => $pathBukti,
@@ -184,7 +180,8 @@ class PurchasingController extends Controller
     }
 }
 
-   public function store(Request $request)
+
+  public function store(Request $request)
 {
     $request->validate([
         'nama' => 'nullable|string|max:255',
@@ -197,11 +194,21 @@ class PurchasingController extends Controller
         'serialNumber' => 'nullable|string|max:255',
         'idCategory' => 'required|exists:categories,idCategory',
         'jumlah' => 'required|integer|min:1',
-        'hargaBeli' => 'required|numeric|min:0',
-        'hargaJual' => 'required|numeric|min:0',
+        'hargaBeli' => 'required|string',  // ubah jadi string karena ada titik
+        'hargaJual' => 'required|string',
         'keterangan' => 'nullable|string|max:100',
-        'buktiTransaksi' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', 
+        'buktiTransaksi' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
     ]);
+
+    // Hilangkan titik pada hargaBeli dan hargaJual agar jadi angka murni
+    $request->merge([
+        'hargaBeli' => str_replace('.', '', $request->hargaBeli),
+        'hargaJual' => str_replace('.', '', $request->hargaJual),
+    ]);
+
+    // Jika kamu mau, kamu bisa convert ke integer setelah hapus titik
+    $hargaBeli = (int) $request->hargaBeli;
+    $hargaJual = (int) $request->hargaJual;
 
     DB::beginTransaction();
 
@@ -222,17 +229,17 @@ class PurchasingController extends Controller
                 'namaBarang' => $request->namaBarang,
                 'idCategory' => $request->idCategory,
                 'jumlah' => $request->jumlah,
-                'hargaBeli' => $request->hargaBeli,
-                'hargaJual' => $request->hargaJual,
+                'hargaBeli' => $hargaBeli,
+                'hargaJual' => $hargaJual,
             ]);
         } else {
             $product->jumlah += $request->jumlah;
-            $product->hargaBeli = $request->hargaBeli;
-            $product->hargaJual = $request->hargaJual;
+            $product->hargaBeli = $hargaBeli;
+            $product->hargaJual = $hargaJual;
             $product->save();
         }
 
-        $total = $request->jumlah * $request->hargaBeli;
+        $total = $request->jumlah * $hargaBeli;
 
         $finance = Finance::create([
             'dana' => -$total,
@@ -241,22 +248,19 @@ class PurchasingController extends Controller
             'keterangan' => 'Pembelian produk',
         ]);
 
-        // Simpan file jika ada
-       $pathBukti = null;
-
+        $pathBukti = null;
         if ($request->hasFile('buktiTransaksi')) {
             $file = $request->file('buktiTransaksi');
-            $namaFile = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName()); // hindari spasi
+            $namaFile = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
             $file->move(public_path('uploads/bukti_transaksi'), $namaFile);
             $pathBukti = 'uploads/bukti_transaksi/' . $namaFile;
         }
 
-
         $purchasing = Purchasing::create([
             'nomorFaktur' => rand(10000000, 99999999),
             'jumlah' => $request->jumlah,
-            'hargaBeli' => $request->hargaBeli,
-            'hargaJual' => $request->hargaJual,
+            'hargaBeli' => $hargaBeli,
+            'hargaJual' => $hargaJual,
             'type' => $request->type,
             'spek' => $request->spek,
             'serialNumber' => $request->serialNumber,
@@ -264,7 +268,7 @@ class PurchasingController extends Controller
             'idCustomer' => $customer->idCustomer,
             'idProduct' => $product->idProduct,
             'idFinance' => $finance->idFinance,
-            'buktiTransaksi' => $pathBukti, // ← simpan path gambar di sini
+            'buktiTransaksi' => $pathBukti,
         ]);
 
         DB::commit();
@@ -281,6 +285,7 @@ class PurchasingController extends Controller
         ]);
     }
 }
+
 
 
     public function show(Purchasing $purchasing)

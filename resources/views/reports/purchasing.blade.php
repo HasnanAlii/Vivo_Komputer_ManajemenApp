@@ -49,8 +49,8 @@
                                 <th class="p-3 border">Nama Barang</th>
                                 <th class="p-3 border">Jumlah</th>
                                 <th class="p-3 border">Harga Beli</th>
-                                <th class="p-3 border">Harga Jual</th>
-                                <th class="p-3 border">Keuntungan</th>
+                                {{-- <th class="p-3 border">Harga Jual</th>
+                                <th class="p-3 border">Keuntungan</th> --}}
                                 <th class="p-3 border">Bukti Transaksi</th>
                                 <th class="p-3 border">Tanggal</th>
                             </tr>
@@ -63,8 +63,8 @@
                                     <td class="p-3 border">{{ $p->product->namaBarang ?? '-' }}</td>
                                     <td class="p-3 border">{{ $p->jumlah }}</td>
                                     <td class="p-3 border">Rp {{ number_format($p->hargaBeli, 0, ',', '.') }}</td>
-                                    <td class="p-3 border">Rp {{ number_format($p->hargaJual, 0, ',', '.') }}</td>
-                                    <td class="p-3 border">Rp {{ number_format($p->keuntungan, 0, ',', '.') }}</td>
+                                    {{-- <td class="p-3 border">Rp {{ number_format($p->hargaJual, 0, ',', '.') }}</td>
+                                    <td class="p-3 border">Rp {{ number_format($p->keuntungan, 0, ',', '.') }}</td> --}}
                                     <td class="p-3 border text-center align-middle">
                                         <div class="flex justify-center items-center">
                                             @if ($p->buktiTransaksi)
@@ -90,13 +90,13 @@
                 <div class="mt-4 ">
                     {{ $purchasings->links('vendor.pagination.custom') }}
                 </div>
-                <div class="mt-6 p-5 bg-blue-50 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-6 text-lg font-semibold shadow-inner ">
-                    <div class="mx-auto flex items-center space-x-2 text-red-700">
+               <div class="mt-6 p-5 bg-blue-50 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-6 text-lg font-semibold shadow-inner">
+                    <div class="flex md:justify-end items-center space-x-2 text-green-700 md:col-span-3">
                         <span class="text-2xl">💰</span>
-                        <span>Total Modal:</span>
+                        <span>Total Pembelian:</span>
                         <span>Rp {{ number_format($totalModal, 0, ',', '.') }}</span>
                     </div>
-                    <div class="flex items-center space-x-2 text-blue-700">
+                    {{-- <div class="flex items-center space-x-2 text-blue-700">
                         <span class="text-2xl">📈</span>
                         <span>Total Keuntungan:</span>
                         <span>Rp {{ number_format($totalKeuntungan, 0, ',', '.') }}</span>
@@ -105,7 +105,7 @@
                         <span class="text-2xl">💰</span>
                         <span>Total Pendapatan:</span>
                         <span>Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</span>
-                    </div>
+                    </div> --}}
                 </div>
                 </div>
             </div>

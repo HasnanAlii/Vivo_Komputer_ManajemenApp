@@ -3,7 +3,7 @@
         <div class="flex items-center space-x-4">
             <button type="button" onclick="window.location='{{ route('reports.index') }}'"
                 class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded shadow transition">
-                🔙 Kembali
+                🔙 
             </button>
             <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
                 Kelola Pelanggan

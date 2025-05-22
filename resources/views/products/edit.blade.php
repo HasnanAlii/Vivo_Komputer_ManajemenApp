@@ -27,18 +27,18 @@
 
                         <div>
                             <label class="block mb-1 text-gray-700 font-semibold">Jumlah</label>
-                            <input type="number" name="jumlah" value="{{ old('jumlah', $product->jumlah) }}"
+                            <input type="text" name="jumlah" value="{{ old('jumlah', $product->jumlah) }}"
                                 placeholder="Masukkan jumlah stok"
                                 required
-                                class="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm px-4 py-2">
+                                class="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm px-4 py-2 format-ribuan">
                         </div>
 
                         <div>
                             <label class="block mb-1 text-gray-700 font-semibold">Harga Jual</label>
-                            <input type="number" name="hargaJual" value="{{ old('hargaJual', $product->hargaJual) }}"
+                            <input type="text" name="hargaJual" value="{{ old('hargaJual', $product->hargaJual) }}"
                                 placeholder="Masukkan harga jual"
                                 required
-                                class="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm px-4 py-2">
+                                class="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm px-4 py-2 format-ribuan">
                         </div>
                     </div>
 
@@ -57,4 +57,14 @@
             </div>
         </div>
     </div>
+     <script>
+  document.querySelectorAll('.format-ribuan').forEach(function(input) {
+    input.addEventListener('input', function(e) {
+      // Hapus semua titik dulu
+      let value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '');
+      // Format angka dengan pemisah ribuan
+      e.target.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    });
+  });
+</script>
 </x-app-layout>

@@ -14,7 +14,7 @@
            <div class="bg-white shadow-lg sm:rounded-lg p-6">
                <div class="flex justify-end items-center mb-6">
          
-            <a href="{{ route('purchasing.create') }}" class="mt-2 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <a href="{{ route('purchasing.createe') }}" class="mt-2 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                 + Tambah Pembelian
             </a>
         </div>
@@ -33,8 +33,7 @@
                         <th class="p-3 border">Nama Barang</th>
                         <th class="p-3 border">Jumlah</th>
                         <th class="p-3 border">Harga Beli</th>
-                        <th class="p-3 border">Harga Jual</th>
-                        <th class="p-3 border">Keuntungan</th>
+               
                         <th class="p-3 border">Tanggal</th>
                         <th class="p-3 border text-center">Aksi</th>
                     </tr>
@@ -47,8 +46,7 @@
                             <td class="p-3 border">{{ $p->product->namaBarang ?? '-' }}</td>
                             <td class="p-3 border">{{ $p->jumlah }}</td>
                             <td class="p-3 border">Rp {{ number_format($p->hargaBeli, 0, ',', '.') }}</td>
-                            <td class="p-3 border">Rp {{ number_format($p->hargaJual, 0, ',', '.') }}</td>
-                            <td class="p-3 border">Rp {{ number_format($p->keuntungan, 0, ',', '.') }}</td>
+                            
                             <td class="p-3 border">{{ $p->tanggal }}</td>
                            <td class="p-3 border text-center">
                                 <a href="{{ route('purchasing.show', $p->idPurchasing) }}"

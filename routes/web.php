@@ -61,7 +61,6 @@ Route::middleware('auth')->group(function () {
     // Purchasing routes
     Route::prefix('purchasing')->name('purchasing.')->group(function () {
         Route::get('/', [PurchasingController::class, 'index'])->name('index');
-        Route::get('/menu', [PurchasingController::class, 'menu'])->name('menu');
         Route::get('/purchasing/{purchasing}', [PurchasingController::class, 'show'])->name('show');
         Route::get('/create', [PurchasingController::class, 'create'])->name('create');
         Route::get('/createe', [PurchasingController::class, 'createe'])->name('createe');
@@ -86,7 +85,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/service/struk/{id}', [ServiceController::class, 'struk'])->name('struk');
         Route::get('/service/label/{id}', [ServiceController::class, 'label'])->name('label');
         Route::get('/createe', [ServiceController::class, 'createe'])->name('createe');
-        Route::get('/menu', [ServiceController::class, 'menu'])->name('menu');
         Route::post('/langganan', [ServiceController::class, 'storee'])->name('storee');
 
 

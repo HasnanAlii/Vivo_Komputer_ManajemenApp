@@ -38,10 +38,22 @@
                         <textarea name="keterangan" rows="3"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">{{ old('keterangan', $service->keterangan) }}</textarea>
                         <label class="block text-gray-700 font-semibold mb-2">💰 Biaya Jasa (Rp)</label>
-                        <input type="number" name="biayaJasa" value="{{ old('biayaJasa', $service->biayaJasa) }}"
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-                         min="0">
+                         <input type="text" name="biayaJasa" 
+         value="{{ old('biayaJasa', number_format($service->biayaJasa, 0, ',', '.')) }}"
+         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 format-ribuan"
+         required>
                     </div>
+<script>
+  document.querySelectorAll('.format-ribuan').forEach(function(input) {
+    input.addEventListener('input', function(e) {
+      // Hapus semua titik dulu
+      let value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '');
+      // Format angka dengan pemisah ribuan
+      e.target.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    });
+  });
+</script>
+
 
                     <!-- Pilih Sparepart -->
                     <div class="mb-8">

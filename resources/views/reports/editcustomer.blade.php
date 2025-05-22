@@ -1,6 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Edit Customer</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <button type="button" onclick="window.location='{{ route('reports.customer') }}'"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded shadow transition">
+                🔙
+            </button>Edit Customer</h2>
     </x-slot>
 
     <div class="py-8">

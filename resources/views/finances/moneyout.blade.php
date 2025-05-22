@@ -114,4 +114,14 @@
             </div>
         </div>
     </div>
+    <script>
+  document.querySelectorAll('.format-ribuan').forEach(function(input) {
+    input.addEventListener('input', function(e) {
+      // Hapus semua titik dulu
+      let value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '');
+      // Format angka dengan pemisah ribuan
+      e.target.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    });
+  });
+</script>
 </x-app-layout>

@@ -20,9 +20,18 @@
                             <h3 class="text-blue-700 font-bold">Data Customer</h3>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="nama" class="border px-3 py-2 rounded w-full" placeholder="Nama Customer" required>
-                            <input type="text" name="noTelp" class="border px-3 py-2 rounded w-full" placeholder="No Telepon" required>
-                            <input type="text" name="alamat" class="border px-3 py-2 rounded w-full" placeholder="Alamat" required>
+                        <div>
+                            <label class="block font-medium text-gray-700 mb-1">Nama Customer</label>
+                            <input type="text" name="nama" class="border px-3 py-2 rounded w-full" required>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700 mb-1">No Telepon</label>
+                            <input type="text" name="noTelp" class="border px-3 py-2 rounded w-full" required>
+                        </div><div>
+                            <label class="block font-medium text-gray-700 mb-1">Alamat</label>
+                            <input type="text" name="alamat" class="border px-3 py-2 rounded w-full" required>
+                        </div>
+                        
                         </div>
                     </div>
 
@@ -38,10 +47,22 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="jenisPerangkat" class="border px-3 py-2 rounded w-full mb-2" placeholder="Nama Barang / Jenis Perangkat" required>
-                            <input type="text" name="kerusakan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kerusakan (dapat diisi nanti)">
-                            <input type="text" name="kondisi" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kondisi awal" required>
-                            <input type="text" name="kelengkapan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan" required>
+
+                            <div>
+                            <label class="block font-medium text-gray-700 mb-1">Nama Barang / Jenis Perangkat</label>
+                            <input type="text" name="jenisPerangkat" class="border px-3 py-2 rounded w-full mb-2"required>
+                        </div>
+                         <div>
+                            <label class="block font-medium text-gray-700 mb-1">Kerusakan (dapat diisi nanti)</label>
+                            <input type="text" name="kerusakan" class="border px-3 py-2 rounded w-full mb-2">
+                        </div> <div>
+                            <label class="block font-medium text-gray-700 mb-1">Kondisi awal</label>
+                            <input type="text" name="kondisi" class="border px-3 py-2 rounded w-full mb-2"  required>
+                        </div> <div>
+                            <label class="block font-medium text-gray-700 mb-1">Kelengkapan</label>
+                            <input type="text" name="kelengkapan" class="border px-3 py-2 rounded w-full mb-2"  required>
+                        </div>
+                        
                             {{-- <input type="text" name="keterangan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan" required> --}}
                             {{-- <input type="text" name="ciriCiri" class="border px-3 py-2 rounded w-full mb-2" placeholder="Ciri-ciri barang" required> --}}
                         </div>

@@ -27,7 +27,7 @@
                             <x-dashboard.card title="Stok Barang" route="{{ route('product.index') }}" icon="archive-box" />
 
                             <!-- Kartu 2: Pembelian Produk -->
-                            <x-dashboard.card title="Pembelian Produk" route="{{ route('purchasing.menu') }}" icon="shopping-cart" />
+                            <x-dashboard.card title="Pembelian Produk" route="{{ route('purchasing.index') }}" icon="shopping-cart" />
 
                             <!-- Kartu 3: Laporan Penjualan -->
                             <x-dashboard.card title="Laporan" route="{{ route('reports.index') }}" icon="document-text" />

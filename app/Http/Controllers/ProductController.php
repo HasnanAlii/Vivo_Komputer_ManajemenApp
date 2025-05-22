@@ -39,6 +39,11 @@ public function index(Request $request)
 
     public function store(Request $request)
     {
+         $request->merge([
+        'hargaBeli' => str_replace('.', '', $request->hargaBeli),
+        'hargaJual' => str_replace('.', '', $request->hargaJual),
+        'jumlah' => str_replace('.', '', $request->jumlah),
+    ]);
         $request->validate([
             'namaBarang' => 'required|max:50',
             'jumlah' => 'required|integer',
@@ -97,6 +102,10 @@ public function index(Request $request)
 
     public function update(Request $request, Product $product)
     {
+         $request->merge([
+        'hargaJual' => str_replace('.', '', $request->hargaJual),
+        'jumlah' => str_replace('.', '', $request->jumlah),
+    ]);
         $request->validate([
             'namaBarang' => 'required|max:50',
             'jumlah' => 'required|integer',
