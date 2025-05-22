@@ -257,7 +257,7 @@ public function storee(Request $request)
         }
 
         $purchasing = Purchasing::create([
-            'nomorFaktur' => rand(10000000, 99999999),
+            'nomorFaktur' => rand(1000000000, 9999999999),
             'jumlah' => $request->jumlah,
             'hargaBeli' => $hargaBeli,
             'hargaJual' => $hargaJual,

@@ -66,7 +66,11 @@ public function index(Request $request)
         return view('services.create', compact('products'));
     }
 
-    
+         public function menu()
+    {
+            return view('services.menu');
+       
+    }
           public function createe()
         {
         $products = Product::where('idCategory', 1)->get();
@@ -76,11 +80,6 @@ public function index(Request $request)
 
    public function store(Request $request)
 {
-    
-     $request->merge([
-        'biayaJasa' => str_replace('.', '', $request->biayaJasa),
-    ]);
-
     $request->validate([
         'nama' => 'required|string|max:255',
         'noTelp' => 'required|string|max:20',
@@ -160,10 +159,6 @@ public function index(Request $request)
 }
 public function storee(Request $request)
 {
-     $request->merge([
-        'biayaJasa' => str_replace('.', '', $request->biayaJasa),
-    ]);
-
     $request->validate([
        'idCustomer' => 'required|exists:customers,idCustomer', 
         'jenisPerangkat' => 'required|string|max:255',
@@ -215,7 +210,7 @@ public function storee(Request $request)
         $keuntungan = $totalHarga - $modal;
 
         $service = Service::create([
-            'nomorFaktur' => rand(10000000, 99999999),
+            'nomorFaktur' => rand(1000000000, 9999999999),
             'kerusakan' => $request->kerusakan,
             'jenisPerangkat' => $request->jenisPerangkat,
             'kondisi' => $request->kondisi,
@@ -278,7 +273,7 @@ public function label($id)
 
 public function update(Request $request, $id)
 {
-     $request->merge([
+      $request->merge([
         'biayaJasa' => str_replace('.', '', $request->biayaJasa),
     ]);
 

@@ -35,7 +35,10 @@ return new class extends Migration
             $table->foreign('idProduct')->references('idProduct')->on('products')->onDelete('cascade');
 
             $table->unsignedBigInteger('idFinance')->nullable();
-             $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('cascade');
+            $table->foreign('idFinance')->references('idFinance')->on('finance')->onDelete('cascade');
+             
+            $table->unsignedBigInteger('idEmployee')->nullable();
+            $table->foreign('idEmployee')->references('idEmployee')->on('employess')->onDelete('cascade');
 
 
             $table->timestamps();

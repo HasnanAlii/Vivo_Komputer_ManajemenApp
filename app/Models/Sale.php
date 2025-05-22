@@ -24,6 +24,7 @@ class Sale extends Model
         'idProduct',
         'hargaTransaksi',
          'idCustomer',
+         'idEmployee'
     ];
 
 
@@ -42,6 +43,9 @@ class Sale extends Model
 }
 
 
-
+public function employee()
+{
+    return $this->belongsTo(Employee::class, 'idEmployee', 'idEmployee');
+}
 
 }

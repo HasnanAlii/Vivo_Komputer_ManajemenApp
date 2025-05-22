@@ -28,26 +28,30 @@ class Service extends Model
     public function finance() {
     return $this->belongsTo(Finance::class, 'idFinance', 'idFinance');
     }
-
-
- public function products()
-{
-    return $this->belongsTo(Product::class, 'idProduct', 'idProduct');
-}
-
-    public function notifications()
+    public function employee()
     {
-        return $this->hasMany(Notification::class, 'idService');
-    }
-    public function getProductsAttribute()
-{
-    if (!$this->idProduct) {
-        return collect();  
+        return $this->belongsTo(Employee::class, 'idEmployee', 'idEmployee');
     }
 
-    $ids = explode(',', $this->idProduct);
 
-    return Product::whereIn('idProduct', $ids)->get();
-}
+    public function products()
+    {
+        return $this->belongsTo(Product::class, 'idProduct', 'idProduct');
+    }
+
+        public function notifications()
+        {
+            return $this->hasMany(Notification::class, 'idService');
+        }
+        public function getProductsAttribute()
+    {
+        if (!$this->idProduct) {
+            return collect();  
+        }
+
+        $ids = explode(',', $this->idProduct);
+
+        return Product::whereIn('idProduct', $ids)->get();
+    }
 
 }

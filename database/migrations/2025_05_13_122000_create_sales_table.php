@@ -31,7 +31,9 @@ return new class extends Migration
             $table->unsignedBigInteger('idCustomer')->nullable();
             $table->foreign('idCustomer')->references('idCustomer')->on('customers')->onDelete('set null');
 
-            
+            $table->unsignedBigInteger('idEmployee')->nullable();
+            $table->foreign('idEmployee')->references('idEmployee')->on('employess')->onDelete('cascade');
+
 
             $table->timestamps();
         });

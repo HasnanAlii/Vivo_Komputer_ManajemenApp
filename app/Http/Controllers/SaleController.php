@@ -13,8 +13,26 @@ use Illuminate\Support\Facades\DB;
 class SaleController extends Controller
 {
 
-    public function index(Request $request)
+public function index(Request $request)
 {
+    // Filter pencarian customer
+    if ($request->has('searchCustomer') && !empty($request->searchCustomer)) {
+        if (is_numeric($request->searchCustomer)) {
+            $customer = Customer::find($request->searchCustomer);
+        } else {
+            $customer = Customer::where('nama', 'like', '%' . $request->searchCustomer . '%')->first();
+        }
+
+        if ($customer) {
+            return redirect()->route('sales.index', ['customer' => $customer->idCustomer])
+                ->with('success', 'Customer berhasil dipilih.');
+        } else {
+            return redirect()->route('sales.index')
+                ->with('error', 'Customer tidak ditemukan.');
+        }
+    }
+
+    // Filter pencarian produk
     if ($request->has('search') && !empty($request->search)) {
         if (is_numeric($request->search)) {
             $product = Product::find($request->search);
@@ -41,6 +59,7 @@ class SaleController extends Controller
                     'keuntungan' => $product->hargaJual - $product->hargaBeli,
                     'tanggal' => now(),
                     'idProduct' => $product->idProduct,
+                    'idCustomer' => $request->customer, 
                 ]);
             }
 
@@ -52,14 +71,16 @@ class SaleController extends Controller
             ->with('error', 'Produk tidak ditemukan.');
     }
 
-    $sales = Sale::whereNull('idFinance')->with('product')->get();
-    $total = $sales->sum(fn($s) => $s->jumlah * $s->hargaTransaksi);
+    // Tampilkan halaman kasir seperti biasa
+    $sales = Sale::whereNull('idFinance')->get();
+    $customer = null;
+    if ($request->has('customer')) {
+        $customer = Customer::find($request->customer);
+    }
 
-    // ✅ Ambil idCustomer dari query string
-    $customer = Customer::find($request->customer);
-
-    return view('sales.index', compact('sales', 'customer', 'total'));
+    return view('sales.index', compact('sales', 'customer'));
 }
+
 
 
     public function indexx(Request $request)
@@ -355,4 +376,15 @@ public function editPrice(Request $request, $id)
 
         return response()->json(['results' => $products]);
     }
+    public function searchCustomer(Request $request)
+{
+    $search = $request->q;
+
+    $customers = Customer::where('nama', 'like', '%' . $search . '%')
+        ->select('idCustomer as id', 'nama as text')
+        ->get();
+
+    return response()->json(['results' => $customers]);
+}
+
 }

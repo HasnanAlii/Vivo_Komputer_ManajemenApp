@@ -21,7 +21,16 @@
             
             <!-- Produk -->
             <div class="col-span-2 bg-white p-6 rounded-xl shadow-md">
+                
                 <select id="select-product" style="width: 350px;" ></select>
+                <select id="select-customer" style="width: 350px"></select>
+      
+
+                
+
+ 
+
+
                 <table class="min-w-full divide-y divide-gray-200 mt-4">
                     <thead class="bg-gray-100">
                         <tr class="text-gray-700 text-sm">
@@ -204,7 +213,38 @@
         });
     </script> --}}
 
+<script>
+$(document).ready(function() {
+    $('#select-customer').select2({
+        placeholder: 'Cari customer...',
+        ajax: {
+            url: '{{ route('sales.customer') }}', // Buat route ini di controller
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data.results
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 1,
+    });
 
+    // Event saat customer dipilih
+    $('#select-customer').on('select2:select', function(e) {
+        var customerId = e.params.data.id;
+
+        // Redirect ke halaman sales dengan customer yang dipilih
+        window.location.href = '{{ route('sales.index') }}' + '?customer=' + customerId;
+    });
+});
+</script>
 <script>
 $(document).ready(function() {
     $('#select-product').select2({
