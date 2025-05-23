@@ -34,10 +34,9 @@
                 <table class="min-w-full divide-y divide-gray-200 mt-4">
                     <thead class="bg-gray-100">
                         <tr class="text-gray-700 text-sm">
-                            <th class="px-4 py-2 text-left">No</th>
+                            <th class="px-4 py-2 text-left">Stok</th>
                             <th class="px-4 py-2 text-left">Nama Produk</th>
                             <th class="px-4 py-2 text-center">Harga</th>
-                            {{-- <th class="px-4 py-2 text-center">Stok Barang</th> --}}
                             <th class="px-4 py-2 text-center">Jumlah</th>
                             <th class="px-4 py-2 text-center">Aksi</th>
                         </tr>
@@ -45,18 +44,17 @@
                     <tbody class="divide-y divide-gray-100 text-sm">
                         @forelse ($sales as $sale)
                             <tr>
-                                <td class="px-4 py-2">{{ $loop->iteration }}</td>
+                                <td class="px-4 py-2 text-grey-600 text-center">
+                                                      {{ $sale->product->jumlah }}
+                               </td>
                                 <td class="px-4 py-2 font-medium">{{ $sale->product->namaBarang }}</td>
                                 <td class="px-4 py-2 text-grey-600 text-center">
                                     Rp {{ number_format($sale->hargaTransaksi, 0, ',', '.') }}
                                 </td>
-                                 {{-- <td class="px-4 py-2 text-grey-600 text-center">
-                                                       {{ $sale->product->jumlah }}
-                                </td> --}}
 
                                 {{-- <td class="px-4 py-2 text-grey-600 text-center" >Rp {{ number_format($sale->product->hargaJual, 0, ',', '.') }}</td> --}}
                                 <td class="px-4 py-2 text-center">{{ $sale->jumlah }}</td>
-                          <td class="flex flex-wrap gap-2 items-center px-4 py-2">
+                          <td class="flex flex-wrap gap-2 items-left px-4 py-2">
                         {{-- Tombol Kurangi Jumlah --}}
                         <form action="{{ route('sales.decrease', $sale->idSale) }}" method="POST">
                             @csrf @method('PATCH')
@@ -83,10 +81,10 @@
                         <form action="{{ route('sales.editPrice', $sale->idSale) }}" method="POST" class="flex items-center gap-2">
                             @csrf @method('PATCH')
                             <input 
-                                type="number" 
+                                type="text" 
                                 name="hargaTransaksi" 
                                 value="{{ $sale->hargaTransaksi }}" 
-                                class="w-40 px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                class="w-36 px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 format-ribuann"
                                 required
                             >
                             <button 
@@ -336,5 +334,14 @@ $(document).ready(function() {
     });
 </script>
 
-
+<script>
+  document.querySelectorAll('.format-ribuann').forEach(function(input) {
+    input.addEventListener('input', function(e) {
+      // Hapus semua titik dulu
+      let value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '');
+      // Format angka dengan pemisah ribuan
+      e.target.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    });
+  });
+</script>
 </x-app-layout>

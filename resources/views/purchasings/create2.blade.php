@@ -29,7 +29,7 @@
             @endif
 
             <div class="bg-white shadow-md rounded-xl p-8 space-y-6">
-                <form action="{{ route('purchasing.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('purchasing.storee') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Customer Info -->
@@ -38,7 +38,7 @@
                         <select name="idCustomer" class="select-customer w-full">
                             <option value="">-- Pilih Customer --</option>
                             @foreach ($customers as $customer)
-                            <option value="{{ $customer->idCustomer }}">{{ $customer->noTelp }}</option>
+                            <option value="{{ $customer->idCustomer }}">{{ $customer->noTelp }} - {{ $customer->nama }}</option>
                             @endforeach
                         </select>
                     </div>

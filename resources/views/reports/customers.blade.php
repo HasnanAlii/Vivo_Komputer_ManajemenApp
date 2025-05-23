@@ -27,8 +27,10 @@
                                 <th class="p-3 border">No KTP</th>
                                 <th class="p-3 border">Riwayat Service</th>
                                 <th class="p-3 border">Riwayat Penjualan</th>
-                                <th class="p-3 border text-center">Cicilan</th>
-                                <th class="p-3 border text-center">Sisa Cicilan</th>
+                                {{-- <th class="p-3 border">Riwayat Pembelian</th> --}}
+
+                                {{-- <th class="p-3 border text-center">Cicilan</th>
+                                <th class="p-3 border text-center">Sisa Cicilan</th> --}}
 
                                 <th class="p-3 border text-center">Aksi</th>
                             </tr>
@@ -59,9 +61,9 @@
                                     
                                 </td>
                                 
-                                <td class="p-3 border text-center font-semibold text-green-700">
+                                <td class="p-3 border text-green-700">
                                     @if($customer->purchasings->isEmpty())
-                                    -
+                                      <span class="text-gray-400 italic">- Tidak ada</span>
                                     @else
                                     <ul class="list-disc list-inside text-left">
                                         @foreach ($customer->purchasings as $purchase)
@@ -70,21 +72,32 @@
                                     </ul>
                                     @endif
                                 </td>
-                               <td class="p-3 border text-center font-semibold text-green-700">
-    @if($customer->cicilan == 0)
-        -
-    @else
-        <ul class="list-disc list-inside text-left">
-            @foreach ($customer->sales as $purchase)
-                <li>{{ $purchase->product->namaBarang }}</li>
-            @endforeach
-        </ul>
-    @endif
-</td>
+                                {{-- <td class="p-3 border text-center font-semibold text-green-700">
+                                    @if($customer->sales->isEmpty())
+                                    -
+                                    @else
+                                    <ul class="list-disc list-inside text-left">
+                                        @foreach ($customer->sales as $purchase)
+                                        <li>{{ $purchase->product->namaBarang }}</li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                </td> --}}
+                               {{-- <td class="p-3 border text-center font-semibold text-green-700">
+                                    @if($customer->cicilan == 0)
+                                        -
+                                    @else
+                                        <ul class="list-disc list-inside text-left">
+                                            @foreach ($customer->sales as $purchase)
+                                                <li>{{ $purchase->product->namaBarang }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </td> --}}
 
-<td class="p-3 border text-center font-semibold text-green-700">
-    {{ number_format($customer->cicilan ?? 0, 0, ',', '.') }}
-</td>
+                                {{-- <td class="p-3 border text-center font-semibold text-green-700">
+                                    {{ number_format($customer->cicilan ?? 0, 0, ',', '.') }}
+                                </td> --}}
 
                                     <td class="p-3 border text-center space-x-1 whitespace-nowrap">
                                         @if ($customer->cicilan > 0)

@@ -129,7 +129,7 @@ public function index(Request $request)
         $keuntungan = $totalHarga - $modal;
 
         $service = Service::create([
-            'nomorFaktur' => rand(10000000, 99999999),
+              'nomorFaktur' => rand(10000000, 99999999),
             'kerusakan' => $request->kerusakan,
             'jenisPerangkat' => $request->jenisPerangkat,
             'kondisi' => $request->kondisi,
@@ -210,7 +210,8 @@ public function storee(Request $request)
         $keuntungan = $totalHarga - $modal;
 
         $service = Service::create([
-            'nomorFaktur' => rand(1000000000, 9999999999),
+            'nomorFaktur' => rand(10000000, 99999999),
+
             'kerusakan' => $request->kerusakan,
             'jenisPerangkat' => $request->jenisPerangkat,
             'kondisi' => $request->kondisi,
@@ -364,11 +365,14 @@ public function update(Request $request, $id)
         ])->withInput();
     }
 }
+
+
+
 private function sendWhatsappNotification($service)
 {
     $customer = $service->customer; 
     $phone = $customer->noTelp;     
-    $message = "Halo {$customer->nama}, service Anda dengan kerusakan {$service->kerusakan} sudah SELESAI.\nSilakan datang ke toko untuk mengambil barang Anda.\nTerima kasih telah menggunakan layanan kami. 🙏";
+    $message = "Halo {$customer->nama}, service Anda dengan kerusakan {$service->kerusakan} sudah SELESAI dan Total biaya perbaikan senilai RP. " . number_format($service->totalHarga, 0, ',', '.')."\nSilakan datang ke toko untuk mengambil barang Anda.\nTerima kasih telah menggunakan layanan kami. 🙏";
 
   $response = Http::withHeaders([
     'Authorization' => 'L9PaGYokqbue5GHechJR',

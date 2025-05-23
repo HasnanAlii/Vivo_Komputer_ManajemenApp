@@ -88,13 +88,13 @@ class PurchasingController extends Controller
 public function storee(Request $request)
 {
     $request->validate([
-        'idCustomer' => 'required|exists:customers,idCustomer',
+        'idCustomer' => 'required|exists:customers,idCustomer', 
         'namaBarang' => 'required|string|max:255',
         'type' => 'required|string|max:255',
         'spek' => 'required|string|max:255',
         'serialNumber' => 'nullable|string|max:255',
         'idCategory' => 'required|exists:categories,idCategory',
-        'jumlah' => 'required|integer|min:1',
+        'jumlah' => 'required|string|min:1',
         'hargaBeli' => 'required|string',
         'hargaJual' => 'required|string',
         'keterangan' => 'nullable|string|max:100',
@@ -104,6 +104,7 @@ public function storee(Request $request)
     $request->merge([
         'hargaBeli' => str_replace('.', '', $request->hargaBeli),
         'hargaJual' => str_replace('.', '', $request->hargaJual),
+        'jumlah' => str_replace('.', '', $request->jumlah),
     ]);
 
     $hargaBeli = (int) $request->hargaBeli;
@@ -112,6 +113,7 @@ public function storee(Request $request)
     DB::beginTransaction();
 
     try {
+        // Hanya gunakan customer dari request, tanpa membuat baru
         $customer = Customer::findOrFail($request->idCustomer);
 
         $product = Product::where('namaBarang', $request->namaBarang)
@@ -193,7 +195,7 @@ public function storee(Request $request)
         'spek' => 'required|string|max:255',
         'serialNumber' => 'nullable|string|max:255',
         'idCategory' => 'required|exists:categories,idCategory',
-        'jumlah' => 'required|integer|min:1',
+        'jumlah' => 'required|string|min:1',
         'hargaBeli' => 'required|string',  // ubah jadi string karena ada titik
         'hargaJual' => 'required|string',
         'keterangan' => 'nullable|string|max:100',
@@ -201,9 +203,11 @@ public function storee(Request $request)
     ]);
 
     // Hilangkan titik pada hargaBeli dan hargaJual agar jadi angka murni
-    $request->merge([
+   $request->merge([
         'hargaBeli' => str_replace('.', '', $request->hargaBeli),
         'hargaJual' => str_replace('.', '', $request->hargaJual),
+        'jumlah' => str_replace('.', '', $request->jumlah),
+
     ]);
 
     // Jika kamu mau, kamu bisa convert ke integer setelah hapus titik
@@ -257,7 +261,7 @@ public function storee(Request $request)
         }
 
         $purchasing = Purchasing::create([
-            'nomorFaktur' => rand(1000000000, 9999999999),
+            'nomorFaktur' => rand(10000000, 99999999),
             'jumlah' => $request->jumlah,
             'hargaBeli' => $hargaBeli,
             'hargaJual' => $hargaJual,

@@ -57,9 +57,12 @@ class FinanceController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+        'jumlah' => str_replace('.', '', $request->jumlah),
+    ]);
         $request->validate([
             'keterangan' => 'required|string|max:50',
-            'jumlah' => 'required|integer|min:0',
+            'jumlah' => 'required|string|min:0',
             'tanggal' => 'required|date',
         ]);
 
@@ -96,9 +99,12 @@ class FinanceController extends Controller
 
     public function storee(Request $request)
     {
+        $request->merge([
+        'jumlah' => str_replace('.', '', $request->jumlah),
+    ]);
         $request->validate([
             'keterangan' => 'required|string|max:50',
-            'jumlah' => 'required|integer|min:0',
+            'jumlah' => 'required|string|min:0',
             'tanggal' => 'required|date',
         ]);
 

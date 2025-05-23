@@ -24,7 +24,8 @@
                             <select name="idCustomer" class="select-customer w-full">
                                 <option value="">-- Pilih Customer --</option>
                                 @foreach ($customers as $customer)
-                                    <option value="{{ $customer->idCustomer }}">{{ $customer->noTelp }}</option>
+                               <option value="{{ $customer->idCustomer }}">{{ $customer->noTelp }} - {{ $customer->nama }}</option>
+
                                 @endforeach
                             </select>
                         </div>

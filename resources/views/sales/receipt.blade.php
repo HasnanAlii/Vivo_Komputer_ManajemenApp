@@ -20,7 +20,8 @@
         </div>
 
 
-        <table class="w-full text-xs mb-4" style="border-collapse: collapse;">
+       <table class="w-full text-xs mb-4" style="border-collapse: collapse; width: 100%;">
+
             <thead>
                 <tr style="border-bottom: 1px solid #000;">
                     <th align="left">Barang</th>
@@ -69,39 +70,40 @@
 </x-app-layout>
 
 <style>
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-
-        #print-area,
-        #print-area * {
-            visibility: visible;
-        }
-
-        #print-area {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 21.6cm;
-            max-width: 21.6cm;
-            padding: 0.5cm;
-            font-size: 11px;
-            line-height: 1.3;
-        }
-
-        .no-print {
-            display: none !important;
-        }
-
-        @page {
-            size: 9.5in 11in;
-            margin: 0.5cm;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
+ @media print {
+    body * {
+        visibility: hidden;
     }
+
+    #print-area, #print-area * {
+        visibility: visible;
+    }
+
+    #print-area {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 24.13cm; /* Lebar 9.5 inch */
+        max-width: 24.13cm;
+        padding: 0.5cm;
+        font-size: 11px;
+        line-height: 1.3;
+        
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        size: 9.5in 11in; /* ukuran kertas */
+        margin: 0.5cm;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+    }
+}
+
 </style>
