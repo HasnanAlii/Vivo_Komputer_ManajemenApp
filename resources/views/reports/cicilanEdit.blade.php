@@ -12,7 +12,7 @@
     <div class="py-8">
         <div class="max-w-md mx-auto sm:px-6 lg:px-8">
             <div class="bg-white p-6 rounded shadow">
-                <form action="{{ route('reports.update', $customer->idCustomer) }}" method="POST" target="_blank">
+                <form action="{{ route('reports.update', $customer->idCustomer) }}" method="POST" >
                     @csrf
 
                     <div class="mb-4">

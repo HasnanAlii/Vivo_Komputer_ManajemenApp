@@ -17,10 +17,10 @@
                 position: absolute;
                 left: 0;
                 top: 0;
-                width: 21.6cm; /* approx 8.5 inch width */
-                max-width: 21.6cm;
-                padding: 0.5cm;
-                font-size: 11px;
+                width: 28cm; /* approx 8.5 inch width */
+                max-width: 28cm;
+                /* padding: 0.5cm; */
+                font-size: 14px;
                 line-height: 1.3;
             }
             table, th, td {
@@ -31,15 +31,17 @@
                 padding: 4px;
             }
             img {
-                max-width: 80px !important;
+                max-width: 110px !important;
             }
         }
     </style>
 
     <div class="py-4">
-        <div id="print-area" class="border border-gray-300 p-4 text-sm font-mono">
-            <div class="flex justify-between border-b pb-2 mb-2">
-                <div class="flex items-start gap-4">
+       <div id="print-area" class=" text-sm font-mono" style="max-width: 28cm; width: 100%;">
+
+            <div class="flex justify-between items-start border-b border-gray-900 pb-2 mb-2">
+            
+                <div class="flex items-start gap-2">
                     <img src="/assets/images/struk.png" alt="Vivo Komputer Logo">
                     <div>
                         <strong class="text-lg">Vivo Komputer</strong><br>
@@ -49,6 +51,7 @@
                     </div>
                 </div>
                 <div class="text-right">
+                <strong class="text-lg">Struk Perbaikan Barang</strong>
                 <div>Nomor Faktur:</div>
                 <div class="font-bold text-base">{{ $service->first()->nomorFaktur ?? '-' }}</div>
                 <div>Tanggal:</div>
@@ -123,11 +126,11 @@
                 </table>
             </div>
 
-         <div class="mt-2 border border-red-400 text-red-500 text-[8px] px-2 py-1 leading-tight max-w-xs">
-    <p>- Barang yang sudah dibeli tidak dapat ditukar/dikembalikan.</p>
-    <p>- Garansi sesuai tanggal yang tertera.</p>
-    <p>- Garansi batal jika segel rusak.</p>
-    <p>- Service lebih dari 1 bulan tidak diambil kami tidak bertanggung jawab jika barang tersebut rusak.</p>
+    <div class="mt-4 border border-black text-black text-[9px]  px-3 py-2 leading-tight max-w-md print:text-[9px]">
+    <p>• Barang yang sudah dibeli tidak dapat ditukar/dikembalikan.</p>
+    <p>• Garansi sesuai tanggal yang tertera.</p>
+    <p>• Garansi batal jika segel rusak.</p>
+    {{-- <p>• Service lebih dari 1 bulan tidak diambil, kami tidak bertanggung jawab jika barang tersebut rusak.</p> --}}
 </div>
 
         </div>

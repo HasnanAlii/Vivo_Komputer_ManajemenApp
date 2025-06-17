@@ -166,6 +166,8 @@ public function updateCicilan(Request $request, $idCustomer)
             $untung = $totalHarga - $modal;
 
             $s->keuntungan = $untung;
+            $s->jenisPembayaran = 'lunas';
+
             $s->idFinance = $finance->idFinance ?? null;
             $s->save();
 
@@ -201,8 +203,8 @@ public function updateCicilan(Request $request, $idCustomer)
         }
 
         // Hapus semua riwayat pembayaran sebelumnya (reset bayar jadi 0)
-        // Pembayaran::where('idCustomer', $customer->idCustomer)
-        //     ->update(['bayar' => 0]);
+        Pembayaran::where('idCustomer', $customer->idCustomer)
+            ->update(['bayar' => 0]);
     } else {
         $sale->idFinance = $finance->idFinance;
         $sale->save();
