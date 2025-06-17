@@ -25,11 +25,11 @@
                     <form action="{{ route('reports.purchasings') }}" method="GET" class="flex items-center gap-2">
                         <label for="filter" class="text-sm text-gray-600">Filter:</label>
                         <select name="filter" id="filter" onchange="this.form.submit()" class="rounded border-gray-300 text-sm">
-                            <option value="">-- Semua --</option>
-                            <option value="today" {{ request('filter') == 'today' ? 'selected' : '' }}>Harian</option>
-                            <option value="week" {{ request('filter') == 'week' ? 'selected' : '' }}>Mingguan</option>
-                            <option value="month" {{ request('filter') == 'month' ? 'selected' : '' }}>Bulanan</option>
-                            <option value="year" {{ request('filter') == 'year' ? 'selected' : '' }}>Tahunan</option>
+                            <option value=""> Semua </option>
+                            <option value="Harian" {{ request('filter') == 'Harian' ? 'selected' : '' }}>Harian</option>
+                            <option value="Mingguan" {{ request('filter') == 'Mingguan' ? 'selected' : '' }}>Mingguan</option>
+                            <option value="Bulanan" {{ request('filter') == 'Bulanan' ? 'selected' : '' }}>Bulanan</option>
+                            <option value="Tahunan" {{ request('filter') == 'Tahunan' ? 'selected' : '' }}>Tahunan</option>
                         </select>
                     </form>
 

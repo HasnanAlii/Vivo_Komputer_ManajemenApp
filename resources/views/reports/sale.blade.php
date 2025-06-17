@@ -16,21 +16,34 @@
 
                 {{-- Filter & PDF --}}
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
-                    <form action="{{ route('reports.sales') }}" method="GET" class="flex items-center gap-2">
-                        <label for="filter" class="text-sm text-gray-600">Filter:</label>
-                        <select name="filter" id="filter" onchange="this.form.submit()" class="rounded border-gray-300 text-sm">
-                            <option value="">-- Semua --</option>
-                            <option value="today" {{ request('filter') == 'today' ? 'selected' : '' }}>Harian</option>
-                            <option value="week" {{ request('filter') == 'week' ? 'selected' : '' }}>Mingguan</option>
-                            <option value="month" {{ request('filter') == 'month' ? 'selected' : '' }}>Bulanan</option>
-                            <option value="year" {{ request('filter') == 'year' ? 'selected' : '' }}>Tahunan</option>
-                        </select>
-                    </form>
+                  <form action="{{ route('reports.sales') }}" method="GET" class="flex items-center gap-2">
+                    <label for="filter" class="text-sm text-gray-600">Filter:</label>
+                    <select name="filter" id="filter" onchange="this.form.submit()" class="rounded border-gray-300 text-sm">
+                        <option value="">Semua</option>
+                    <option value="harian" {{ $filter == 'harian' ? 'selected' : '' }}>Harian</option>
+                    <option value="mingguan" {{ $filter == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
+                    <option value="bulanan" {{ $filter == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
+                    <option value="tahunan" {{ $filter == 'tahunan' ? 'selected' : '' }}>Tahunan</option>
+                    </select>
 
-                    <a href="{{ route('reports.printt', ['filter' => request('filter')]) }}" 
-                       class="inline-block px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
+                    <label for="idEmployee" class="text-sm text-gray-600">Kasir:</label>
+                    <select name="idEmployee" id="idEmployee" onchange="this.form.submit()" class="rounded border-gray-300 text-sm">
+                        <option value=""> Semua </option>
+                        @foreach ($employees as $employee)
+                            <option value="{{ $employee->idEmployee }}" {{ request('idEmployee') == $employee->idEmployee ? 'selected' : '' }}>
+                                {{ $employee->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
+     
+
+
+                   <a href="{{ route('reports.printt', ['filter' => request('filter'), 'idEmployee' => request('idEmployee')]) }}" 
+                    class="inline-block px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
                         Cetak PDF
                     </a>
+
                 </div>
 
                 <div class="overflow-x-auto">
@@ -40,7 +53,7 @@
                                 <th class="px-4 py-2 border">NO</th>
                                 <th class="px-4 py-2 border text-center">Nomor Faktur</th>
                                 <th class="px-4 py-2 border text-left">Produk</th>
-                                <th class="px-4 py-2 border text-left">Kategori Produk</th>
+                                <th class="px-4 py-2 border text-left">Kasir</th>
                                 <th class="px-4 py-2 border">Jumlah</th>
                                 <th class="px-4 py-2 border text-left">Keuntungan</th>
 
@@ -54,7 +67,7 @@
                                     <td class="px-4 py-2 border text-center">{{ $index + 1 }}</td>
                                     <td class="px-4 py-2 border text-center">{{ $item->nomorFaktur }}</td>
                                     <td class="px-4 py-2 border">{{ $item->product->namaBarang ?? '-' }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->product->category->namaKategori ?? '-' }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->employee->nama }}</td>
                                     <td class="px-4 py-2 border text-center">{{ $item->jumlah }}</td>
                                    
                                     <td class="px-4 py-2 border text-blue-600 font-semibold"> Rp {{ number_format($item->keuntungan, 0, ',', '.') }}</td>

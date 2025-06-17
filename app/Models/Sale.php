@@ -25,6 +25,7 @@ class Sale extends Model
         'hargaTransaksi',
          'idCustomer',
          'idEmployee'
+         , 'idFinance'
     ];
 
 
@@ -42,10 +43,10 @@ class Sale extends Model
     return $this->belongsTo(Customer::class, 'idCustomer', 'idCustomer');
 }
 
-
 public function employee()
 {
-    return $this->belongsTo(Employee::class, 'idEmployee', 'idEmployee');
+    return $this->belongsTo(Employee::class, 'idEmployee');
 }
+
 
 }

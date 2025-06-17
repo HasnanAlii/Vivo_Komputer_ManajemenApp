@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Finance;
 use App\Models\Service;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -39,26 +40,67 @@ public function index(Request $request)
 }
 
     public function indexx(Request $request)
-    {
-        $query = Service::with(['customer', 'products']);
+{
+    $filter = $request->input('filter', 'harian');
+    $idEmployee = $request->input('idEmployee');
+    $date = $request->input('date', \Carbon\Carbon::today()->toDateString());
+    $carbonDate = \Carbon\Carbon::parse($date);
 
-        if ($request->filter == 'today') {
-            $query->whereDate('tglMasuk', Carbon::today());
-        } elseif ($request->filter == 'week') {
-            $query->whereBetween('tglMasuk', [now()->startOfWeek(), now()->endOfWeek()]);
-        } elseif ($request->filter == 'month') {
-            $query->whereMonth('tglMasuk', now()->month);
-        } elseif ($request->filter == 'year') {
-            $query->whereYear('tglMasuk', now()->year);
-        }
+    // Query awal dengan eager loading relasi
+    $query = Service::with(['customer', 'products', 'employee']);
 
-        $services = $query->paginate(8);
-        $totalModal = $query->sum('totalHarga') - $query->sum('biayaJasa');
-        $totalKeuntungan = $query->sum('biayaJasa');
-        $totalPendapatan= $query->sum('totalHarga');
-
-        return view('reports.service', compact('services' ,'totalModal', 'totalKeuntungan', 'totalPendapatan' ));
+    // Filter waktu
+    switch ($filter) {
+        case 'harian':
+            $query->whereDate('tglMasuk', $carbonDate);
+            break;
+        case 'mingguan':
+            $startOfWeek = $carbonDate->copy()->startOfWeek();
+            $endOfWeek = $carbonDate->copy()->endOfWeek();
+            $query->whereBetween('tglMasuk', [$startOfWeek, $endOfWeek]);
+            break;
+        case 'bulanan':
+            $query->whereYear('tglMasuk', $carbonDate->year)
+                  ->whereMonth('tglMasuk', $carbonDate->month);
+            break;
+        case 'tahunan':
+            $query->whereYear('tglMasuk', $carbonDate->year);
+            break;
     }
+
+    if (!empty($idEmployee)) {
+        $query->where('idEmployee', $idEmployee);
+    }
+
+    $totalQuery = clone $query;
+
+    $services = $query->latest()->paginate(10)->withQueryString();
+
+    $allData = $totalQuery->get();
+
+    $totalModal = $allData->sum(function ($item) {
+        return $item->products->sum('hargaBeli');
+    });
+
+    $totalKeuntungan = $allData->sum('biayaJasa');
+    $totalPendapatan = $allData->sum('totalHarga');
+
+    // Ambil daftar employee untuk filter
+    $employees = Employee::all();
+
+    return view('reports.service', compact(
+        'services',
+        'totalModal',
+        'totalKeuntungan',
+        'totalPendapatan',
+        'employees',
+        'filter',
+        'idEmployee',
+        'date'
+    ));
+}
+
+
 
     public function create()
     {
@@ -78,6 +120,10 @@ public function index(Request $request)
         return view('services.create2', compact('products','customers'));  
         }
 
+
+
+
+        
    public function store(Request $request)
 {
     $request->validate([
@@ -85,13 +131,10 @@ public function index(Request $request)
         'noTelp' => 'required|string|max:20',
         'alamat' => 'required|string|max:255',
         'jenisPerangkat' => 'required|string|max:255',
-        'kondisi' => 'nullable|string|max:255',
+        'kondisi' => 'required|string|max:255',
         'ciriCiri' => 'nullable|string|max:255',
-        'kelengkapan' => 'nullable|string|max:255',
+        'kelengkapan' => 'required|string|max:255',
         'kerusakan' => 'nullable|string|max:255',
-        'idProduct' => 'nullable|array',
-        'idProduct.*' => 'exists:products,idProduct',
-        'biayaJasa' => 'nullable|integer|min:0',
     ]);
 
     try {
@@ -101,49 +144,18 @@ public function index(Request $request)
             'alamat' => $request->alamat,
         ]);
 
-        $modal = 0;
-        $usedProducts = [];
-
-        if ($request->filled('idProduct')) {
-            $products = Product::whereIn('idProduct', $request->idProduct)->get();
-
-            foreach ($request->idProduct as $productId) {
-                $product = $products->where('idProduct', $productId)->first();
-
-                if ($product) {
-                    if ($product->jumlah > 0) {
-                        $product->jumlah -= 1;
-                        $product->save();
-                        $modal += $product->hargaBeli;
-                        $usedProducts[] = $productId;
-                    } else {
-                        return back()->withErrors(['idProduct' => "Stok produk '{$product->namaBarang}' habis."])
-                                     ->withInput();
-                    }
-                }
-            }
-        }
-
-        $biayaJasa = $request->biayaJasa ?? 0;
-        $totalHarga = $modal + $biayaJasa;
-        $keuntungan = $totalHarga - $modal;
 
         $service = Service::create([
-              'nomorFaktur' => rand(10000000, 99999999),
+            'nomorFaktur' => rand(10000000, 99999999),
             'kerusakan' => $request->kerusakan,
             'jenisPerangkat' => $request->jenisPerangkat,
             'kondisi' => $request->kondisi,
             'ciriCiri' => $request->ciriCiri,
             'kelengkapan' => $request->kelengkapan,
             'status' => false,
-            'biayaJasa' => $biayaJasa,
-            'totalHarga' => $totalHarga,
-            'keuntungan' => $keuntungan,
             'tglMasuk' => Carbon::now(),
             'tglSelesai' => null,
             'idCustomer' => $customer->idCustomer,
-            'idProduct' => count($usedProducts) ? implode(',', $usedProducts) : null,
-            'idFinance' => null,
         ]);
 
         return redirect()->route('service.struk', ['id' => $service->idService])->with([
@@ -162,13 +174,11 @@ public function storee(Request $request)
     $request->validate([
        'idCustomer' => 'required|exists:customers,idCustomer', 
         'jenisPerangkat' => 'required|string|max:255',
-        'kondisi' => 'nullable|string|max:255',
+        'kondisi' => 'required|string|max:255',
         'ciriCiri' => 'nullable|string|max:255',
-        'kelengkapan' => 'nullable|string|max:255',
+        'kelengkapan' => 'required|string|max:255',
         'kerusakan' => 'nullable|string|max:255',
-        'idProduct' => 'nullable|array',
-        'idProduct.*' => 'exists:products,idProduct',
-        'biayaJasa' => 'nullable|integer|min:0',
+        
     ]);
 
   
@@ -177,54 +187,18 @@ public function storee(Request $request)
         // customer wajib ada, jadi langsung ambil
         $customer = Customer::findOrFail($request->idCustomer);
 
-        $product = Product::where('namaBarang', $request->namaBarang)
-            ->where('idCategory', $request->idCategory)
-            ->first();
-
-
-        $modal = 0;
-        $usedProducts = [];
-
-        if ($request->filled('idProduct')) {
-            $products = Product::whereIn('idProduct', $request->idProduct)->get();
-
-            foreach ($request->idProduct as $productId) {
-                $product = $products->where('idProduct', $productId)->first();
-
-                if ($product) {
-                    if ($product->jumlah > 0) {
-                        $product->jumlah -= 1;
-                        $product->save();
-                        $modal += $product->hargaBeli;
-                        $usedProducts[] = $productId;
-                    } else {
-                        return back()->withErrors(['idProduct' => "Stok produk '{$product->namaBarang}' habis."])
-                                     ->withInput();
-                    }
-                }
-            }
-        }
-
-        $biayaJasa = $request->biayaJasa ?? 0;
-        $totalHarga = $modal + $biayaJasa;
-        $keuntungan = $totalHarga - $modal;
 
         $service = Service::create([
             'nomorFaktur' => rand(10000000, 99999999),
-
             'kerusakan' => $request->kerusakan,
             'jenisPerangkat' => $request->jenisPerangkat,
             'kondisi' => $request->kondisi,
             'ciriCiri' => $request->ciriCiri,
             'kelengkapan' => $request->kelengkapan,
             'status' => false,
-            'biayaJasa' => $biayaJasa,
-            'totalHarga' => $totalHarga,
-            'keuntungan' => $keuntungan,
             'tglMasuk' => Carbon::now(),
             'tglSelesai' => null,
             'idCustomer' => $customer->idCustomer,
-            'idProduct' => count($usedProducts) ? implode(',', $usedProducts) : null,
             'idFinance' => null,
         ]);
 
@@ -285,15 +259,16 @@ public function update(Request $request, $id)
         'kerusakan' => 'required|string|max:50',
         'status' => 'required|boolean',
         'biayaJasa' => 'nullable|integer|min:0',
-        'kondisi' => 'nullable|string|max:50',
-        'keterangan' => 'nullable|string|max:50',
-        'kelengkapan' => 'nullable|string|max:50',
+        'keterangan' => 'nullable|string|max:50',   
         'idProduct' => 'nullable|array',
         'idProduct.*' => 'exists:products,idProduct',
+        'jasa'=> 'nullable|string|max:50',
+        'idEmployee' => 'exists:employess,idEmployee',
     ]);
 
     try {
         $modal = 0;
+        $totalHargaProduk = 0;
         $usedProducts = [];
 
         if ($request->filled('idProduct')) {
@@ -307,6 +282,7 @@ public function update(Request $request, $id)
                         $product->jumlah -= 1;
                         $product->save();
                         $modal += $product->hargaBeli;
+                        $totalHargaProduk += $product->hargaJual;
                         $usedProducts[] = $productId;
                     } else {
                         return back()->withErrors(['idProduct' => "Stok produk '{$product->namaBarang}' habis."])
@@ -317,7 +293,7 @@ public function update(Request $request, $id)
         }
 
         $biayaJasa = $request->biayaJasa ?? 0;
-        $totalHarga = $modal + $biayaJasa;
+        $totalHarga = $totalHargaProduk + $biayaJasa;
         $keuntungan = $totalHarga - $modal;
 
         $finance = Finance::create([
@@ -330,11 +306,11 @@ public function update(Request $request, $id)
         ]);
 
         $service->kerusakan = $request->kerusakan;
-        $service->kondisi = $request->kondisi;
         $service->keterangan = $request->keterangan;
-        $service->kelengkapan = $request->kelengkapan;
         $service->status = $request->status;
         $service->biayaJasa = $biayaJasa;
+        $service->jasa = $request->jasa;
+        $service->idEmployee = $request->idEmployee;
         $service->totalHarga = $totalHarga;
         $service->keuntungan = $keuntungan;
         $service->idProduct = count($usedProducts) ? implode(',', $usedProducts) : null;
@@ -372,7 +348,7 @@ private function sendWhatsappNotification($service)
 {
     $customer = $service->customer; 
     $phone = $customer->noTelp;     
-    $message = "Halo {$customer->nama}, service Anda dengan kerusakan {$service->kerusakan} sudah SELESAI dan Total biaya perbaikan senilai RP. " . number_format($service->totalHarga, 0, ',', '.')."\nSilakan datang ke toko untuk mengambil barang Anda.\nTerima kasih telah menggunakan layanan kami. 🙏";
+    $message = "Halo {$customer->nama}, Saya dari Vivo Komputer,\nservice Anda dengan kerusakan {$service->kerusakan} sudah SELESAI dan Total biaya perbaikan senilai\nRP. " . number_format($service->totalHarga, 0, ',', '.')."\nSilakan datang ke toko untuk mengambil barang Anda.\nTerima kasih telah menggunakan layanan kami. 🙏";
 
   $response = Http::withHeaders([
     'Authorization' => 'L9PaGYokqbue5GHechJR',
@@ -388,8 +364,9 @@ Log::info('Fonnte response:', $response->json());
  public function edit($id)
 {
         $service = Service::findOrFail($id);
+         $employees = Employee::all();
         $products = Product::where('idCategory', 1)->get();
-        return view('services.update', compact('service', 'products'));
+        return view('services.update', compact('service', 'products','employees'));
 }
 
   

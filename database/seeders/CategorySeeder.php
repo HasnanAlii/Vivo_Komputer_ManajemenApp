@@ -28,9 +28,10 @@ class CategorySeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+         
             [
                 'kodeKategori' => 'SERV001',
-                'namaKategori' => 'Jasa Service',
+                'namaKategori' => 'Jasa ',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -48,7 +49,19 @@ class CategorySeeder extends Seeder
             ],
             [
                 'kodeKategori' => 'NETW001',
-                'namaKategori' => 'Perangkat Jaringan',
+                'namaKategori' => 'Perangkat Listrik',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+               [
+                'kodeKategori' => 'NEW01',
+                'namaKategori' => 'CCTV',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+                [
+                'kodeKategori' => 'PCAC002',
+                'namaKategori' => 'Komputer',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

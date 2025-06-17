@@ -26,8 +26,6 @@
                 <th>Nama Barang</th>
                 <th>Jumlah</th>
                 <th>Harga Beli</th>
-                <th>Harga Jual</th>
-                <th>Keuntungan</th>
                 <th>Tanggal</th>
             </tr>
         </thead>
@@ -39,8 +37,6 @@
                     <td>{{ $p->product->namaBarang ?? '-' }}</td>
                     <td>{{ $p->jumlah }}</td>
                     <td>Rp {{ number_format($p->hargaBeli, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($p->hargaJual, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($p->keuntungan, 0, ',', '.') }}</td>
                     <td>{{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}</td>
                 </tr>
             @empty
@@ -54,17 +50,17 @@
     <br><br>
     <table style="width: 50%;">
         <tr>
-            <td><strong>Total Modal</strong></td>
+            <td><strong>Total pembelian</strong></td>
             <td>Rp {{ number_format($totalModal, 0, ',', '.') }}</td>
         </tr>
-        <tr>
+        {{-- <tr>
             <td><strong>Total Keuntungan</strong></td>
             <td>Rp {{ number_format($totalKeuntungan, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <td><strong>Total Pendapatan</strong></td>
             <td>Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</td>
-        </tr>
+        </tr> --}}
     </table>
 </body>
 </html>

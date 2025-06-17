@@ -106,33 +106,54 @@
 <p style="margin-top: 20px;">
     Dengan ini menyatakan bahwa saya telah melakukan penjualan barang dengan rincian sebagai berikut:
 </p>
+<table style="width: 100%; margin-top: 10px;">
+    <tr>
+        <!-- Kolom kiri: Data Barang -->
+        <td style="width: 55%; vertical-align: top;">
+            <table>
+                <tr>
+                    <td><strong>Nama Barang</strong></td>
+                    <td>: {{ $purchasing->product->namaBarang }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Jumlah</strong></td>
+                    <td>: {{ $purchasing->jumlah }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Merek / Tipe</strong></td>
+                    <td>: {{ $purchasing->type }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Serial Number</strong></td>
+                    <td>: {{ $purchasing->serialNumber }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Spesifikasi</strong></td>
+                    <td>: {{ $purchasing->spek }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Harga</strong></td>
+                    <td>: Rp {{ number_format($purchasing->hargaBeli, 0, ',', '.') }}</td>
+                </tr>
+            </table>
+        </td>
 
-<table>
-    <tr>
-        <td><strong>Nama Barang</strong></td>
-        <td>: {{ $purchasing->product->namaBarang }}</td>
-    </tr>
-    <tr>
-        <td><strong>Jumlah</strong></td>
-        <td>: {{ $purchasing->jumlah }}</td>
-    </tr>
-    <tr>
-        <td><strong>Merek / Tipe</strong></td>
-        <td>: {{ $purchasing->type }}</td>
-    </tr>
-    <tr>
-        <td><strong>Serial Number</strong></td>
-        <td>: {{ $purchasing->serialNumber }}</td>
-    </tr>
-    <tr>
-        <td><strong>Spesifikasi</strong></td>
-        <td>: {{ $purchasing->spek }}</td>
-    </tr>
-    <tr>
-        <td><strong>Harga</strong></td>
-        <td>: Rp {{ number_format($purchasing->hargaBeli, 0, ',', '.') }}</td>
+        <!-- Kolom kanan: Foto Bukti -->
+        <td style="width: 40%; text-align: center; vertical-align: top;">
+            @if ($purchasing->buktiTransaksi)
+                <a href="{{ asset($purchasing->buktiTransaksi) }}" target="_blank">
+                    <img src="{{ asset($purchasing->buktiTransaksi) }}"
+                         alt="Bukti Transaksi"
+                         style="max-width: 100%; height: auto; max-height: 320px; border: 1px solid #ccc; padding: 6px; margin-left: 10px;">
+                </a>
+            @else
+                <span style="color: #888;">(Tidak ada bukti)</span>
+            @endif
+        </td>
     </tr>
 </table>
+
+
 
 
     <p>Barang tersebut adalah milik pribadi saya, bukan milik orang lain atau hasil dari tindakan melawan hukum (barang curian).</p>

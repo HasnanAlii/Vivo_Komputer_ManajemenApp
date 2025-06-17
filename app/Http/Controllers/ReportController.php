@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Finance;
 use App\Models\Sale;
 use App\Models\Purchasing;
@@ -18,6 +19,17 @@ public function index()
 {
     return view('reports.index');
 }
+
+
+
+public function cetakhutang($id)
+{
+    $customer = Customer::with(['sales.product', 'pembayaran'])->findOrFail($id);
+
+    return view('reports.cetakhutang', compact('customer'));
+}
+
+
 public function print(Request $request)
 {
     $filter = $request->get('filter');
@@ -52,23 +64,28 @@ public function print(Request $request)
 }
 public function printt(Request $request)
 {
-     $filter = $request->get('filter');
+    $filter = $request->get('filter');
+    $idEmployee = $request->get('idEmployee');
 
-    $query = Sale::with('product.category');
+    $query = Sale::with(['product', 'employee']);
 
     switch ($filter) {
-        case 'today':
+        case 'harian':
             $query->whereDate('tanggal', Carbon::today());
             break;
-        case 'week':
+        case 'mingguan':
             $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
             break;
-        case 'month':
+        case 'bulanan':
             $query->whereMonth('tanggal', Carbon::now()->month);
             break;
-        case 'year':
+        case 'tahunan':
             $query->whereYear('tanggal', Carbon::now()->year);
             break;
+    }
+
+    if ($idEmployee) {
+        $query->where('idEmployee', $idEmployee);
     }
 
     $sales = $query->get();
@@ -76,28 +93,36 @@ public function printt(Request $request)
     $totalModal = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaBeli);
     $totalPendapatan = $sales->sum('totalHarga');
     $totalKeuntungan = $sales->sum('keuntungan');
+    
 
-    $pdf = Pdf::loadView('reports.sales_pdf', compact(
+    
+    $pdf = Pdf::loadView('reports.sales_pdf',[
+    'employee' => $idEmployee ? Employee::find($idEmployee) : null
+
+     ], compact(
         'sales', 'totalModal', 'totalPendapatan', 'totalKeuntungan', 'filter'
     ))->setPaper('A4', 'landscape');
 
     return $pdf->stream('laporan_penjualan.pdf');
 }
+
 public function printtt(Request $request)
 {
-     $filter = $request->get('filter');
+    $filter = $request->get('filter');
+    $idEmployee = $request->get('idEmployee');
 
-    $services = Service::with(['customer', 'products'])
-        ->when($filter == 'today', fn($q) => $q->whereDate('tglMasuk', now()))
-        ->when($filter == 'week', fn($q) => $q->whereBetween('tglMasuk', [now()->startOfWeek(), now()->endOfWeek()]))
-        ->when($filter == 'month', fn($q) => $q->whereMonth('tglMasuk', now()->month))
-        ->when($filter == 'year', fn($q) => $q->whereYear('tglMasuk', now()->year))
-        ->get();
+    $query = Service::with(['customer', 'products', 'employee'])
+        ->when($filter == 'harian', fn($q) => $q->whereDate('tglMasuk', now()))
+        ->when($filter == 'mingguan', fn($q) => $q->whereBetween('tglMasuk', [now()->startOfWeek(), now()->endOfWeek()]))
+        ->when($filter == 'bulanan', fn($q) => $q->whereMonth('tglMasuk', now()->month))
+        ->when($filter == 'tahunan', fn($q) => $q->whereYear('tglMasuk', now()->year))
+        ->when($idEmployee, fn($q) => $q->where('idEmployee', $idEmployee));
 
-  
-    $totalModal = $services->sum('totalHarga') - $services->sum('biayaJasa');
+    $services = $query->get();
+
+    $totalModal = $services->sum(fn($item) => $item->totalHarga - $item->biayaJasa);
     $totalKeuntungan = $services->sum('biayaJasa');
-    $totalPendapatan= $services->sum('totalHarga');
+    $totalPendapatan = $services->sum('totalHarga');
 
     $pdf = Pdf::loadView('reports.service_pdf', [
         'services' => $services,
@@ -105,14 +130,34 @@ public function printtt(Request $request)
         'totalPendapatan' => $totalPendapatan,
         'totalKeuntungan' => $totalKeuntungan,
         'filter' => $filter,
+        'employee' => $idEmployee ? Employee::find($idEmployee) : null
     ])->setPaper('A4', 'landscape');
 
     return $pdf->stream('laporan-service.pdf');
 }
+
 public function customers()
 {
-    $customers = Customer::with(['sales.product', 'services', 'purchasings.product'])->get();
+    $customers = Customer::with(['sales.product', 'purchasings', 'services'])->get();
+
+    foreach ($customers as $customer) {
+        $totalSales = $customer->sales->sum(function ($sale) {
+            return $sale->product->hargaJual ?? 0;
+        });
+
+        // $totalPurchases = $customer->purchasings->sum('hargaBeli');
+
+        $totalServiceCost = $customer->services->sum('totalHarga');
+
+        $customer->totalTransaksi = $totalSales + $totalServiceCost;
+    }
     return view('reports.customers', compact('customers'));
+}
+public function customer()
+{
+   $customers = Customer::with(['pembayaran','sales.product'])->where('cicilan', '>', 0)->get();
+
+    return view('reports.hutang', compact('customers'));
 }
 
   public function destroyy($id)

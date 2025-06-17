@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\MoneyOutController;
 use App\Http\Controllers\ProfileController;
@@ -9,7 +11,15 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\ShoppingController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
+
+Route:: get ('/storage-link', function (){
+Artisan:: call('storage:link');
+return 'Storage linked successfully.';
+});
 
 Route::get('/', function () {
     return view('welcome');
@@ -43,12 +53,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('/sales/edit-price/{id}', [SaleController::class, 'editPrice'])->name('editPrice');
         Route::get('/sales/search-customer', [SaleController::class, 'searchCustomer'])->name('customer');
         Route::get('/sales/employee', [SaleController::class, 'searchEmployee'])->name('employee');
-
-
-
-
-
-
+        Route::post('/customer', [CustomerController::class, 'store'])->name('addcustomer');
+        Route::get('/create', [CustomerController::class, 'create'])->name('add');
     });
 
      Route::prefix('finances')->name('finances.')->group(function () {
@@ -74,8 +80,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/{purchasing}/edit', [PurchasingController::class, 'edit'])->name('edit');
         Route::put('/{purchasing}', [PurchasingController::class, 'update'])->name('update');
         Route::delete('/{purchasing}', [PurchasingController::class, 'destroy'])->name('destroy');
-
-
     });
     
     // Service routes
@@ -103,23 +107,43 @@ Route::middleware('auth')->group(function () {
         Route::get('/sales/print_sales', [ReportController::class, 'printt'])->name('printt');
         Route::get('/services', [ServiceController::class, 'indexx'])->name('services');
         Route::get('/sales/print_services', [ReportController::class, 'printtt'])->name('printtt');
-        Route::get('/sales/customers', [ReportController::class, 'customers'])->name('customer');
+        Route::get('/sales/customer', [ReportController::class, 'customers'])->name('customer');
+        Route::get('/sales/customers', [ReportController::class, 'customer'])->name('customers');
         Route::delete('/{reports}', [ReportController::class, 'destroyy'])->name('destroyy');
         Route::get('/cicilan/bayar/{idCustomer}', [CustomerController::class, 'editCicilan'])->name('edit');
         Route::get('/cicilan/edit/{idCustomer}', [CustomerController::class, 'edit'])->name('editt');
         Route::post('/cicilan/update/{idCustomer}', [CustomerController::class, 'updateCicilan'])->name('update');
         Route::post('/cicilan/bayar/{idCustomer}', [CustomerController::class, 'update'])->name('updatee');
 
+        Route::get('/print/{id}', [ReportController::class, 'cetakhutang'])->name('cetakhutang');
 
 
-
-
-
-
-
-
+        Route::get('/shopping', [ShoppingController::class, 'index'])->name('shopping');
+        Route::get('/shopping/create', [ShoppingController::class, 'create'])->name('shoppingcreate');
+        Route::post('/shopping/store', [ShoppingController::class, 'store'])->name('store');
+        Route::get('/{shopping}/edit', [ShoppingController::class, 'edit'])->name('edits'); 
+        Route::put('/{shopping}', [ShoppingController::class, 'update'])->name('updates');  
+        Route::delete('/{shopping}/destroy', [ShoppingController::class, 'destroy'])->name('destroysh'); 
 
     });
+
+        Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+        Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
+        Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
+        Route::get('/employees/{id}', [EmployeeController::class, 'show'])->name('employees.show');
+        Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+        Route::put('/employees/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+        Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+
+
+
+        Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+        Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
     
     // Inventory routes
     Route::prefix('product')->name('product.')->group(function () {

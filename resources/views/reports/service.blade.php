@@ -10,7 +10,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-full mx-auto sm:px-6 lg:px-8">
 
             @if (session('success'))
                 <div class="mb-4 px-4 py-2 bg-green-100 text-green-700 rounded">
@@ -24,18 +24,28 @@
                     <form action="{{ route('reports.services') }}" method="GET" class="flex items-center gap-2">
                         <label for="filter" class="text-sm text-gray-600">Filter:</label>
                         <select name="filter" id="filter" onchange="this.form.submit()" class="rounded border-gray-300 text-sm">
-                            <option value="">-- Semua --</option>
-                            <option value="today" {{ request('filter') == 'today' ? 'selected' : '' }}>Harian</option>
-                            <option value="week" {{ request('filter') == 'week' ? 'selected' : '' }}>Mingguan</option>
-                            <option value="month" {{ request('filter') == 'month' ? 'selected' : '' }}>Bulanan</option>
-                            <option value="year" {{ request('filter') == 'year' ? 'selected' : '' }}>Tahunan</option>
+                            <option value=""> Semua </option>
+                            <option value="Harian" {{ request('filter') == 'Harian' ? 'selected' : '' }}>Harian</option>
+                            <option value="Mingguan" {{ request('filter') == 'Mingguan' ? 'selected' : '' }}>Mingguan</option>
+                            <option value="Bulanan" {{ request('filter') == 'Bulanan' ? 'selected' : '' }}>Bulanan</option>
+                            <option value="Tahunan" {{ request('filter') == 'Tahunan' ? 'selected' : '' }}>Tahunan</option>
                         </select>
+                         <label for="idEmployee" class="text-sm text-gray-600">Teknisi:</label>
+                    <select name="idEmployee" id="idEmployee" onchange="this.form.submit()" class="rounded border-gray-300 text-sm">
+                        <option value="">Semua</option>
+                        @foreach ($employees as $employee)
+                            <option value="{{ $employee->idEmployee }}" {{ request('idEmployee') == $employee->idEmployee ? 'selected' : '' }}>
+                                {{ $employee->nama }}
+                            </option>
+                        @endforeach
+                    </select>
                     </form>
 
-                    <a href="{{ route('reports.printtt', ['filter' => request('filter')]) }}" 
-                       class="inline-block px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
+                   <a href="{{ route('reports.printtt', ['filter' => request('filter'), 'idEmployee' => request('idEmployee')]) }}" 
+                    class="inline-block px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
                         Cetak PDF
                     </a>
+
                 </div>
                
                 <div class="overflow-x-auto">
@@ -48,6 +58,8 @@
                                 <th class="px-4 py-2 border">Kerusakan</th>
                                 <th class="px-4 py-2 border">Sparepart Digunakan</th>
                                 <th class="px-4 py-2 border">Biaya Service</th>
+                                <th class="px-4 py-2 border text-left">Teknisi</th>  
+                                <th class="px-4 py-2 border text-left">Jasa yang digunakan</th>
                                 <th class="px-4 py-2 border">Tgl Masuk</th>
                                 <th class="px-4 py-2 border">Tgl Selesai</th>
                                 <th class="px-4 py-2 border">Status</th>
@@ -69,7 +81,8 @@
                                     @endif
                                 </td>
                                     <td class="px-4 py-2 border">{{ $service->totalHarga }}</td>
-
+                                    <td class="px-4 py-2 border">{{ $service->employee->nama }}</td>
+                                    <td class="px-4 py-2 border">{{ $service->jasa }}</td>
                                     <td class="px-4 py-2 border">{{ $service->tglMasuk }}</td>
                                     <td class="px-4 py-2 border">{{ $service->tglSelesai ?? '-' }}</td>
                                     <td class="px-4 py-2 border text-center">

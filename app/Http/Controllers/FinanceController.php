@@ -23,16 +23,19 @@ class FinanceController extends Controller
         $filter = $request->input('filter', 'harian');
         $date = $request->input('date', date('Y-m-d'));
 
-        $query = Finance::with(['purchasings', 'sales']);
+       $query = Finance::with(['purchasings', 'sales']);
 
         switch ($filter) {
             case 'harian':
                 $query->whereDate('tanggal', $date);
                 break;
-            case 'mingguan':
+             case 'mingguan':
                 $carbonDate = \Carbon\Carbon::parse($date);
-                $query->whereBetween('tanggal', [$carbonDate->startOfWeek(), $carbonDate->endOfWeek()]);
+                 $startOfWeek = $carbonDate->copy()->startOfWeek(); // Gunakan copy()
+                 $endOfWeek = $carbonDate->copy()->endOfWeek();
+                $query->whereBetween('tanggal', [$startOfWeek, $endOfWeek]);
                 break;
+
             case 'bulanan':
                 $carbonDate = \Carbon\Carbon::parse($date);
                 $query->whereYear('tanggal', $carbonDate->year)->whereMonth('tanggal', $carbonDate->month);
@@ -46,10 +49,12 @@ class FinanceController extends Controller
                 break;
         }
 
+        $cloneQuery = clone $query;
+
         $finances = $query->paginate(10)->withQueryString();
 
-        $totalModal = $query->sum('modal');
-        $totalKeuntungan = $query->sum('keuntungan');
+        $totalModal = $cloneQuery->sum('modal');
+        $totalKeuntungan = $cloneQuery->sum('keuntungan');
         $totalDana = $totalModal + $totalKeuntungan;
 
         return view('finances.index', compact('finances', 'totalModal', 'totalKeuntungan', 'totalDana', 'filter', 'date'));
@@ -83,13 +88,13 @@ class FinanceController extends Controller
             ]);
 
             $notification = [
-                'message' => 'Data dana keluar berhasil disimpan.',
+                'message' => 'Pengeluaran berhasil disimpan.',
                 'alert-type' => 'success',
             ];
         } catch (\Exception $e) {
             Log::error('Store Dana Keluar Gagal: ' . $e->getMessage());
             $notification = [
-                'message' => 'Gagal menyimpan data dana keluar.',
+                'message' => 'Gagal menyimpan Pengeluaran.',
                 'alert-type' => 'error',
             ];
         }

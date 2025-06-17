@@ -8,11 +8,69 @@
                 </button>
                 🛒 <span>Halaman Kasir</span>
             </h2>
-            {{-- <form action="{{ route('sales.index') }}" method="GET" class="flex items-center space-x-2">
-                <input type="text" name="search" placeholder="Cari Produk..." value="{{ request('search') }}"
-                    class="pl-3 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300">
-            </form> --}}
+            <!-- Tambah Customer Button -->
+            <a href="{{ route('sales.add') }}" 
+            class="inline-flex items-center px-5 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 text-white font-semibold rounded-lg shadow-md transition duration-200 ease-in-out">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Tambah Customer
+            </a>
+
+            {{-- <div x-data="{ showTambahCustomer: false }"> --}}
+
+
+           {{-- <button  @click="showTambahCustomer = true"
+                    class="inline-flex items-center px-5 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 text-white font-semibold rounded-lg shadow-md transition duration-200 ease-in-out"
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah Customer
+                    </button>
+
+
+            {{-- modal di sini --}}
+            {{-- <div x-show="showTambahCustomer" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
+            <div @click.away="showTambahCustomer = false" class="bg-white rounded-xl shadow-lg w-[400px] p-6">
+                <h2 class="text-xl font-bold mb-4 text-blue-700">👤 Tambah Customer</h2>
+                <form action="{{ route('sales.addcustomer') }}" method="POST">
+                    @csrf
+
+                    <div class="mb-4">
+                        <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+                        <input type="text" id="nama" name="nama" maxlength="50" placeholder="Nama Customer" 
+                            class="w-full rounded border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                        <textarea id="alamat" name="alamat" maxlength="255" placeholder="Alamat Customer" rows="3"
+                            class="w-full rounded border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="noTelp" class="block text-sm font-medium text-gray-700 mb-1">No. Telepon</label>
+                        <input type="text" id="noTelp" name="noTelp" maxlength="255" placeholder="No. Telepon Customer" 
+                            class="w-full rounded border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" @click="showTambahCustomer = false" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-700">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             
+        </div> --}}
+
+        {{-- </div>  --}}
+
         </div>
     </x-slot>
     
@@ -22,13 +80,25 @@
             <!-- Produk -->
             <div class="col-span-2 bg-white p-6 rounded-xl shadow-md">
                 
-                <select id="select-product" style="width: 350px;" ></select>
-                {{-- <select id="select-customer" style="width: 350px"></select> --}}
-      
+               <div class="space-y-4 mb-6">
+                <!-- Customer & Employee -->
+                <div class="flex flex-col lg:flex-row gap-4">
+                    <div class="flex-1">
+                        <label for="select-customer" class="block text-sm font-semibold text-gray-700 mb-1">Pilih Pelanggan</label>
+                        <select id="select-customer" class="w-full"></select>
+                    </div>
+                    <div class="flex-1">
+                        <label for="select-employee" class="block text-sm font-semibold text-gray-700 mb-1">Pilih Kasir </label>
+                        <select id="select-employee" class="w-full"></select>
+                    </div>
+                </div>
 
-                
-
- 
+                <!-- Produk -->
+                <div>
+                    <label for="select-product" class="block text-sm font-semibold text-gray-700 mb-1">Cari & Tambah Produk</label>
+                    <select id="select-product" class="w-full"></select>
+                </div>
+            </div>
 
 
                 <table class="min-w-full divide-y divide-gray-200 mt-4">
@@ -45,14 +115,12 @@
                         @forelse ($sales as $sale)
                             <tr>
                                 <td class="px-4 py-2 text-grey-600 text-center">
-                                                      {{ $sale->product->jumlah }}
+                                    {{ $sale->product->jumlah }}
                                </td>
                                 <td class="px-4 py-2 font-medium">{{ $sale->product->namaBarang }}</td>
                                 <td class="px-4 py-2 text-grey-600 text-center">
                                     Rp {{ number_format($sale->hargaTransaksi, 0, ',', '.') }}
                                 </td>
-
-                                {{-- <td class="px-4 py-2 text-grey-600 text-center" >Rp {{ number_format($sale->product->hargaJual, 0, ',', '.') }}</td> --}}
                                 <td class="px-4 py-2 text-center">{{ $sale->jumlah }}</td>
                           <td class="flex flex-wrap gap-2 items-left px-4 py-2">
                         {{-- Tombol Kurangi Jumlah --}}
@@ -61,9 +129,8 @@
                             <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow-sm">-</button>
                         </form>
 
-                        {{-- Jumlah Produk --}}
-
-                        <span class="font-semibold text-gray-800">{{ $sale->jumlah }}</span>
+                        {{-- Jumlah Produk
+                        <span class="font-semibold text-gray-800 ">{{ $sale->jumlah }}</span> --}}
 
                         {{-- Tombol Tambah Jumlah --}}
                         <form action="{{ route('sales.increase', $sale->idSale) }}" method="POST">
@@ -95,7 +162,6 @@
                             </button>
                           </form>
                             </td>
-
                             </tr>
                         @empty
                             <tr>
@@ -130,6 +196,21 @@
                     </ul>
                 </div>
 
+                <!-- Display selected customer and employee info -->
+                @if(isset($customer))
+                    <div class="bg-blue-50 p-3 rounded">
+                        <label class="text-sm text-blue-600 font-semibold">Customer Terpilih:</label>
+                        <span class="text-sm text-blue-800">{{ $customer->nama }}</span>
+                    </div>
+                @endif
+
+                @if(isset($employee))
+                    <div class="bg-green-50 p-3 rounded">
+                        <label class="text-sm text-green-600 font-semibold">Kasir:</label>
+                        <span class="text-sm text-green-800">{{ $employee->nama }}</span>
+                    </div>
+                @endif
+
                 <div class="flex justify-between items-center border-t pt-4">
                     <label class="text-sm text-gray-700">Total Bayar</label>
                     <p class="text-xl font-bold text-grey-600">Rp {{ number_format($total, 0, ',', '.') }}</p>
@@ -141,6 +222,11 @@
         {{-- Hidden: ID Customer jika ada --}}
         @if(isset($customer))
             <input type="hidden" name="idCustomer" value="{{ $customer->idCustomer }}">
+        @endif
+
+        {{-- Hidden: ID Employee jika ada --}}
+        @if(isset($employee))
+            <input type="hidden" name="idEmployee" value="{{ $employee->idEmployee }}">
         @endif
 
         {{-- Bayar --}}
@@ -185,62 +271,131 @@
     </div>
 </form>
 
-
             </div>
         </div>
     </div>
 
-    {{-- <script>
-        function updateKembalian() {
-            const bayarInput = document.getElementById('bayar-input');
-            const kembalianOutput = document.getElementById('kembalian-output');
-            const total = {{ $total }};
-            const bayar = parseInt(bayarInput.value) || 0;
-            const kembalian = Math.max(0, bayar - total);
-            kembalianOutput.innerText = 'Rp. ' + new Intl.NumberFormat('id-ID').format(kembalian);
-        }
-
-        function setExact() {
-            const bayarInput = document.getElementById('bayar-input');
-            bayarInput.value = {{ $total }};
-            updateKembalian();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateKembalian();
-        });
-    </script> --}}
 
 <script>
 $(document).ready(function() {
-    $('#select-customer').select2({
-        placeholder: 'Cari customer...',
+    // Initialize employee select2
+    $('#select-employee').select2({
+        placeholder: 'Cari Kasir...',
+        allowClear: true,
+        width: '100%',
         ajax: {
-            url: '{{ route('sales.customer') }}', // Buat route ini di controller
+            url: '{{ route("sales.employee") }}',
             dataType: 'json',
             delay: 250,
             data: function(params) {
                 return {
-                    q: params.term
+                    q: params.term,
+                    page: params.page || 1
                 };
             },
-            processResults: function(data) {
+            processResults: function(data, params) {
+                params.page = params.page || 1;
                 return {
-                    results: data.results
+                    results: data.results,
+                    pagination: {
+                        more: (params.page * 10) < data.total_count
+                    }
                 };
             },
             cache: true
         },
         minimumInputLength: 1,
+        templateResult: formatResult,
+        templateSelection: formatSelection
     });
 
-    // Event saat customer dipilih
-    $('#select-customer').on('select2:select', function(e) {
-        var customerId = e.params.data.id;
-
-        // Redirect ke halaman sales dengan customer yang dipilih
-        window.location.href = '{{ route('sales.index') }}' + '?customer=' + customerId;
+    // Initialize customer select2
+    $('#select-customer').select2({
+        placeholder: 'Cari Pelanggan...',
+        allowClear: true,
+        width: '100%',
+        ajax: {
+            url: '{{ route("sales.customer") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page || 1
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data.results,
+                    pagination: {
+                        more: (params.page * 10) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 1,
+        templateResult: formatResult,
+        templateSelection: formatSelection
     });
+
+    // Shared format functions
+    function formatResult(item) {
+        if (item.loading) return item.text;
+        
+        var markup =  item.text ;
+            
+        if (item.additional_info) {
+            markup += item.additional_info;
+        }
+        
+        
+        return markup;
+    }
+
+    function formatSelection(item) {
+        return item.text || item.nama;
+    }
+
+    // Handle selection events for both dropdowns
+    function handleSelection(element, paramName) {
+        element.on('select2:select', function(e) {
+            var currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set(paramName, e.params.data.id);
+            window.location.href = currentUrl.toString();
+        });
+
+        element.on('select2:unselect', function() {
+            var currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.delete(paramName);
+            window.location.href = currentUrl.toString();
+        });
+    }
+
+    // Apply handlers
+    handleSelection($('#select-employee'), 'employee');
+    handleSelection($('#select-customer'), 'customer');
+
+    // Set initial values if present
+    @if(isset($employee))
+        $('#select-employee').append(
+            new Option('{{ $employee->nama }}', '{{ $employee->idEmployee }}', true, true)
+        ).trigger('change');
+    @endif
+
+    @if(isset($customer))
+        $('#select-customer').append(
+            new Option('{{ $customer->nama }}', '{{ $customer->idCustomer }}', true, true)
+        ).trigger('change');
+    @endif
+
+    // Add custom CSS
+    $('<style>' +
+      '.select2-result-item__title { font-weight: 500; }' +
+      '.select2-result-item__info { margin-top: 2px; color: #6c757d; }' +
+      '.select2-container--default .select2-selection--single { height: 38px; padding-top: 4px; }' +
+      '</style>').appendTo('head');
 });
 </script>
 <script>

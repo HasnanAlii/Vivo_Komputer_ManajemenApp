@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <h2>Laporan Pengeluaran</h2>
+    <h2 style="text-align:center;">Laporan Pengeluaran</h2>
     <p>Filter: {{ ucfirst($filter) }}</p>
     <p>Tanggal: {{ \Carbon\Carbon::parse($date)->format('d-m-Y') }}</p>
 

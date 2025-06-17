@@ -28,35 +28,54 @@ class PurchasingController extends Controller
     }
   
   
-    public function indexx(Request $request)
-    {
-        try {
-            $query = Purchasing::with(['customer', 'product']);
+public function indexx(Request $request)
+{
+    try {
+        $query = Purchasing::with(['customer', 'product']);
 
-            if ($request->filter == 'today') {
-                $query->whereDate('tanggal', Carbon::today());
-            } elseif ($request->filter == 'week') {
-                $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
-            } elseif ($request->filter == 'month') {
-                $query->whereMonth('tanggal', Carbon::now()->month)
-                      ->whereYear('tanggal', Carbon::now()->year);
-            } elseif ($request->filter == 'year') {
-                $query->whereYear('tanggal', Carbon::now()->year);
-            }
-
-            $purchasings = $query->paginate(8);
-            $totalModal = $query->sum('hargaBeli');
-            $totalKeuntungan = $query->sum('hargaJual') - $query->sum('hargaBeli');
-            $totalPendapatan = $totalModal + $totalKeuntungan;
-
-            return view('reports.purchasing', compact('purchasings', 'totalModal', 'totalKeuntungan', 'totalPendapatan'));
-        } catch (Exception $e) {
-            return redirect()->back()->with([
-                'message' => 'Gagal memuat laporan pembelian: ' . $e->getMessage(),
-                'alert-type' => 'error'
-            ]);
+        if ($request->filter == 'harian') {
+            $query->whereDate('tanggal', Carbon::today());
+        } elseif ($request->filter == 'mingguan') {
+            $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+        } elseif ($request->filter == 'bulanan') {
+            $query->whereMonth('tanggal', Carbon::now()->month)
+                  ->whereYear('tanggal', Carbon::now()->year);
+        } elseif ($request->filter == 'tahunan') {
+            $query->whereYear('tanggal', Carbon::now()->year);
         }
+
+    
+        $queryClone = clone $query;
+
+        $purchasings = $query->paginate(10); 
+
+    
+        $allPurchasings = $queryClone->get();
+
+        $totalModal = $allPurchasings->sum(function ($purchase) {
+            return $purchase->jumlah * ($purchase->product->hargaBeli ?? 0);
+        });
+
+        $totalKeuntungan = $allPurchasings->sum(function ($purchase) {
+            $hargaJual = $purchase->hargaJual ?? 0;
+            $hargaBeli = $purchase->product->hargaBeli ?? 0;
+            return $purchase->jumlah * ($hargaJual - $hargaBeli);
+        });
+
+        $totalPendapatan = $totalModal + $totalKeuntungan;
+
+        return view('reports.purchasing', compact('purchasings', 'totalModal', 'totalKeuntungan', 'totalPendapatan'));
+    } catch (Exception $e) {
+        return redirect()->back()->with([
+            'message' => 'Gagal memuat laporan pembelian: ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ]);
     }
+}
+
+
+
+
        public function createe()
         {
     try {

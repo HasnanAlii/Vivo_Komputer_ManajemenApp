@@ -9,21 +9,25 @@ use Illuminate\Http\Request;
 
 class MoneyOutController extends Controller
 {
-     public function index(Request $request)
+ public function index(Request $request)
 {
     $filter = $request->input('filter', 'harian');
-    $date = $request->input('date', Carbon::today()->toDateString());
-    $dateCarbon = Carbon::parse($date);
+    $date = $request->input('date', \Carbon\Carbon::today()->toDateString());
+    $dateCarbon = \Carbon\Carbon::parse($date);
 
+    // Query utama
     $MoneyOutQuery = MoneyOut::query();
 
+    // Terapkan filter tanggal
     switch ($filter) {
         case 'harian':
             $MoneyOutQuery->whereDate('tanggal', $dateCarbon);
             break;
 
         case 'mingguan':
-            $MoneyOutQuery->whereBetween('tanggal', [$dateCarbon->startOfWeek(), $dateCarbon->endOfWeek()]);
+            $startOfWeek = $dateCarbon->copy()->startOfWeek();
+            $endOfWeek = $dateCarbon->copy()->endOfWeek();
+            $MoneyOutQuery->whereBetween('tanggal', [$startOfWeek, $endOfWeek]);
             break;
 
         case 'bulanan':
@@ -36,11 +40,19 @@ class MoneyOutController extends Controller
             break;
     }
 
-    $MoneyOut = $MoneyOutQuery->orderByDesc('tanggal')->paginate(10);
-    $totalPengeluaran = $MoneyOutQuery->sum('jumlah'); 
+    // Clone query untuk total agar tidak terkena pagination
+    $totalQuery = clone $MoneyOutQuery;
+
+    // Pagination hasil
+    $MoneyOut = $MoneyOutQuery->orderByDesc('tanggal')->paginate(10)->withQueryString();
+
+    // Total pengeluaran
+    $totalPengeluaran = $totalQuery->sum('jumlah');
 
     return view('finances.moneyout', compact('MoneyOut', 'filter', 'date', 'totalPengeluaran'));
 }
+
+
 public function exportPDFF(Request $request)
 {
     $filter = $request->input('filter', 'harian');

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('keterangan', 250)->nullable();
             $table->string('kelengkapan', 250)->nullable();
             $table->string('ciriCiri', 250)->nullable();
+            $table->string('jasa', 250)->nullable();
             $table->boolean('status')->default(false);
             $table->integer('biayaJasa')->nullable();
             $table->integer('totalHarga')->nullable();

@@ -13,9 +13,9 @@
 </head>
 <body>
 
-<h2 style="text-align:center;">📊 Laporan Keuangan</h2>
+<h2 style="text-align:center;"> Laporan Keuangan</h2>
 <p>Filter: {{ ucfirst($filter ?? 'Semua') }}</p>
-<p>Tanggal Cetak: {{ now()->format('d-m-Y H:i') }}</p>
+<p>Tanggal Cetak: {{ now()->format('d-m-Y ') }}</p>
 
 <table>
     <thead>

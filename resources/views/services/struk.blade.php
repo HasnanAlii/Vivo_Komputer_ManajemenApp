@@ -44,13 +44,17 @@
                     <div>
                         <strong class="text-lg">Vivo Komputer</strong><br>
                         Jl. Pasirgede Raya Bojongherang Cianjur<br>
-                        Telp: 0812-3456-7890
+                        Telp: 0815-7202-4321
+
                     </div>
                 </div>
                 <div class="text-right">
-                    <div>Nomor Faktur:</div>
-                    <div class="font-bold text-lg">{{ $service->nomorFaktur }}</div>
-                </div>
+                <div>Nomor Faktur:</div>
+                <div class="font-bold text-base">{{ $service->first()->nomorFaktur ?? '-' }}</div>
+                <div>Tanggal:</div>
+                <div class="font-bold text-base">{{ \Carbon\Carbon::now()->format('d M Y') }}</div>
+            </div>
+
             </div>
 
             <div class="flex justify-between gap-8 mb-4">
@@ -99,7 +103,7 @@
                             <tr>
                                 <td>Sparepart: {{ $product->namaBarang }}</td>
                                 <td class="text-right">
-                                    {{ $product->hargaBeli > 0 ? 'Rp ' . number_format($product->hargaBeli, 0, ',', '.') : '-' }}
+                                    {{ $product->hargaJual > 0 ? 'Rp ' . number_format($product->hargaJual, 0, ',', '.') : '-' }}
                                 </td>
                             </tr>
                         @endforeach
@@ -119,12 +123,13 @@
                 </table>
             </div>
 
-            <div class="mt-4 border border-red-500 text-red-600 text-xs p-2 leading-snug w-fit">
-                <p>- Barang yang sudah dibeli tidak dapat ditukar/dikembalikan.</p>
-                <p>- Garansi sesuai tanggal yang tertera.</p>
-                <p>- Garansi batal jika segel rusak.</p>
-                <p>- Service lebih dari 1 bulan tidak diambil kami tidak bertanggung jawab jika barang tersebut rusak.</p>
-            </div>
+         <div class="mt-2 border border-red-400 text-red-500 text-[8px] px-2 py-1 leading-tight max-w-xs">
+    <p>- Barang yang sudah dibeli tidak dapat ditukar/dikembalikan.</p>
+    <p>- Garansi sesuai tanggal yang tertera.</p>
+    <p>- Garansi batal jika segel rusak.</p>
+    <p>- Service lebih dari 1 bulan tidak diambil kami tidak bertanggung jawab jika barang tersebut rusak.</p>
+</div>
+
         </div>
 
         <!-- Tombol di luar area cetak -->

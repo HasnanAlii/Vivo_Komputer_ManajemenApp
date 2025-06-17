@@ -12,7 +12,7 @@
     </x-slot>
 
     <div class="py-10">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-full mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-xl sm:rounded-lg p-6 overflow-x-auto">
                 @if ($customers->isEmpty())
                     <p class="text-gray-500 italic">Belum ada data pelanggan.</p>
@@ -27,10 +27,10 @@
                                 <th class="p-3 border">No KTP</th>
                                 <th class="p-3 border">Riwayat Service</th>
                                 <th class="p-3 border">Riwayat Penjualan</th>
-                                {{-- <th class="p-3 border">Riwayat Pembelian</th> --}}
+                                <th class="p-3 border">Riwayat Pembelian</th>
+                                <th class="p-3 border">Total Transaksi</th>
 
-                                {{-- <th class="p-3 border text-center">Cicilan</th>
-                                <th class="p-3 border text-center">Sisa Cicilan</th> --}}
+
 
                                 <th class="p-3 border text-center">Aksi</th>
                             </tr>
@@ -72,7 +72,7 @@
                                     </ul>
                                     @endif
                                 </td>
-                                {{-- <td class="p-3 border text-center font-semibold text-green-700">
+                                <td class="p-3 border text-center font-semibold text-green-700">
                                     @if($customer->sales->isEmpty())
                                     -
                                     @else
@@ -82,34 +82,13 @@
                                         @endforeach
                                     </ul>
                                     @endif
-                                </td> --}}
-                               {{-- <td class="p-3 border text-center font-semibold text-green-700">
-                                    @if($customer->cicilan == 0)
-                                        -
-                                    @else
-                                        <ul class="list-disc list-inside text-left">
-                                            @foreach ($customer->sales as $purchase)
-                                                <li>{{ $purchase->product->namaBarang }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </td> --}}
-
-                                {{-- <td class="p-3 border text-center font-semibold text-green-700">
-                                    {{ number_format($customer->cicilan ?? 0, 0, ',', '.') }}
-                                </td> --}}
+                                </td>
+                                <td class="p-3 border text-center font-semibold text-blue-700">
+                                Rp{{ number_format($customer->totalTransaksi, 0, ',', '.') }}
+                            </td>
 
                                     <td class="p-3 border text-center space-x-1 whitespace-nowrap">
-                                        @if ($customer->cicilan > 0)
-                                            <a href="{{ route('reports.edit', $customer->idCustomer) }}"
-                                               class="inline-flex items-center px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded shadow transition duration-150">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                          d="M11 5h6M11 9h4M5 15h14M5 19h10M4 4h16a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V5a1 1 0 011-1z" />
-                                                </svg>
-                                                Bayar
-                                            </a>
-                                        @endif
+                                     
 
                                         <a href="{{ route('reports.editt', $customer->idCustomer) }}"
                                            class="inline-flex items-center px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded shadow transition duration-150">

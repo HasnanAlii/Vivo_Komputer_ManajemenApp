@@ -41,11 +41,16 @@
                             <option value="{{ $customer->idCustomer }}">{{ $customer->noTelp }} - {{ $customer->nama }}</option>
                             @endforeach
                         </select>
+            
                     </div>
                     <a href="{{ route('purchasing.create') }}" class="mt-2 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ">
                        Pelanggan Baru
                    </a>
-
+               <!-- Input untuk upload bukti transaksi -->
+            <div class="md:col-span-3 mt-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Upload Bukti Transaksi</label>
+                <input type="file" name="buktiTransaksi" accept="image/*" class="input file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
 
                     <!-- Product Info -->
                     <div>

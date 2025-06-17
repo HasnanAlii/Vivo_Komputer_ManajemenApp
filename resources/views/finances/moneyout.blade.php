@@ -28,46 +28,63 @@
                 🖨️ Export PDF
             </a>
 
-    <!-- Filter Form di kanan -->
-    <form method="GET" action="{{ route('finances.indexx') }}" class="flex space-x-4 items-center">
-        {{-- <label for="filter" class="font-medium">Filter:</label> --}}
-        <select name="filter" id="filter" onchange="this.form.submit()" class="border rounded px-3 py-2">
-            <option value="harian" {{ $filter == 'harian' ? 'selected' : '' }}>Harian</option>
-            <option value="mingguan" {{ $filter == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
-            <option value="bulanan" {{ $filter == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
-            <option value="tahunan" {{ $filter == 'tahunan' ? 'selected' : '' }}>Tahunan</option>
-        </select>
+                    <!-- Filter Form di kanan -->
+                    <form method="GET" action="{{ route('finances.indexx') }}" class="flex space-x-4 items-center">
+                        {{-- <label for="filter" class="font-medium">Filter:</label> --}}
+                        <select name="filter" id="filter" onchange="this.form.submit()" class="border rounded px-7 py-2">
+                            <option value="semua">Semua</option>
+                            <option value="harian" {{ $filter == 'harian' ? 'selected' : '' }}>Harian</option>
+                            <option value="mingguan" {{ $filter == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
+                            <option value="bulanan" {{ $filter == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
+                            <option value="tahunan" {{ $filter == 'tahunan' ? 'selected' : '' }}>Tahunan</option>
+                        </select>
 
-        <input type="date" name="date" value="{{ $date }}" onchange="this.form.submit()" class="border rounded px-3 py-2">
+                        <input type="date" name="date" value="{{ $date }}" onchange="this.form.submit()" class="border rounded px-3 py-2">
 
-        <noscript>
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Filter</button>
-        </noscript>
-    </form>
+                        <noscript>
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Filter</button>
+                        </noscript>
+                    </form>
 
-    {{-- Tombol Tambah Pengeluaran di kanan --}}
-                <div x-data="{ showModal: false }" class="ml-4">
-                    <button 
-                        @click="showModal = true"
-                        class="bg-blue-500 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold shadow flex items-center gap-2">
-                        <span>➕</span> Tambah Pengeluaran
-                    </button>
+                 {{-- Tombol Tambah Pengeluaran di kanan --}}
+               <div x-data="{ showModal: false }" class="ml-4">
+                <button 
+                    @click="showModal = true"
+                    class="bg-blue-500 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold shadow flex items-center gap-2">
+                    <span>➕</span> Tambah Pengeluaran
+                </button>
 
-                    <!-- Modal Dana Keluar -->
-                    <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
-                        <div @click.away="showModal = false" class="bg-white rounded-xl shadow-lg w-[400px] p-6">
-                            <h2 class="text-xl font-bold mb-4 text-grey-700">📤 Tambah Pengeluaran</h2>
-                            <form action="{{ route('finances.store') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="tipe" value="keluar">
-                                <x-text-input label="Keterangan" name="keterangan" />
-                                <x-number-input label="Jumlah (Rp)" name="jumlah" />
-                                <x-date-input label="Tanggal" name="tanggal" :value="date('Y-m-d')" />
-                                <x-modal-buttons @close="showModal = false" color="blue"/>
-                            </form>
-                        </div>
+                <!-- Modal Dana Keluar -->
+                <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
+                    <div @click.away="showModal = false" class="bg-white rounded-xl shadow-lg w-[400px] p-6">
+                        <h2 class="text-xl font-bold mb-4 text-grey-700">📤 Tambah Pengeluaran</h2>
+                        <form action="{{ route('finances.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="tipe" value="keluar">
+                            <x-text-input label="Keterangan" name="keterangan" />
+                            <x-number-input label="Jumlah (Rp)" name="jumlah" />
+                            <x-date-input label="Tanggal" name="tanggal" :value="date('Y-m-d')" />
+
+                            <div class="flex justify-end gap-3 mt-4">
+                                <button type="button" 
+                                        @click="showModal = false" 
+                                        class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold">
+                                    Batal
+                                </button>
+
+                                <button type="submit" 
+                                        class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                                    Simpan
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
+            </div>
+
+
+
+
             </div>
 
 

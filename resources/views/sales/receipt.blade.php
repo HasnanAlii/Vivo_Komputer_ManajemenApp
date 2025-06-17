@@ -7,16 +7,19 @@
                 <div>
                     <div class="text-base font-bold">Vivo Komputer</div>
                     <div>Jl. Pasirgede Raya Bojongherang Cianjur</div>
-                    <div>Telp: 0812-3456-7890</div>
+                    <div>Telp: 0815-7202-4321</div>
                 </div>
             </div>
             <div class="text-center text-base font-bold mb-2">
                 Nota Pembelian
             </div>
-            <div class="text-right">
-                <div>Nomor Faktur:</div>
-                <div class="font-bold text-base">{{ $sales->first()->nomorFaktur ?? '-' }}</div>
-            </div>
+           <div class="text-right">
+            <div>Nomor Faktur:</div>
+            <div class="font-bold text-base">{{ $sales->first()->nomorFaktur ?? '-' }}</div>
+            <div>Tanggal:</div>
+            <div class="font-bold text-base">{{ \Carbon\Carbon::now()->format('d M Y') }}</div>
+        </div>
+
         </div>
 
 
@@ -50,7 +53,8 @@
             @endif
         </div>
 
-        <div class="mt-4 border border-red-600 text-red-700 p-2 w-fit text-xs leading-snug">
+        
+         <div class="mt-2 border border-red-400 text-red-500 text-[9px] px-2 py-1 leading-tight max-w-xs">
             <p>- Barang yang sudah dibeli tidak dapat dikembalikan.</p>
             <p>- Simpan struk sebagai bukti transaksi.</p>
         </div>

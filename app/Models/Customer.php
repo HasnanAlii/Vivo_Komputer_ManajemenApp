@@ -36,5 +36,10 @@ public function product()
 {
     return $this->belongsTo(Product::class, 'idProduct', 'idProduct');
 }
+public function pembayaran()
+{
+    return $this->hasMany(Pembayaran::class, 'idCustomer', 'idCustomer');
+}
+
 
 }

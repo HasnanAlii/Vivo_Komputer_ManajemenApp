@@ -46,12 +46,24 @@
                                 <h3 class="text-green-500 font-bold">Data Service</h3>
                             </div>
                         </div>
-                               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="jenisPerangkat" class="border px-3 py-2 rounded w-full mb-2" placeholder="Nama Barang / Jenis Perangkat" required>
-                            <input type="text" name="kerusakan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kerusakan (dapat diisi nanti)">
-                            <input type="text" name="kondisi" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kondisi awal" required>
-                            <input type="text" name="kelengkapan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan" required>
-                            {{-- <input type="text" name="kelengkapan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan" required> --}}
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                            <div>
+                            <label class="block font-medium text-gray-700 mb-1">Nama Barang / Jenis Perangkat</label>
+                            <input type="text" name="jenisPerangkat" class="border px-3 py-2 rounded w-full mb-2"required>
+                        </div>
+                         <div>
+                            <label class="block font-medium text-gray-700 mb-1">Kerusakan (dapat diisi nanti)</label>
+                            <input type="text" name="kerusakan" class="border px-3 py-2 rounded w-full mb-2">
+                        </div> <div>
+                            <label class="block font-medium text-gray-700 mb-1">Kondisi awal</label>
+                            <input type="text" name="kondisi" class="border px-3 py-2 rounded w-full mb-2"  required>
+                        </div> <div>
+                            <label class="block font-medium text-gray-700 mb-1">Kelengkapan</label>
+                            <input type="text" name="kelengkapan" class="border px-3 py-2 rounded w-full mb-2"  required>
+                        </div>
+                        
+                            {{-- <input type="text" name="keterangan" class="border px-3 py-2 rounded w-full mb-2" placeholder="Kelengkapan" required> --}}
                             {{-- <input type="text" name="ciriCiri" class="border px-3 py-2 rounded w-full mb-2" placeholder="Ciri-ciri barang" required> --}}
                         </div>
                         <div class="mb-3">

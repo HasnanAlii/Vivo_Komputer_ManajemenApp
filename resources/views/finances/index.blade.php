@@ -33,8 +33,19 @@
                         <x-text-input label="Keterangan" name="keterangan" />
                         <x-number-input label="Jumlah (Rp)" name="jumlah" />
                         <x-date-input label="Tanggal" name="tanggal" :value="date('Y-m-d')" />
-           
-                        <x-modal-buttons @close="showDanaMasuk = false" color="green"/>
+                        <div class="flex justify-end space-x-3 mt-4">
+                                <button type="button" 
+                                    @click="showDanaMasuk = false" 
+                                    class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold transition">
+                                    Batal
+                                </button>
+
+                                <button type="submit" 
+                                    class="px-4 py-2 rounded bg-green-600 hover:bg-green-700 text-white font-semibold transition">
+                                    Simpan
+                                </button>
+                        </div>
+                        {{-- <x-modal-buttons @close="showDanaMasuk = false" color="green"/> --}}
                     </form>  
                 </div>
                
@@ -46,8 +57,9 @@
                 🖨️ Export PDF
             </a>
                 <form method="GET" action="{{ route('finances.index') }}" class="flex space-x-4 items-center">
-                    {{-- <label for="filter" class="font-medium">Filter:</label> --}}
-                    <select name="filter" id="filter" onchange="this.form.submit()" class="border rounded px-3 py-2">
+              
+                    <select name="filter" id="filter" onchange="this.form.submit()" class="border rounded px-7 py-2">
+                    <option value="semua">Semua</option>
                     <option value="harian" {{ $filter == 'harian' ? 'selected' : '' }}>Harian</option>
                     <option value="mingguan" {{ $filter == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
                     <option value="bulanan" {{ $filter == 'bulanan' ? 'selected' : '' }}>Bulanan</option>

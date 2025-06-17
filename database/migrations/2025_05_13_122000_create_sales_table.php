@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('totalHarga');
             $table->integer('keuntungan');
             $table->date('tanggal');
+            $table->enum('jenisPembayaran', ['cicilan', 'lunas'])->default('lunas')->nullable();
 
             
 

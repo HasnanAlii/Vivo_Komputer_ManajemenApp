@@ -2,10 +2,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Finance;
+use App\Models\Pembayaran;
 use App\Models\Sale;
 use App\Models\Product;
 use App\Models\TransactionItem;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,30 +18,26 @@ class SaleController extends Controller
 
 public function index(Request $request)
 {
-    // Filter pencarian customer
-    if ($request->has('searchCustomer') && !empty($request->searchCustomer)) {
-        if (is_numeric($request->searchCustomer)) {
-            $customer = Customer::find($request->searchCustomer);
-        } else {
-            $customer = Customer::where('nama', 'like', '%' . $request->searchCustomer . '%')->first();
-        }
+    $employees = Employee::all();
+    $sales = Sale::whereNull('idFinance')->get();
+    $customer = null;
+    $employee = null;
 
-        if ($customer) {
-            return redirect()->route('sales.index', ['customer' => $customer->idCustomer])
-                ->with('success', 'Customer berhasil dipilih.');
-        } else {
-            return redirect()->route('sales.index')
-                ->with('error', 'Customer tidak ditemukan.');
-        }
+
+    if ($request->has('employee')) {
+        $employee = Employee::find($request->employee);
     }
 
-    // Filter pencarian produk
+
+    if ($request->has('customer')) {
+        $customer = Customer::find($request->customer);
+    }
+
+   
     if ($request->has('search') && !empty($request->search)) {
-        if (is_numeric($request->search)) {
-            $product = Product::find($request->search);
-        } else {
-            $product = Product::where('namaBarang', 'like', '%' . $request->search . '%')->first();
-        }
+        $product = is_numeric($request->search) 
+            ? Product::find($request->search)
+            : Product::where('namaBarang', 'like', '%' . $request->search . '%')->first();
 
         if ($product) {
             $salesWithNoFinance = Sale::whereNull('idFinance')->get();
@@ -46,10 +45,12 @@ public function index(Request $request)
             $existingSale = $salesWithNoFinance->where('idProduct', $product->idProduct)->first();
 
             if ($existingSale) {
-                $existingSale->jumlah += 1;
-                $existingSale->totalHarga = $existingSale->jumlah * $existingSale->hargaTransaksi;
-                $existingSale->keuntungan = $existingSale->jumlah * ($existingSale->hargaTransaksi - $product->hargaBeli);
-                $existingSale->save();
+                $existingSale->update([
+                    'jumlah' => $existingSale->jumlah + 1,
+                    'totalHarga' => ($existingSale->jumlah + 1) * $existingSale->hargaTransaksi,
+                    'keuntungan' => ($existingSale->jumlah + 1) * ($existingSale->hargaTransaksi - $product->hargaBeli),
+                    'idEmployee' => $request->employee 
+                ]);
             } else {
                 Sale::create([
                     'nomorFaktur' => $existingFaktur,
@@ -59,59 +60,85 @@ public function index(Request $request)
                     'keuntungan' => $product->hargaJual - $product->hargaBeli,
                     'tanggal' => now(),
                     'idProduct' => $product->idProduct,
-                    'idCustomer' => $request->customer, 
+                    'idCustomer' => $request->customer,
+                    'idEmployee' => $request->employee 
                 ]);
             }
 
-            return redirect()->route('sales.index', ['customer' => $request->customer])
-                ->with('success', 'Produk berhasil ditambahkan.');
+            return redirect()->route('sales.index', [
+                'customer' => $request->customer,
+                'employee' => $request->employee
+            ])->with('success', 'Produk berhasil ditambahkan.');
         }
-
-        return redirect()->route('sales.index', ['customer' => $request->customer])
-            ->with('error', 'Produk tidak ditemukan.');
     }
 
-    // Tampilkan halaman kasir seperti biasa
-    $sales = Sale::whereNull('idFinance')->get();
-    $customer = null;
-    if ($request->has('customer')) {
-        $customer = Customer::find($request->customer);
+    return view('sales.index', compact('sales', 'customer', 'employees', 'employee'));
+}
+
+public function indexx(Request $request)
+{
+    // Terima input filter, default 'harian'
+    $filter = $request->input('filter', 'harian');
+    $idEmployee = $request->input('idEmployee');
+    $date = $request->input('date', \Carbon\Carbon::today()->toDateString());
+    $carbonDate = \Carbon\Carbon::parse($date);
+
+    $query = Sale::with(['product', 'employee']);
+
+    switch ($filter) {
+        case 'harian': 
+            $query->whereDate('tanggal', $carbonDate);
+            break;
+
+        case 'mingguan': 
+            $startOfWeek = $carbonDate->copy()->startOfWeek();
+            $endOfWeek = $carbonDate->copy()->endOfWeek();
+            $query->whereBetween('tanggal', [$startOfWeek, $endOfWeek]);
+            break;
+
+        case 'bulanan': 
+            $query->whereYear('tanggal', $carbonDate->year)
+                  ->whereMonth('tanggal', $carbonDate->month);
+            break;
+
+        case 'tahunan': 
+            $query->whereYear('tanggal', $carbonDate->year);
+            break;
     }
 
-    return view('sales.index', compact('sales', 'customer'));
+    if (!empty($idEmployee)) {
+        $query->where('idEmployee', $idEmployee);
+    }
+
+    $totalQuery = clone $query;
+
+    $sales = $query->latest()->paginate(10)->withQueryString();
+
+    $allSales = $totalQuery->get();
+
+    $totalModal = $allSales->sum(function ($sale) {
+        return $sale->jumlah * ($sale->product->hargaBeli ?? 0);
+    });
+
+    $totalKeuntungan = $allSales->sum('keuntungan');
+    $totalPendapatan = $allSales->sum('totalHarga');
+
+    $employees = Employee::all();
+
+    return view('reports.sale', compact(
+        'sales',
+        'totalModal',
+        'totalKeuntungan',
+        'totalPendapatan',
+        'employees',
+        'filter',
+        'idEmployee',
+        'date'
+    ));
 }
 
 
 
-    public function indexx(Request $request)
-    {
-        $query = Sale::with(['product']);
-
-        switch ($request->filter) {
-            case 'today':
-                $query->whereDate('tanggal', Carbon::today());
-                break;
-            case 'week':
-                $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
-                break;
-            case 'month':
-                $query->whereMonth('tanggal', Carbon::now()->month)
-                      ->whereYear('tanggal', Carbon::now()->year);
-                break;
-            case 'year':
-                $query->whereYear('tanggal', Carbon::now()->year);
-                break;
-        }
-
-        $filteredQuery = clone $query;
-        $sales = $query->paginate(8);
-
-        $totalModal = $filteredQuery->sum('totalHarga') - $filteredQuery->sum('keuntungan');
-        $totalKeuntungan = $filteredQuery->sum('keuntungan');
-        $totalPendapatan = $totalModal + $totalKeuntungan;
-
-        return view('reports.sale', compact('sales', 'totalModal', 'totalKeuntungan', 'totalPendapatan'));
-    }
 
     public function create()
     {
@@ -145,7 +172,6 @@ public function index(Request $request)
         }
     }
     
-
     public function edit($id)
     {
         return view('sales.edit', [
@@ -212,10 +238,11 @@ public function index(Request $request)
 
 public function checkout(Request $request)
 {
-        $request->merge([
+    $request->merge([
         'bayar' => str_replace('.', '', $request->bayar),
         'total' => str_replace('.', '', $request->total),
     ]);
+    
     $request->validate([
         'bayar' => 'required|numeric|min:0',
         'total' => 'required|numeric|min:0',
@@ -232,7 +259,7 @@ public function checkout(Request $request)
         $bayar = $request->bayar;
         $sisaCicilan = max($totalBayar - $bayar, 0);
         $idCustomer = $request->input('idCustomer');
-
+        $idEmployee = $request->input('idEmployee'); 
         if ($sales->isEmpty()) {
             DB::rollBack();
             return redirect()->route('sales.index')->with([
@@ -241,15 +268,13 @@ public function checkout(Request $request)
             ]);
         }
 
-       
         $statusPembayaran = $bayar == 0 ? 'cicilan' : ($sisaCicilan > 0 ? 'sebagian' : 'lunas');
 
-        // Jika bayar = 0, set modal dan keuntungan jadi 0
+   
         $financeModal = $bayar == 0 ? 0 : $totalModal;
         $financeKeuntungan = $bayar == 0 ? 0 : $totalKeuntungan;
         
-
-        // Simpan data finance
+   
         $finance = new Finance();
         $finance->dana = $bayar;
         $finance->modal = $financeModal;
@@ -261,16 +286,10 @@ public function checkout(Request $request)
         $finance->keterangan = 'penjualan produk';
         $finance->save();
 
-        // Jika customer belum dipilih dan ada sisa cicilan, buat baru
-        if (!$idCustomer && $sisaCicilan > 0) {
-            $customer = Customer::create([
-                'nama' => 'Customer Baru',
-                'idFinance' => $finance->idFinance,
-            ]);
-            $idCustomer = $customer->idCustomer;
-        }
+   
+     
+        
 
-        // Jika customer sudah ada dan ada sisa cicilan, tambahkan cicilannya
         if ($idCustomer && $sisaCicilan > 0) {
             $customer = Customer::find($idCustomer);
             if ($customer) {
@@ -279,6 +298,27 @@ public function checkout(Request $request)
                 }
                 $customer->idFinance = $finance->idFinance;
                 $customer->save();
+                     if ($sisaCicilan > 0 && $idCustomer) {
+               $lastPembayaran = Pembayaran::where('idCustomer', $idCustomer)
+                        ->orderByDesc('created_at')
+                        ->first();
+
+                    $previousSisa = $lastPembayaran ? $lastPembayaran->sisaCicilan : 0;
+
+                    // Total sisa cicilan = sebelumnya + baru
+                    $totalSisaCicilan = $previousSisa + $sisaCicilan;
+
+                    Pembayaran::create([
+                        'idCustomer' => $idCustomer,
+                        'sisaCicilan' => $totalSisaCicilan,
+                        'idFinance' => $finance->idFinance,
+                        'idShopping' => null,
+                         'tanggalBayar' => null,
+                        'bayar' => null, 
+
+                    ]);
+                }
+
             }
         }
 
@@ -292,11 +332,20 @@ public function checkout(Request $request)
             $product->jumlah -= $sale->jumlah;
             $product->save();
 
+            // Update sale dengan finance ID dan employee ID
             $sale->idFinance = $finance->idFinance;
             $sale->totalHarga = $sale->jumlah * $sale->hargaTransaksi;
             $sale->keuntungan = $bayar == 0 ? 0 : $totalKeuntungan;
             $sale->tanggal = now();
             $sale->idCustomer = $idCustomer;
+            $sale->jenisPembayaran = $bayar == 0 ? 'cicilan' : 'lunas';
+
+            
+            // Pastikan employee ID tersimpan
+            if ($idEmployee) {
+                $sale->idEmployee = $idEmployee;
+            }
+            
             $sale->save();
 
             TransactionItem::create([
@@ -323,9 +372,6 @@ public function checkout(Request $request)
         ]);
     }
 }
-
-
-
 
 public function editPrice(Request $request, $id)
 {
@@ -377,15 +423,26 @@ public function editPrice(Request $request, $id)
 
         return response()->json(['results' => $products]);
     }
+    
     public function searchCustomer(Request $request)
-{
-    $search = $request->q;
+    {
+        $search = $request->q;
 
-    $customers = Customer::where('nama', 'like', '%' . $search . '%')
-        ->select('idCustomer as id', 'nama as text')
-        ->get();
+        $customers = Customer::where('noTelp', 'like', '%' . $search . '%')
+            ->select('idCustomer as id', 'nama as text')
+            ->get();
 
-    return response()->json(['results' => $customers]);
-}
+        return response()->json(['results' => $customers]);
+    }
+    
+    public function searchEmployee(Request $request)
+    {
+        $search = $request->q;
 
+        $employees = Employee::where('nama', 'like', '%' . $search . '%')
+            ->select('idEmployee as id', 'nama as text')
+            ->get();
+
+        return response()->json(['results' => $employees]);
+    }
 }
