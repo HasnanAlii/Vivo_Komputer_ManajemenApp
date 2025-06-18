@@ -122,8 +122,41 @@
                                     Rp {{ number_format($sale->hargaTransaksi, 0, ',', '.') }}
                                 </td>
                                 <td class="px-4 py-2 text-center">{{ $sale->jumlah }}</td>
-                          <td class="flex flex-wrap gap-2 items-left px-4 py-2">
-                        {{-- Tombol Kurangi Jumlah --}}
+                          <td class="flex flex-wrap gap-2 w-52 items-left px-4 py-2">
+                        {{-- Form Ubah Harga --}}
+                        <form action="{{ route('sales.editPrice', $sale->idSale) }}" method="POST" class="flex items-center gap-2">
+                            @csrf @method('PATCH')
+                            <input 
+                                type="text" 
+                                name="hargaTransaksi" 
+                                value="{{ $sale->hargaTransaksi }}" 
+                                class="w-28 px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 format-ribuann"
+                                required
+                            >
+                            <button 
+                                type="submit" 
+                                class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm text-sm"
+                            >
+                                MarkUp
+                            </button>
+                          </form>
+                           {{-- <form action="{{ route('sales.cashback', $sale->idSale) }}" method="POST" class="flex items-center gap-2">
+                            @csrf @method('PATCH')
+                            <input 
+                                type="text" 
+                                name="hargaTransaksi" 
+                                value="{{ $sale->hargaTransaksi }}" 
+                                class="w-28 px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 format-ribuann"
+                                required
+                            >
+                            <button 
+                                type="submit" 
+                                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm text-sm"
+                            >
+                                Cashback
+                            </button>
+                          </form> --}}
+                               {{-- Tombol Kurangi Jumlah --}}
                         <form action="{{ route('sales.decrease', $sale->idSale) }}" method="POST">
                             @csrf @method('PATCH')
                             <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow-sm">-</button>
@@ -143,25 +176,8 @@
                             @csrf @method('DELETE')
                             <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded shadow-sm">🗑</button>
                         </form>
-
-                        {{-- Form Ubah Harga --}}
-                        <form action="{{ route('sales.editPrice', $sale->idSale) }}" method="POST" class="flex items-center gap-2">
-                            @csrf @method('PATCH')
-                            <input 
-                                type="text" 
-                                name="hargaTransaksi" 
-                                value="{{ $sale->hargaTransaksi }}" 
-                                class="w-36 px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 format-ribuann"
-                                required
-                            >
-                            <button 
-                                type="submit" 
-                                class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm text-sm"
-                            >
-                                Ubah
-                            </button>
-                          </form>
                             </td>
+                            
                             </tr>
                         @empty
                             <tr>
@@ -245,7 +261,14 @@
             </div>
             <p class="text-blue-500 text-xs mt-1 hover:underline cursor-pointer" onclick="setExact()">Uang Pas</p>
         </div>
-
+             <div class="flex items-center">
+                    <input type="checkbox" name="statuspembayaran" id="statuspembayaran" value="1"
+                        {{ old('statuspembayaran') ? 'checked' : '' }}
+                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="statuspembayaran" class="ml-2 block text-sm text-gray-700">
+                        Cashback
+                    </label>
+                </div>
         {{-- Flash Message --}}
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">

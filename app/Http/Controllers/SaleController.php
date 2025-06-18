@@ -254,7 +254,18 @@ public function checkout(Request $request)
     try {
         $totalBayar = $sales->sum(fn($s) => $s->jumlah * $s->hargaTransaksi);
         $totalModal = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaBeli);
-        $totalKeuntungan = $totalBayar - $totalModal;
+        $totalJual = $sales->sum(fn($s) => $s->jumlah * $s->product->hargaJual);
+
+
+        $isCashback = $request->has('statuspembayaran') && $request->statuspembayaran == '1';
+
+        if ($isCashback) {
+            $totalKeuntungan = $totalJual - $totalModal;
+        } else {
+            $totalKeuntungan = $totalBayar - $totalModal;
+        }
+
+
 
         $bayar = $request->bayar;
         $sisaCicilan = max($totalBayar - $bayar, 0);
@@ -395,10 +406,32 @@ public function editPrice(Request $request, $id)
         return redirect()->route('sales.index')->with('error', 'Gagal mengubah harga: ' . $e->getMessage());
     }
 }
+public function cashback(Request $request, $id)
+{
+     $request->merge([
+        'hargaTransaksi' => str_replace('.', '', $request->hargaTransaksi),
+    ]);
+
+    $request->validate([
+        'hargaTransaksi' => 'required|numeric|min:0',
+    ]);
+
+    try {
+        $sale = Sale::findOrFail($id);
+        $sale->hargaTransaksi = $request->hargaTransaksi;
+        $sale->totalHarga = $sale->jumlah * $sale->hargaTransaksi;
+        // $sale->keuntungan = $sale->jumlah * ($sale->hargajual - $sale->product->hargaBeli);
+        $sale->save();
+
+        return redirect()->route('sales.index')->with('success', 'Harga berhasil diubah.');
+    } catch (\Exception $e) {
+        return redirect()->route('sales.index')->with('error', 'Gagal mengubah harga: ' . $e->getMessage());
+    }
+}
 
     public function printReceipt($id)
     {
-        $sales = Sale::with(['product', 'finance'])->where('idFinance', $id)->get();
+       $sales = Sale::with(['product', 'finance' ,'customer'])->where('idFinance', $id)->get();
 
         if ($sales->isEmpty()) {
             return redirect()->route('sales.index')->with('error', 'Transaksi tidak ditemukan.');
@@ -409,8 +442,11 @@ public function editPrice(Request $request, $id)
         $bayar = session('bayar') ?? $sales->first()->finance->dana ?? $total;
         $kembalian = $bayar - $total;
         $nomorFaktur = $sales->first()->nomorFaktur ?? '-';
+        $customer = $sales->first()->customer ?? '-';
 
-        return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian', 'modal', 'nomorFaktur'));
+
+        return view('sales.receipt', compact('sales', 'total', 'bayar', 'kembalian', 'modal', 'nomorFaktur', 'customer'));
+
     }
 
     public function searchProducts(Request $request)

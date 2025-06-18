@@ -37,7 +37,7 @@
         }
     </style>
 
-    <div class="py-4">
+    <div class="py-4 ml-5">
         <div id="print-area" class="text-sm font-mono" style="max-width: 28cm; width: 100%;">
             <div class="flex justify-between items-start border-b border-gray-900 pb-2 mb-2">
                 <div class="flex gap-4">
@@ -52,14 +52,27 @@
                     <strong class="text-lg">Struk Pembelian Barang</strong>
                     <div>Nomor Faktur:</div>
                     <div class="font-bold text-base">{{ $sales->first()->nomorFaktur ?? '-' }}</div>
-                    <div>Tanggal:</div>
-                    <div class="font-bold text-base">{{ \Carbon\Carbon::now()->format('d M Y') }}</div>
                 </div>
             </div>
+           <div class="mb-2">
+            @if ($customer)
+                <div class="mb-4">
+                    <p class="font-semibold">Kepada Yth :</p>
+                    <div class="ml-4 space-y-1">
+                        <p><span class="inline-block w-20">Nama</span>: {{ $customer->nama }}</p>
+                        <p><span class="inline-block w-20">Telepon</span>: {{ $customer->noTelp }}</p>
+                        <p>Tanggal {{ \Carbon\Carbon::now()->format('d M Y') }}</p>
+                    </div>
+                </div>
+            @else
+                <p class="text-red-500 italic">Data customer tidak ditemukan.</p>
+            @endif
+
+        </div>
 
             <table class="w-full text-xs mb-4">
                 <thead>
-                    <tr class="border-b border-black">
+                    <tr class="border-y border-black">
                         <th align="left">Barang</th>
                         <th align="right">Jumlah</th>
                         <th align="right">Subtotal</th>

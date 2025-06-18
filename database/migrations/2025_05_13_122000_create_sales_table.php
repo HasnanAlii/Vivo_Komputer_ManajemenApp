@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('keuntungan');
             $table->date('tanggal');
             $table->enum('jenisPembayaran', ['cicilan', 'lunas'])->default('lunas')->nullable();
+            $table->boolean('statuspembayaran')->default(false);
+
 
             
 
