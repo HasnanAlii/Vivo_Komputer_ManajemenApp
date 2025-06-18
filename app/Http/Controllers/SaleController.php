@@ -406,28 +406,6 @@ public function editPrice(Request $request, $id)
         return redirect()->route('sales.index')->with('error', 'Gagal mengubah harga: ' . $e->getMessage());
     }
 }
-public function cashback(Request $request, $id)
-{
-     $request->merge([
-        'hargaTransaksi' => str_replace('.', '', $request->hargaTransaksi),
-    ]);
-
-    $request->validate([
-        'hargaTransaksi' => 'required|numeric|min:0',
-    ]);
-
-    try {
-        $sale = Sale::findOrFail($id);
-        $sale->hargaTransaksi = $request->hargaTransaksi;
-        $sale->totalHarga = $sale->jumlah * $sale->hargaTransaksi;
-        // $sale->keuntungan = $sale->jumlah * ($sale->hargajual - $sale->product->hargaBeli);
-        $sale->save();
-
-        return redirect()->route('sales.index')->with('success', 'Harga berhasil diubah.');
-    } catch (\Exception $e) {
-        return redirect()->route('sales.index')->with('error', 'Gagal mengubah harga: ' . $e->getMessage());
-    }
-}
 
     public function printReceipt($id)
     {

@@ -104,11 +104,11 @@
                 <table class="min-w-full divide-y divide-gray-200 mt-4">
                     <thead class="bg-gray-100">
                         <tr class="text-gray-700 text-sm">
-                            <th class="px-4 py-2 text-left">Stok</th>
+                            <th class="px-4 py-2 text-left w-5">Stok</th>
                             <th class="px-4 py-2 text-left">Nama Produk</th>
-                            <th class="px-4 py-2 text-center">Harga</th>
-                            <th class="px-4 py-2 text-center">Jumlah</th>
-                            <th class="px-4 py-2 text-center">Aksi</th>
+                            <th class="px-4 py-2 text-center w-5">Jumlah</th>
+                            <th class="px-4 py-2 text-center w-14">Harga</th>
+                            <th class="px-4 py-2 text-center w-32">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 text-sm">
@@ -118,11 +118,27 @@
                                     {{ $sale->product->jumlah }}
                                </td>
                                 <td class="px-4 py-2 font-medium">{{ $sale->product->namaBarang }}</td>
-                                <td class="px-4 py-2 text-grey-600 text-center">
-                                    Rp {{ number_format($sale->hargaTransaksi, 0, ',', '.') }}
-                                </td>
                                 <td class="px-4 py-2 text-center">{{ $sale->jumlah }}</td>
-                          <td class="flex flex-wrap gap-2 w-52 items-left px-4 py-2">
+                                <td class="px-4 py-2 text-grey-600 text-center">
+                                    {{ number_format($sale->hargaTransaksi, 0, ',', '.') }}
+                                </td>
+                          <td class="flex flex-wrap justify-between gap-2 items-start py-2">
+                            
+                        <form action="{{ route('sales.decrease', $sale->idSale) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow-sm">-</button>
+                        </form>
+
+                        <form action="{{ route('sales.increase', $sale->idSale) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm">+</button>
+                        </form>
+
+                        {{-- Tombol Hapus --}}
+                        <form action="{{ route('sales.destroy', $sale->idSale) }}" method="POST">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded shadow-sm">🗑</button>
+                        </form>
                         {{-- Form Ubah Harga --}}
                         <form action="{{ route('sales.editPrice', $sale->idSale) }}" method="POST" class="flex items-center gap-2">
                             @csrf @method('PATCH')
@@ -135,49 +151,13 @@
                             >
                             <button 
                                 type="submit" 
-                                class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm text-sm"
+                                class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded shadow-sm text-sm"
                             >
-                                MarkUp
+                                Ubah
                             </button>
-                          </form>
-                           {{-- <form action="{{ route('sales.cashback', $sale->idSale) }}" method="POST" class="flex items-center gap-2">
-                            @csrf @method('PATCH')
-                            <input 
-                                type="text" 
-                                name="hargaTransaksi" 
-                                value="{{ $sale->hargaTransaksi }}" 
-                                class="w-28 px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 format-ribuann"
-                                required
-                            >
-                            <button 
-                                type="submit" 
-                                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm text-sm"
-                            >
-                                Cashback
-                            </button>
-                          </form> --}}
-                               {{-- Tombol Kurangi Jumlah --}}
-                        <form action="{{ route('sales.decrease', $sale->idSale) }}" method="POST">
-                            @csrf @method('PATCH')
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow-sm">-</button>
-                        </form>
-
-                        {{-- Jumlah Produk
-                        <span class="font-semibold text-gray-800 ">{{ $sale->jumlah }}</span> --}}
-
-                        {{-- Tombol Tambah Jumlah --}}
-                        <form action="{{ route('sales.increase', $sale->idSale) }}" method="POST">
-                            @csrf @method('PATCH')
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm">+</button>
-                        </form>
-
-                        {{-- Tombol Hapus --}}
-                        <form action="{{ route('sales.destroy', $sale->idSale) }}" method="POST">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded shadow-sm">🗑</button>
-                        </form>
+                          </form>          
                             </td>
-                            
+
                             </tr>
                         @empty
                             <tr>

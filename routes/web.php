@@ -51,7 +51,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/sales/{id}/update-bayar', [SaleController::class, 'updateBayar'])->name('updateBayar');
         Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('search');
         Route::patch('/sales/edit-price/{id}', [SaleController::class, 'editPrice'])->name('editPrice');
-        Route::patch('/sales/cashback/{id}', [SaleController::class, 'cashback'])->name('cashback');
         Route::get('/sales/search-customer', [SaleController::class, 'searchCustomer'])->name('customer');
         Route::get('/sales/employee', [SaleController::class, 'searchEmployee'])->name('employee');
         Route::post('/customer', [CustomerController::class, 'store'])->name('addcustomer');
