@@ -1,6 +1,6 @@
 <x-app-layout>
 <div class="max-w-md mx-auto bg-white rounded-xl shadow-md p-6 mt-10">
-    <h2 class="text-xl font-bold mb-4 text-blue-700">👤 Tambah Customer</h2>
+    <h2 class="text-xl font-bold mb-4 text-blue-700"> Tambah Customer</h2>
 
     <form action="{{ route('sales.addcustomer') }}" method="POST">
         @csrf

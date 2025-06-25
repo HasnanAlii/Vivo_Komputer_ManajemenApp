@@ -5,7 +5,7 @@
                     class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
                 🔙
             </button>
-            {{ __('📊 Laporan') }}
+            {{ __('Laporan') }}
         </h2>
     </x-slot>
 

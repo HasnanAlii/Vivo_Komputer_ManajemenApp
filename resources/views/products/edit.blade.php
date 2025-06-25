@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-2xl text-gray-800 leading-tight flex items-center gap-2">
-             📝📦 {{ __('Halaman Edit Stok Barang') }}
+           {{ __('Edit Stok Barang') }}
         </h2>
 
     </x-slot>
@@ -33,6 +33,13 @@
                                 class="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm px-4 py-2 format-ribuan">
                         </div>
 
+                        <div>
+                            <label class="block mb-1 text-gray-700 font-semibold">Harga Beli</label>
+                            <input type="text" name="hargaBeli" value="{{ old('hargaBeli', $product->hargaBeli) }}"
+                                placeholder="Masukkan harga Beli"
+                                
+                                class="w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm px-4 py-2 format-ribuan">
+                        </div>
                         <div>
                             <label class="block mb-1 text-gray-700 font-semibold">Harga Jual</label>
                             <input type="text" name="hargaJual" value="{{ old('hargaJual', $product->hargaJual) }}"

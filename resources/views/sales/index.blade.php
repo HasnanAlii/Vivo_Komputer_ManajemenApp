@@ -6,7 +6,7 @@
                         class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
                     🔙
                 </button>
-                🛒 <span>Halaman Kasir</span>
+                <span>Penjualan Barang</span>
             </h2>
             <!-- Tambah Customer Button -->
             <a href="{{ route('sales.add') }}" 
@@ -16,60 +16,6 @@
                 </svg>
                 Tambah Customer
             </a>
-
-            {{-- <div x-data="{ showTambahCustomer: false }"> --}}
-
-
-           {{-- <button  @click="showTambahCustomer = true"
-                    class="inline-flex items-center px-5 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 text-white font-semibold rounded-lg shadow-md transition duration-200 ease-in-out"
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Tambah Customer
-                    </button>
-
-
-            {{-- modal di sini --}}
-            {{-- <div x-show="showTambahCustomer" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
-            <div @click.away="showTambahCustomer = false" class="bg-white rounded-xl shadow-lg w-[400px] p-6">
-                <h2 class="text-xl font-bold mb-4 text-blue-700">👤 Tambah Customer</h2>
-                <form action="{{ route('sales.addcustomer') }}" method="POST">
-                    @csrf
-
-                    <div class="mb-4">
-                        <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-                        <input type="text" id="nama" name="nama" maxlength="50" placeholder="Nama Customer" 
-                            class="w-full rounded border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                        <textarea id="alamat" name="alamat" maxlength="255" placeholder="Alamat Customer" rows="3"
-                            class="w-full rounded border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="noTelp" class="block text-sm font-medium text-gray-700 mb-1">No. Telepon</label>
-                        <input type="text" id="noTelp" name="noTelp" maxlength="255" placeholder="No. Telepon Customer" 
-                            class="w-full rounded border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-                    </div>
-
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" @click="showTambahCustomer = false" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-700">
-                            Batal
-                        </button>
-                        <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                            Simpan
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            
-        </div> --}}
-
-        {{-- </div>  --}}
 
         </div>
     </x-slot>

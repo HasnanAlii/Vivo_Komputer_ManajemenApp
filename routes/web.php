@@ -157,6 +157,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/{product}/harga', [ProductController::class, 'updatee'])->name('updatee');
         Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
         Route::post('/product/import', [ProductController::class, 'import'])->name('import');
+        Route::get('/product/export', [ProductController::class, 'export'])->name('export');
  
 
 

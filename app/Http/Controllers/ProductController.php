@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductExport;
 use App\Imports\ProductImport;
 use App\Models\Category;
 use App\Models\Customer;
@@ -78,37 +79,19 @@ public function index(Request $request)
         return view('products.edit2', compact('product'));
     }
 
-    public function updatee(Request $request, Product $product)
-    {
-        $request->validate([
-            'hargaJual' => 'required|integer',
-        ]);
 
-        try {
-            $product->update($request->all());
-            $notification = [
-                'message' => 'Harga jual produk berhasil diperbarui',
-                'alert-type' => 'success'
-            ];
-        } catch (\Exception $e) {
-            $notification = [
-                'message' => 'Gagal memperbarui harga: ' . $e->getMessage(),
-                'alert-type' => 'error'
-            ];
-        }
-
-        return redirect()->route('sales.index')->with($notification);
-    }
 
     public function update(Request $request, Product $product)
     {
          $request->merge([
+        'hargaBeli' => str_replace('.', '', $request->hargaBeli),
         'hargaJual' => str_replace('.', '', $request->hargaJual),
         'jumlah' => str_replace('.', '', $request->jumlah),
     ]);
         $request->validate([
             'namaBarang' => 'required|max:50',
             'jumlah' => 'required|integer',
+            'hargaBeli' => 'required|integer',
             'hargaJual' => 'required|integer',
         ]);
 
@@ -168,4 +151,8 @@ public function index(Request $request)
         return redirect()->route('product.index')->with($notification);
     }
      
+    public function export()
+{
+    return Excel::download(new ProductExport, 'data_produk.xlsx');
+}
 }

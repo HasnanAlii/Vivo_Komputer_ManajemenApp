@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-2xl text-gray-800 leading-tight flex items-center space-x-2">
-            <span>📊</span>
-            <span>Halaman Keuangan</span>
+        
+            <span>Laporan Pengeluaran</span>
         </h2>
     </x-slot>
 

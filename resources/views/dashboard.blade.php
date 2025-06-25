@@ -27,10 +27,10 @@
                             <x-dashboard.card title="Stok Barang" route="{{ route('product.index') }}" icon="archive-box" />
 
                             <!-- Kartu 2: Pembelian Produk -->
-                            <x-dashboard.card title="Pembelian Produk" route="{{ route('purchasing.index') }}" icon="shopping-cart" />
+                            <x-dashboard.card title="Pembelian Barang" route="{{ route('purchasing.index') }}" icon="shopping-cart" />
 
                             <!-- Kartu 3: Laporan Penjualan -->
-                            <x-dashboard.card title="Laporan" route="{{ route('reports.index') }}" icon="document-text" />
+                            <x-dashboard.card title="Laporan dan Pengelolaan" route="{{ route('reports.index') }}" icon="document-text" />
 
                             <!-- Kartu 4: Keuangan -->
                             <x-dashboard.card title="Keuangan" route="{{ route('finances.index') }}" icon="currency-dollar" />
@@ -39,10 +39,10 @@
                         <!-- Kolom Kanan -->
                         <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <!-- Servis -->
-                            <x-dashboard.card title="Servis" route="{{ route('service.index') }}" icon="wrench-screwdriver" />
+                            <x-dashboard.card title="Perbaikan Barang" route="{{ route('service.index') }}" icon="wrench-screwdriver" />
 
                             <!-- Kasir -->
-                            <x-dashboard.card title="Kasir" route="{{ route('sales.index') }}" icon="credit-card" />
+                            <x-dashboard.card title="Penjualan Barang" route="{{ route('sales.index') }}" icon="credit-card" />
                         </div>
 
                     </div>

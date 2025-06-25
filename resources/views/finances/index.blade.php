@@ -5,8 +5,8 @@
                         class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded shadow transition">
                     🔙
                 </button>
-            <span>📊</span>
-            <span>Halaman Keuangan</span>
+            
+            <span>Laporan Keuangan</span>
         </h2>
     </x-slot>
 
